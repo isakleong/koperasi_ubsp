@@ -133,13 +133,13 @@
                                 <div class="row">
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
-                                            <label for="ktp">Foto KTP</label>
+                                            <label for="ktp">Username</label>
                                             <input type="text" class="form-control" id="username" name="username" placeholder="Username">
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
-                                            <label for="kk">Foto KK</label>
+                                            <label for="kk">Password</label>
                                             <input type="password" class="form-control" id="password" name="password" placeholder="Password">
                                         </div>
                                     </div>
