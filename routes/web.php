@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,11 +15,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//USER AUTHENTICATION (LOGIN AND REGISTER)
 Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::get('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/register', [AuthController::class, 'registerProcess'])->name('register');
+Route::get('/email/verify', function(){
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+ 
+    return redirect('/');
+})->middleware(['auth', 'signed'])->name('verification.verify');
 
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
 
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
@@ -26,7 +35,7 @@ Route::get('/forgot-password', function () {
 
 Route::get('/', function () {
     return view('main.index');
-}); 
+})->middleware(['auth', 'verified']);
 
 Route::get('/saving/add', function () {
     return view('main.saving-add');

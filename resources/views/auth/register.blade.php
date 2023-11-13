@@ -56,7 +56,8 @@
                     <h1 class="auth-title">Daftar</h1>
                     <p class="auth-subtitle mb-5">Yuk, jadi anggota Sistem Akuntansi UBSP!</p>
 
-                    <form action="index.html" method="POST">
+                    <form action="register" method="POST">
+                        @csrf
                         <div id="register-section1" class="card-content">
                             <div class="card-body">
                                 <a href="{{route('login')}}" class="btn btn-primary mb-3 circular-btn" role="button"><i class="bi bi-arrow-left"></i></a>
@@ -79,7 +80,7 @@
                                         <div class="form-group">
                                             <label for="birthplace">Tempat Lahir</label>
                                             <input type="text" id="birthplace" class="form-control"
-                                                placeholder="Tempat Lahir" name="birthdate">
+                                                placeholder="Tempat Lahir" name="birthplace">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
@@ -98,8 +99,8 @@
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="work-address">Alamat Kerja</label>
-                                            <input type="email" id="work-address" class="form-control"
-                                                name="work-address" placeholder="Alamat Kerja">
+                                            <input type="text" id="work-address" class="form-control"
+                                                name="workAddress" placeholder="Alamat Kerja">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
@@ -115,7 +116,7 @@
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text" id="basic-addon1">+62</span>
                                                 <input type="text" class="form-control" placeholder="No Hp"
-                                                    aria-label="No Hp" aria-describedby="basic-addon1" name="phone-number">
+                                                    aria-label="No Hp" aria-describedby="basic-addon1" name="phone">
                                             </div>
                                         </div>
                                     </div>
@@ -179,7 +180,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Daftar</button>
+                                <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Daftar</button>
                             </div>
                             <div class="text-center mt-5 text-lg fs-4">
                                 <p class='text-gray-600'>Sudah punya akun? <a href="{{route('login')}}" class="font-bold">Masuk</a></p>

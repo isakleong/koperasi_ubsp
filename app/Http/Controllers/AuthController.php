@@ -2,10 +2,41 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller {
+    public function register() {
+        return view('auth.register');
+    }
+
+    public function registerProcess(Request $request) {
+        $user = User::create([
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'mothername' => $request->mothername,
+            'memberId' => 'M001',
+            'fname' => $request->fname,
+            'lname' => $request->lname,
+            'birthplace' => $request->birthplace,
+            'birthdate' => $request->birthdate,
+            'address' => $request->address,
+            'workAddress' => $request->workAddress,
+            'phone' => $request->phone
+            // 'ktp' => $request->ktp,
+            // 'kk' => $request->kk
+        ]);
+
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return redirect('/email/verify');
+    }
+
     public function login() {
         return view('auth.login');
     }
