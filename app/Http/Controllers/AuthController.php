@@ -7,6 +7,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Intervention\Image\Facades\Image;
 
 class AuthController extends Controller {
     public function register() {
@@ -14,7 +15,41 @@ class AuthController extends Controller {
     }
 
     public function registerProcess(Request $request) {
-        return redirect('/login')->withSuccess('Post Created Successfully!');
+        // return redirect('/login')->withSuccess('Post Created Successfully!');
+
+        $input = $request->all();
+
+        $input['password'] = Hash::make($input['password']);
+        $input['memberId'] = 'MUBSP' . date('Ymd') . str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+
+        if($imageKTP = $request->file('ktp')) {
+            $destinationPath = 'image/upload/';
+            $fileName = pathinfo($imageKTP->getClientOriginalName(), PATHINFO_FILENAME);
+            $generatedID = $fileName.hexdec(uniqid())."-".time(). ".";
+            $imageName = $generatedID.$imageKTP->getClientOriginalExtension();            
+
+            $input['ktp'] = $destinationPath.$imageName;
+        } else {
+            dd('erer');
+        }
+
+        if($imageKK = $request->file('kk')) {
+            $destinationPath = 'image/upload/';
+            $fileName = pathinfo($imageKK->getClientOriginalName(), PATHINFO_FILENAME);
+            $generatedID = $fileName.hexdec(uniqid())."-".time(). ".";
+            $imageName = $generatedID.$imageKK->getClientOriginalExtension();
+
+            $input['kk'] = $destinationPath.$imageName;
+        }
+
+        $user = User::create($input);
+        Image::make($imageKTP)->resize(1024, 768, function ($constraint) {
+            $constraint->aspectRatio();
+        })->save($input['ktp']);
+
+        Image::make($imageKK)->resize(1024, 768, function ($constraint) {
+            $constraint->aspectRatio();
+        })->save($input['kk']);
         
         // $user = User::create([
         //     'email' => $request->email,
@@ -32,11 +67,11 @@ class AuthController extends Controller {
         //     // 'kk' => $request->kk
         // ]);
 
-        // event(new Registered($user));
+        event(new Registered($user));
 
-        // Auth::login($user);
+        Auth::login($user);
 
-        // return redirect('/email/verify');
+        return redirect('/email/verify');
     }
 
     public function login() {

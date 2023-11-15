@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/tes/aja', function () {
+    return view('auth.verify');
+})->name('tes-aja');
+
 //USER AUTHENTICATION (LOGIN AND REGISTER)
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/register', [AuthController::class, 'register'])->name('register');

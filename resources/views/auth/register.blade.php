@@ -57,7 +57,7 @@
                     <h1 class="auth-title">Daftar</h1>
                     <p class="auth-subtitle mb-5">Yuk, jadi anggota Sistem Akuntansi UBSP!</p>
 
-                    <form action="register" method="POST">
+                    <form action="register" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div id="register-section1" class="card-content">
                             <div class="card-body">
@@ -66,59 +66,60 @@
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="fname">Nama Depan</label>
-                                            <input type="text" id="fname" class="form-control"
-                                                placeholder="Nama Depan" name="fname">
+                                            <input type="text" id="fname" class="form-control" placeholder="Nama Depan" name="fname">
+                                            <p id="fname-check" style="color: red; display: none;">Nama Depan harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="lname">Nama Belakang</label>
-                                            <input type="text" id="lname" class="form-control"
-                                                placeholder="Nama Belakang" name="lname">
+                                            <input type="text" id="lname" class="form-control" placeholder="Nama Belakang" name="lname">
+                                            <p id="lname-check" style="color: red; display: none;">Nama Belakang harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="birthplace">Tempat Lahir</label>
-                                            <input type="text" id="birthplace" class="form-control"
-                                                placeholder="Tempat Lahir" name="birthplace">
+                                            <input type="text" id="birthplace" class="form-control" placeholder="Tempat Lahir" name="birthplace">
+                                            <p id="birthplace-check" style="color: red; display: none;">Tempat Lahir harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="birthdate">Tanggal Lahir</label>
-                                            <input type="date" class="form-control mb-3" name="birthdate">
+                                            <input type="date" class="form-control mb-3" id="birthdate" name="birthdate">
+                                            <p id="birthdate-check" style="color: red; display: none;">Tanggal Lahir harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="address">Alamat Tinggal</label>
-                                            <input type="text" id="address" class="form-control"
-                                                name="address" placeholder="Alamat Tinggal">
+                                            <input type="text" id="address" class="form-control" name="address" placeholder="Alamat Tinggal">
+                                            <p id="address-check" style="color: red; display: none;">Alamat Tinggal harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <label for="work-address">Alamat Kerja</label>
-                                            <input type="text" id="work-address" class="form-control"
-                                                name="workAddress" placeholder="Alamat Kerja">
+                                            <label for="workAddress">Alamat Kerja</label>
+                                            <input type="text" id="workAddress" class="form-control" name="workAddress" placeholder="Alamat Kerja">
+                                            <p id="workAddress-check" style="color: red; display: none;">Alamat Kerja harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="email">Email</label>
-                                            <input type="email" id="email" class="form-control"
-                                                name="email" placeholder="Email">
+                                            <input type="email" id="email" class="form-control" name="email" placeholder="Email">
+                                            <p id="email-check" style="color: red; display: none;">Email harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="phone-number">No Hp</label>
-                                            <div class="input-group mb-3">
+                                            <div class="input-group">
                                                 <span class="input-group-text" id="basic-addon1">+62</span>
-                                                <input type="text" class="form-control" placeholder="No Hp"
-                                                    aria-label="No Hp" aria-describedby="basic-addon1" name="phone">
+                                                <input type="text" class="form-control" placeholder="No Hp" aria-label="No Hp" aria-describedby="basic-addon1" id="phone" name="phone">
                                             </div>
+                                            <p id="phone-check" style="color: red; display: none;">No HP harus diisi</p>
                                         </div>
                                     </div>
                                     
@@ -137,24 +138,28 @@
                                         <div class="form-group">
                                             <label for="ktp">Username</label>
                                             <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                                            <p id="username-check" style="color: red; display: none;">Username harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="kk">Password</label>
                                             <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                                            <p id="password-check" style="color: red; display: none;">Password harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
-                                            <label for="confirm-password">Konfirmasi Password</label>
-                                            <input type="password" class="form-control" id="confirm-password" name="confirm-password" placeholder="Konfirmasi Password">
+                                            <label for="confirmPassword">Konfirmasi Password</label>
+                                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Konfirmasi Password">
+                                            <p id="confirmPassword-check" style="color: red; display: none;">Konfirmasi password harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="mothername">Nama Ibu Kandung</label>
                                             <input type="text" class="form-control" id="mothername" name="mothername" placeholder="Nama Ibu Kandung">
+                                            <p id="mothername-check" style="color: red; display: none;">Nama Ibu Kandung harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-12 d-flex justify-content-end">
@@ -171,7 +176,8 @@
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="ktp">Foto KTP</label>
-                                            <input type="file" class="image-exif-filepond" name="ktp">
+                                            <input type="file" class="image-exif-filepond" name="ktp" accept="image/*">
+                                            {{-- <input class="form-control @error('image') is-invalid @enderror" type="file" id="image" name="image" accept="image/*" onchange="previewImage()"> --}}
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-12">
@@ -215,14 +221,224 @@
 
 <script>
     $(document).ready(function() {
+        //onchange
+        $("#fname").keyup(function () {
+            validateData("fname");
+        });
+        $("#lname").keyup(function () {
+            validateData("lname");
+        });
+        $("#birthplace").keyup(function () {
+            validateData("birthplace");
+        });
+        $("#birthdate").keyup(function () {
+            validateData("birthdate");
+        });
+        $("#address").keyup(function () {
+            validateData("address");
+        });
+        $("#workAddress").keyup(function () {
+            validateData("workAddress");
+        });
+        $("#email").keyup(function () {
+            validateData("email");
+        });
+        $("#phone").keyup(function () {
+            validateData("phone");
+        });
+        $("#username").keyup(function () {
+            validateData("username");
+        });
+        $("#password").keyup(function () {
+            validateData("password");
+        });
+        $("#confirmPassword").keyup(function () {
+            validateData("confirmPassword");
+        });
+        $("#mothername").keyup(function () {
+            validateData("mothername");
+        });
+
+        function validateData(type) {
+            if (type == "fname") {
+                let dataValue = $("#fname").val();
+                if (dataValue.length == "") {
+                    $("#fname-check").show();
+                    return 0;
+                } else {
+                    $("#fname-check").hide();
+                    return 1;              
+                }
+            } else if (type == "lname") {
+                let dataValue = $("#lname").val();
+                if (dataValue.length == "") {
+                    $("#lname-check").show();
+                    return 0;
+                } else {
+                    $("#lname-check").hide();
+                    return 1;
+                }
+            } else if (type == "birthplace") {
+                let dataValue = $("#birthplace").val();
+                if (dataValue.length == "") {
+                    $("#birthplace-check").show();
+                    return 0;
+                } else {
+                    $("#birthplace-check").hide();
+                    return 1;
+                }
+            } else if (type == "birthdate") {
+                let dataValue = $("#birthdate").val();
+                if (dataValue.length == "") {
+                    $("#birthdate-check").show();
+                    return 0;
+                } else {
+                    $("#birthdate-check").hide();
+                    return 1;
+                }
+            } else if (type == "address") {
+                let dataValue = $("#address").val();
+                if (dataValue.length == "") {
+                    $("#address-check").show();
+                    return 0;
+                } else {
+                    $("#address-check").hide();
+                    return 1;
+                }
+            } else if (type == "workAddress") {
+                let dataValue = $("#workAddress").val();
+                if (dataValue.length == "") {
+                    $("#workAddress-check").show();
+                    return 0;
+                } else {
+                    $("#workAddress-check").hide();
+                    return 1;
+                }
+            } else if (type == "email") {
+                let dataValue = $("#email").val();
+                if (dataValue.length == "") {
+                    $("#email-check").text("Email harus diisi");
+                    $("#email-check").show();
+                    return 0;
+                } else {
+                    $("#email-check").hide();
+                    let regex = /^([_\-\.0-9a-zA-Z]+)@([_\-\.0-9a-zA-Z]+)\.([a-zA-Z]){2,7}$/;
+                    if (regex.test(dataValue)) {
+                        $("#email-check").hide();
+                        return 1;
+                    } else {
+                        $("#email-check").text("Email tidak valid");
+                        $("#email-check").show();
+                        return 0;
+                    }
+                }
+            } else if (type == "phone") {
+                let dataValue = $("#phone").val();
+                if (dataValue.length == "") {
+                    $("#phone-check").show();
+                    return 0;
+                } else {
+                    $("#phone-check").hide();
+                    return 1;
+                }
+            } else if(type == "username") {
+                let dataValue = $("#username").val();
+                if (dataValue.length == "") {
+                    $("#username-check").show();
+                    return 0;
+                } else {
+                    $("#username-check").hide();
+                    return 1;
+                }
+            } else if(type == "password") {
+                let dataValue = $("#password").val();
+                if (dataValue.length == "") {
+                    $("#password-check").show();
+                    return 0;
+                }
+
+                if (dataValue.length < 8) {
+                    $("#password-check").text("Minimal panjang password adalah 8");
+                    $("#password-check").show();
+                    return 0;
+                } else {
+                    $("#password-check").hide();
+                    return 1;
+                }
+            } else if(type == "confirmPassword") {
+                let dataValue = $("#confirmPassword").val();
+                if (dataValue.length == "") {
+                    $("#confirmPassword-check").show();
+                    return 0;
+                } else {
+                    $("#confirmPassword-check").hide();
+
+                    let confirmPasswordValue = $("#confirmPassword").val();
+                    let passwordValue = $("#password").val();
+                    if (passwordValue != confirmPasswordValue) {
+                        $("#confirmPassword-check").text("Konfirmasi password tidak sesuai");
+                        $("#confirmPassword-check").show();
+                        return 0;
+                    } else {
+                        $("#confirmPassword-check").hide();
+                        return 1;
+                    }
+
+                    
+                    return 1;
+                }
+            } else if(type == "mothername") {
+                let dataValue = $("#mothername").val();
+                if (dataValue.length == "") {
+                    $("#mothername-check").show();
+                    return 0;
+                } else {
+                    $("#mothername-check").hide();
+                    return 1;
+                }
+            }
+        }
+
+        function validateDataSection(params) {
+            if(params == '1') {
+                let isValid = 0;
+
+                isValid += validateData('fname');
+                isValid += validateData('lname');
+                isValid += validateData('birthplace');
+                isValid += validateData('birthdate');
+                isValid += validateData('address');
+                isValid += validateData('workAddress');
+                isValid += validateData('email');
+                isValid += validateData('phone');
+
+                return isValid;
+            } else {
+                let isValid = 0;
+
+                isValid += validateData('username');
+                isValid += validateData('password');
+                isValid += validateData('confirmPassword');
+                isValid += validateData('mothername');
+
+                return isValid;
+            }
+        }
+
         $("#btnContinue").click(function() {
-            $("#register-section1").hide();
-            $("#register-section2").show();
+            let validateData = validateDataSection('1');
+            if(validateData == 8){
+                $("#register-section1").hide();
+                $("#register-section2").show();
+            }
         });
 
         $("#btnContinue2").click(function() {
-            $("#register-section2").hide();
-            $("#register-section3").show();
+            let validateData = validateDataSection('2');
+            if(validateData == 4){
+                $("#register-section2").hide();
+                $("#register-section3").show();
+            }
         });
 
         $("#btnBack").click(function() {
