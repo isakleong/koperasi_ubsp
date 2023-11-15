@@ -14,27 +14,29 @@ class AuthController extends Controller {
     }
 
     public function registerProcess(Request $request) {
-        $user = User::create([
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'mothername' => $request->mothername,
-            'memberId' => 'M001',
-            'fname' => $request->fname,
-            'lname' => $request->lname,
-            'birthplace' => $request->birthplace,
-            'birthdate' => $request->birthdate,
-            'address' => $request->address,
-            'workAddress' => $request->workAddress,
-            'phone' => $request->phone
-            // 'ktp' => $request->ktp,
-            // 'kk' => $request->kk
-        ]);
+        return redirect('/login')->withSuccess('Post Created Successfully!');
+        
+        // $user = User::create([
+        //     'email' => $request->email,
+        //     'password' => Hash::make($request->password),
+        //     'mothername' => $request->mothername,
+        //     'memberId' => 'M001',
+        //     'fname' => $request->fname,
+        //     'lname' => $request->lname,
+        //     'birthplace' => $request->birthplace,
+        //     'birthdate' => $request->birthdate,
+        //     'address' => $request->address,
+        //     'workAddress' => $request->workAddress,
+        //     'phone' => $request->phone
+        //     // 'ktp' => $request->ktp,
+        //     // 'kk' => $request->kk
+        // ]);
 
-        event(new Registered($user));
+        // event(new Registered($user));
 
-        Auth::login($user);
+        // Auth::login($user);
 
-        return redirect('/email/verify');
+        // return redirect('/email/verify');
     }
 
     public function login() {

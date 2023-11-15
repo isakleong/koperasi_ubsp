@@ -16,6 +16,7 @@
 </head>
 
 <body>
+    @include('sweetalert::alert')
     <script src="assets/static/js/initTheme.js"></script>
     <div id="auth">
 
@@ -57,6 +58,10 @@
         </div>
 
     </div>
+
+    <!-- <script src="/main/assets/extensions/sweetalert2/sweetalert2.all.js"></script> -->
+    <script src="/vendor/sweetalert/sweetalert.all.js"></script>
+    <!-- "C:\xampp\htdocs\work\koperasi_ubsp\public\main\assets\extensions\sweetalert2\sweetalert2.all.js" -->
 </body>
 
 </html>

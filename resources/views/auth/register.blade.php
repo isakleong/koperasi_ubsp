@@ -43,6 +43,7 @@
 </head>
 
 <body>
+    @include('sweetalert::alert')
     <script src="assets/static/js/initTheme.js"></script>
     <div id="auth">
 
