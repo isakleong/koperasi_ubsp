@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/tes/aja', function () {
-    return view('auth.verify');
+    return view('auth.mail-verification');
 })->name('tes-aja');
 
 //USER AUTHENTICATION (LOGIN AND REGISTER)
