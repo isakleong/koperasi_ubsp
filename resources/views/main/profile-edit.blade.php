@@ -35,8 +35,9 @@
                 <div class="col-12 col-lg-8">
                     <div class="card">
                         <div class="card-body">
-                            <form method="POST">
+                            <form action="{{ route('profile-setting-update', ['id' => $user->id]) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
+                                @method('PUT')
                                 <div id="register-section1" class="card-content">
                                     <div class="card-body">
                                         <div class="row">
@@ -73,7 +74,7 @@
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <label for="work-address">Alamat Kerja</label>
-                                                    <input type="text" id="work-address" class="form-control" name="work-address" placeholder="Alamat Kerja" value="{{$user->workAddress}}">
+                                                    <input type="text" id="work-address" class="form-control" name="workAddress" placeholder="Alamat Kerja" value="{{$user->workAddress}}">
                                                 </div>
                                             </div>
                                             <div class="col-12">
@@ -87,7 +88,7 @@
                                                     <label for="phone-number">No Hp</label>
                                                     <div class="input-group mb-3">
                                                         <span class="input-group-text" id="basic-addon1">+62</span>
-                                                        <input type="text" class="form-control" placeholder="No Hp" aria-label="No Hp" aria-describedby="basic-addon1" name="phone-number" value="{{$user->phone}}">
+                                                        <input type="text" class="form-control" placeholder="No Hp" aria-label="No Hp" aria-describedby="basic-addon1" name="phone" value="{{$user->phone}}">
                                                     </div>
                                                 </div>
                                             </div>

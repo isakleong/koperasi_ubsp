@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,15 +50,46 @@ class MainController extends Controller
         return view('main.credit-angsuran-recap', compact(['user']));
     }
 
-    public function editProfile(Request $request) {
+    public function showEditProfile(Request $request) {
         $user = Auth::user();
 
         return view('main.profile-edit', compact(['user']));
     }
 
-    public function editPassword(Request $request) {
+    public function showEditPassword(Request $request) {
         $user = Auth::user();
 
         return view('main.password-edit', compact(['user']));
+    }
+
+    public function editProfile(Request $request, $id) {
+        // Retrieve existing user data
+        $user = User::find($id);
+
+        $excludedFields = ['password', 'ktp', 'kk', 'memberId', 'phone', 'email', 'email_verified_at', 'birthdate', 'workAddress'];
+
+        // Compare form data with existing data
+        $formData = $request->except($excludedFields);
+        $changesDetected = false;
+
+        foreach ($formData as $key => $value) {
+            // Check if the form data is different from existing data
+            if ($user->{$key} != $value) {
+                $changesDetected = true;
+                // You can break out of the loop if changes are detected early
+                // break;
+            }
+        }
+
+        // Update data if changes are detected
+        if ($changesDetected) {
+            dd('there is update');
+            // $user->update($formData);
+            // Add any additional logic or messages as needed
+        } else {
+            dd('nope');
+            // No changes detected, you may choose to handle this case differently
+            // For example, show a message to the user
+        }
     }
 }

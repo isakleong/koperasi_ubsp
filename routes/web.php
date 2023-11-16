@@ -50,9 +50,10 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::get('/angsuran/pengajuan', [MainController::class, 'addAngsuran'])->name('credit-angsuran-add');
     Route::get('/kredit/rekap', [MainController::class, 'recapCredit'])->name('credit-recap');
     Route::get('/angsuran/rekap', [MainController::class, 'recapAngsuran'])->name('credit-angsuran-recap');
-    Route::get('/pengaturan/profile', [MainController::class, 'editProfile'])->name('profile-setting');
-    Route::get('/pengaturan/password', [MainController::class, 'editPassword'])->name('password-setting');
+    Route::get('/pengaturan/profile', [MainController::class, 'showEditProfile'])->name('profile-setting');
+    Route::get('/pengaturan/password', [MainController::class, 'showEditPassword'])->name('password-setting');
 
     //POST REQUEST
-    Route::post('/pengaturan/profile', [MainController::class, 'editProfile'])->name('profile-setting');
+    Route::put('/pengaturan/profile/{id}', [MainController::class, 'editProfile'])->name('profile-setting-update');
+    Route::post('/pengaturan/password', [MainController::class, 'editPassword'])->name('password-setting-update');
 });

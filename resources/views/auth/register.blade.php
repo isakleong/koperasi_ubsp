@@ -51,13 +51,13 @@
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
                     <div class="auth-logo text-center">
-                        <a href="index.html"><img src="/main/assets/static/images/logo/UBSP-logos_transparent.png"
+                        <a href="/"><img src="/main/assets/static/images/logo/UBSP-logos_transparent.png"
                                 alt="Logo"></a>
                     </div>
                     <h1 class="auth-title">Daftar</h1>
                     <p class="auth-subtitle mb-5">Yuk, jadi anggota Sistem Akuntansi UBSP!</p>
 
-                    <form action="register" method="POST" enctype="multipart/form-data">
+                    <form id="formRegister" action="register" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div id="register-section1" class="card-content">
                             <div class="card-body">
@@ -66,49 +66,49 @@
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="fname">Nama Depan</label>
-                                            <input type="text" id="fname" class="form-control" placeholder="Nama Depan" name="fname">
+                                            <input type="text" id="fname" class="form-control" placeholder="Nama Depan" name="fname" value="{{old('fname')}}">
                                             <p id="fname-check" style="color: red; display: none;">Nama Depan harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="lname">Nama Belakang</label>
-                                            <input type="text" id="lname" class="form-control" placeholder="Nama Belakang" name="lname">
+                                            <input type="text" id="lname" class="form-control" placeholder="Nama Belakang" name="lname" value="{{old('lname')}}">
                                             <p id="lname-check" style="color: red; display: none;">Nama Belakang harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="birthplace">Tempat Lahir</label>
-                                            <input type="text" id="birthplace" class="form-control" placeholder="Tempat Lahir" name="birthplace">
+                                            <input type="text" id="birthplace" class="form-control" placeholder="Tempat Lahir" name="birthplace" value="{{old('birthplace')}}">
                                             <p id="birthplace-check" style="color: red; display: none;">Tempat Lahir harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="birthdate">Tanggal Lahir</label>
-                                            <input type="date" class="form-control mb-3" id="birthdate" name="birthdate">
+                                            <input type="date" class="form-control mb-3" id="birthdate" name="birthdate" value="{{old('birthdate')}}">
                                             <p id="birthdate-check" style="color: red; display: none;">Tanggal Lahir harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="address">Alamat Tinggal</label>
-                                            <input type="text" id="address" class="form-control" name="address" placeholder="Alamat Tinggal">
+                                            <input type="text" id="address" class="form-control" name="address" placeholder="Alamat Tinggal" value="{{old('address')}}">
                                             <p id="address-check" style="color: red; display: none;">Alamat Tinggal harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="workAddress">Alamat Kerja</label>
-                                            <input type="text" id="workAddress" class="form-control" name="workAddress" placeholder="Alamat Kerja">
+                                            <input type="text" id="workAddress" class="form-control" name="workAddress" placeholder="Alamat Kerja" value="{{old('workAddress')}}">
                                             <p id="workAddress-check" style="color: red; display: none;">Alamat Kerja harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="email">Email</label>
-                                            <input type="email" id="email" class="form-control" name="email" placeholder="Email">
+                                            <input type="email" id="email" class="form-control" name="email" placeholder="Email" value="{{old('email')}}">
                                             <p id="email-check" style="color: red; display: none;">Email harus diisi</p>
                                         </div>
                                     </div>
@@ -117,7 +117,7 @@
                                             <label for="phone-number">No Hp</label>
                                             <div class="input-group">
                                                 <span class="input-group-text" id="basic-addon1">+62</span>
-                                                <input type="text" class="form-control" placeholder="No Hp" aria-label="No Hp" aria-describedby="basic-addon1" id="phone" name="phone">
+                                                <input type="text" class="form-control" placeholder="No Hp" aria-label="No Hp" aria-describedby="basic-addon1" id="phone" name="phone" value="{{old('phone')}}">
                                             </div>
                                             <p id="phone-check" style="color: red; display: none;">No HP harus diisi</p>
                                         </div>
@@ -151,7 +151,7 @@
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="mothername">Nama Ibu Kandung</label>
-                                            <input type="text" class="form-control" id="mothername" name="mothername" placeholder="Nama Ibu Kandung">
+                                            <input type="text" class="form-control" id="mothername" name="mothername" placeholder="Nama Ibu Kandung" value="{{old('mothername')}}">
                                             <p id="mothername-check" style="color: red; display: none;">Nama Ibu Kandung harus diisi</p>
                                         </div>
                                     </div>
@@ -176,7 +176,7 @@
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="kk">Foto Kartu Keluarga</label>
-                                            <input type="file" class="image-preview-filepond" name="kk">
+                                            <input type="file" class="image-preview-filepond" name="kk" accept="image/*">
                                         </div>
                                     </div>
                                 </div>
@@ -215,42 +215,51 @@
 <script>
     $(document).ready(function() {
         //onchange
-        $("#fname").keyup(function () {
-            validateData("fname");
-        });
-        $("#lname").keyup(function () {
-            validateData("lname");
-        });
-        $("#birthplace").keyup(function () {
-            validateData("birthplace");
-        });
-        $("#birthdate").keyup(function () {
-            validateData("birthdate"); 
-        });    
-        $("#birthdate").change(function () {
-            validateData("birthdate");
-        });
-        $("#address").keyup(function () {
-            validateData("address");
-        });
-        $("#workAddress").keyup(function () {
-            validateData("workAddress");
-        });
-        $("#email").keyup(function () {
-            validateData("email");
-        });
-        $("#phone").keyup(function () {
-            validateData("phone");
-        });
-        $("#password").keyup(function () {
-            validateData("password");
-        });
-        $("#confirmPassword").keyup(function () {
-            validateData("confirmPassword");
-        });
-        $("#mothername").keyup(function () {
-            validateData("mothername");
-        });
+        // $("#fname").keyup(function () {
+        //     validateData("fname");
+        // });
+        // $("#lname").keyup(function () {
+        //     validateData("lname");
+        // });
+        // $("#birthplace").keyup(function () {
+        //     validateData("birthplace");
+        // });
+        // $("#birthdate").keyup(function () {
+        //     validateData("birthdate"); 
+        // });    
+        // $("#birthdate").change(function () {
+        //     validateData("birthdate");
+        // });
+        // $("#address").keyup(function () {
+        //     validateData("address");
+        // });
+        // $("#workAddress").keyup(function () {
+        //     validateData("workAddress");
+        // });
+        // $("#email").keyup(function () {
+        //     validateData("email");
+        // });
+        // $("#phone").keyup(function () {
+        //     validateData("phone");
+        // });
+        // $("#password").keyup(function () {
+        //     validateData("password");
+        // });
+        // $("#confirmPassword").keyup(function () {
+        //     validateData("confirmPassword");
+        // });
+        // $("#mothername").keyup(function () {
+        //     validateData("mothername");
+        // });
+
+        //prevent enter submit button
+        $("#formRegister").on("keypress", function (event) { 
+            var keyPressed = event.keyCode || event.which; 
+            if (keyPressed === 13) { 
+                event.preventDefault();
+                return false; 
+            } 
+        }); 
 
         function validateData(type) {
             if (type == "fname") {

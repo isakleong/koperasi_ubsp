@@ -32,16 +32,22 @@
                     <form method="post">
                         @csrf
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="text" class="form-control form-control-xl" placeholder="Email" name="email">
+                            <input type="text" class="form-control form-control-xl" placeholder="Email" name="email" value="{{old('email')}}">
                             <div class="form-control-icon">
                                 <i class="bi bi-person"></i>
                             </div>
+                            @error('email')
+                                <p style="color: red">{{$message}}</p>
+                            @enderror
                         </div>
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="password" class="form-control form-control-xl" placeholder="Password" name="password">
+                            <input type="password" class="form-control form-control-xl" placeholder="Password" name="password" value="{{old('password')}}">
                             <div class="form-control-icon">
                                 <i class="bi bi-shield-lock"></i>
                             </div>
+                            @error('password')
+                                <p style="color: red">{{$message}}</p>
+                            @enderror
                         </div>
                         <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Masuk</button>
                     </form>
