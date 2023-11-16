@@ -39,7 +39,7 @@
                                         <img src="/main/assets/compiled/jpg/1.jpg" alt="Avatar">
                                     </div>
                                     <div class="text">
-                                        <h6 class="user-dropdown-name">Regan Reinaldo</h6>
+                                        <h6 class="user-dropdown-name">{{ucfirst($user->fname)." ".ucfirst($user->lname)}}</h6>
                                         <p class="user-dropdown-status text-sm text-muted">Anggota</p>
                                     </div>
                                 </a>
@@ -143,11 +143,25 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="menu-item">
-                                <a href="{{route('setting')}}" class="menu-link">
+                            <li class="menu-item active has-sub">
+                                <a href="#" class="menu-link">
                                     <span><i class="bi bi-file-person-fill"></i> Pengaturan</span>
                                 </a>
+                                <div class="submenu">
+                                    <!-- Wrap to submenu-group-wrapper if you want 3-level submenu. Otherwise remove it. -->
+                                    <div class="submenu-group-wrapper">
+                                        <ul class="submenu-group">
+                                            <li class="submenu-item">
+                                                <a href="{{route('profile-setting')}}" class="submenu-link">Ubah Data Diri</a>
+                                            </li>
+                                            <li class="submenu-item">
+                                                <a href="{{route('password-setting')}}" class="submenu-link">Ubah Password</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </li>
+
                         </ul>
                     </div>
                 </nav>
