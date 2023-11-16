@@ -24,20 +24,21 @@
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
                     <div class="auth-logo text-center">
-                        <a href="index.html"><img src="/main/assets/static/images/logo/UBSP-logos_transparent.png" alt="Logo"></a>
+                        <a href="/"><img src="/main/assets/static/images/logo/UBSP-logos_transparent.png" alt="Logo"></a>
                     </div>
                     <h1 class="auth-title">Masuk</h1>
                     <p class="auth-subtitle mb-5">Selamat datang di Sistem Akuntansi UBSP!</p>
 
-                    <form action="index.html">
+                    <form method="post">
+                        @csrf
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="text" class="form-control form-control-xl" placeholder="Username / Email">
+                            <input type="text" class="form-control form-control-xl" placeholder="Email" name="email">
                             <div class="form-control-icon">
                                 <i class="bi bi-person"></i>
                             </div>
                         </div>
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="password" class="form-control form-control-xl" placeholder="Password">
+                            <input type="password" class="form-control form-control-xl" placeholder="Password" name="password">
                             <div class="form-control-icon">
                                 <i class="bi bi-shield-lock"></i>
                             </div>
@@ -59,9 +60,7 @@
 
     </div>
 
-    <!-- <script src="/main/assets/extensions/sweetalert2/sweetalert2.all.js"></script> -->
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
-    <!-- "C:\xampp\htdocs\work\koperasi_ubsp\public\main\assets\extensions\sweetalert2\sweetalert2.all.js" -->
 </body>
 
 </html>

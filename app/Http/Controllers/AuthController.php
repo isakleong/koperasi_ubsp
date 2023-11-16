@@ -79,12 +79,13 @@ class AuthController extends Controller {
     }
 
     public function authenticate(Request $request) {
+        // dd($request->all());
         $request->validate([
-            'name' => 'required',
+            'email' => 'required',
             'password' => 'required'
         ]);
 
-        $credentials = $request->only('name','password');
+        $credentials = $request->only('email','password');
 
         if(Auth::attempt($credentials)){
             $request->session()->regenerate();
@@ -93,7 +94,7 @@ class AuthController extends Controller {
         }
 
         return redirect()->back()->withErrors([
-            'loginError' => 'Wrong username or password'
+            'loginError' => 'Email atau password salah, silahkan coba lagi'
         ]);
     }
 

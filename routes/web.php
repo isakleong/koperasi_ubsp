@@ -21,6 +21,8 @@ Route::get('/tes/aja', function () {
 
 //USER AUTHENTICATION (LOGIN AND REGISTER)
 Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'authenticate']);
+Route::get('/logout', [AuthController::class, 'logout']);
 Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/register', [AuthController::class, 'registerProcess'])->name('register');
 Route::get('/email/verify', function(){
@@ -31,6 +33,7 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
  
     return redirect('/');
 })->middleware(['auth', 'signed'])->name('verification.verify');
+//END OF USER AUTHENTICATION (LOGIN AND REGISTER)
 
 
 Route::get('/forgot-password', function () {

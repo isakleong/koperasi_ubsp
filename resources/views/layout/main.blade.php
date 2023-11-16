@@ -11,14 +11,16 @@
         type="image/png">
 
     <link rel="stylesheet" href="/main/assets/compiled/css/app.css">
-    <link rel="stylesheet" href="/main/assets/compiled/css/app-dark.css">
+    <!-- uncomment for dark mode -->
+    <!-- <link rel="stylesheet" href="/main/assets/compiled/css/app-dark.css"> -->
     <link rel="stylesheet" href="/main/assets/compiled/css/iconly.css">
 
     @yield('vendorCSS')
 </head>
 
 <body>
-    {{-- <script src="assets/static/js/initTheme.js"></script> --}}
+    <!-- uncomment for dark mode -->
+    <!-- <script src="/main/assets/static/js/initTheme.js"></script> -->
     <div id="app">
         <div id="main" class="layout-horizontal">
             <header class="mb-5">
@@ -43,7 +45,7 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end shadow-lg"
                                     aria-labelledby="topbarUserDropdown">
-                                    <li><a class="dropdown-item" href="auth-login.html">Keluar</a></li>
+                                    <li><a class="dropdown-item" href="/logout">Keluar</a></li>
                                 </ul>
                             </div>
 
@@ -164,7 +166,9 @@
             </footer>
         </div>
     </div>
-    <script src="/main/assets/static/js/components/dark.js"></script>
+
+    <!-- uncomment for dark mode -->
+    <!-- <script src="/main/assets/static/js/components/dark.js"></script> -->
     <script src="/main/assets/static/js/pages/horizontal-layout.js"></script>
     <script src="/main/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 
