@@ -232,6 +232,9 @@
             validateData("birthplace");
         });
         $("#birthdate").keyup(function () {
+            validateData("birthdate"); 
+        });    
+        $("#birthdate").change(function () {
             validateData("birthdate");
         });
         $("#address").keyup(function () {
@@ -338,8 +341,15 @@
                     $("#phone-check").show();
                     return 0;
                 } else {
-                    $("#phone-check").hide();
-                    return 1;
+                    let regex = /^[8]\d{8,11}$/;
+                    if (regex.test(dataValue)) {
+                        $("#phone-check").hide();
+                        return 1;
+                    } else {
+                        $("#phone-check").text("No Hp tidak valid");
+                        $("#phone-check").show();
+                        return 0;
+                    }
                 }
             } else if(type == "username") {
                 let dataValue = $("#username").val();
