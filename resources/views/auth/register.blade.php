@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pendaftaran - Sistem Akuntansi UBSP</title>
+    <title>Daftar - Sistem Akuntansi UBSP</title>
 
 
 
@@ -136,13 +136,6 @@
                                 <div class="row">
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
-                                            <label for="ktp">Username</label>
-                                            <input type="text" class="form-control" id="username" name="username" placeholder="Username">
-                                            <p id="username-check" style="color: red; display: none;">Username harus diisi</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 col-12">
-                                        <div class="form-group">
                                             <label for="kk">Password</label>
                                             <input type="password" class="form-control" id="password" name="password" placeholder="Password">
                                             <p id="password-check" style="color: red; display: none;">Password harus diisi</p>
@@ -249,9 +242,6 @@
         $("#phone").keyup(function () {
             validateData("phone");
         });
-        $("#username").keyup(function () {
-            validateData("username");
-        });
         $("#password").keyup(function () {
             validateData("password");
         });
@@ -351,15 +341,6 @@
                         return 0;
                     }
                 }
-            } else if(type == "username") {
-                let dataValue = $("#username").val();
-                if (dataValue.length == "") {
-                    $("#username-check").show();
-                    return 0;
-                } else {
-                    $("#username-check").hide();
-                    return 1;
-                }
             } else if(type == "password") {
                 let dataValue = $("#password").val();
                 if (dataValue.length == "") {
@@ -426,7 +407,6 @@
             } else {
                 let isValid = 0;
 
-                isValid += validateData('username');
                 isValid += validateData('password');
                 isValid += validateData('confirmPassword');
                 isValid += validateData('mothername');
@@ -445,7 +425,7 @@
 
         $("#btnContinue2").click(function() {
             let validateData = validateDataSection('2');
-            if(validateData == 4){
+            if(validateData == 3){
                 $("#register-section2").hide();
                 $("#register-section3").show();
             }

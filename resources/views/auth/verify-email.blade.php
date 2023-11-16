@@ -26,7 +26,7 @@
             <p class="fs-5 text-gray-600 mb-0">Link verifikasi telah berhasil dikirim ke email kamu.</p>
             <p class="fs-5 text-gray-600 mb-0">Segera cek email kamu, kemudian klik tombol "Verifikasi Email"</p>
             <p class="fs-5 text-gray-600">untuk melanjutkan proses pendaftaran akun Sistem Akuntansi UBSP.</p>
-            <a href="/" class="btn btn-lg btn-outline-primary mt-3">Go Home</a>
+            <a href="{{route('login')}}" class="btn btn-lg btn-outline-primary mt-3">Masuk</a>
         </div>
     </div>
 </div>

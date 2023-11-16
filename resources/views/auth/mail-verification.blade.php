@@ -120,8 +120,8 @@
 															<td align="right">
 																<table class="center" border="0" cellspacing="0" cellpadding="0"style="text-align:center;">
 																	<tr>
-																		<td class="img" width="32"style="font-size:0pt; line-height:0pt; text-align:left;"><a href="#" target="_blank"><img src="/main/assets/static/images/mail/free_ico_facebook.jpg" width="14" height="13" border="0" alt="" /></a></td>
-																		<td class="img" width="14"style="font-size:0pt; line-height:0pt; text-align:left;"><a href="#" target="_blank"><img src="/main/assets/static/images/mail/free_ico_instagram.jpg" width="14" height="13" border="0" alt="" /></a></td>
+																		<td class="img" width="32"style="font-size:0pt; line-height:0pt; text-align:left;"><a href="#" target="_blank"><img src="https://link.tirtakencana.com/isak_backend/ubsp/mail/free_ico_facebook.jpg" width="14" height="13" border="0" alt="" /></a></td>
+																		<td class="img" width="14"style="font-size:0pt; line-height:0pt; text-align:left;"><a href="#" target="_blank"><img src="https://link.tirtakencana.com/isak_backend/ubsp/mail/free_ico_instagram.jpg" width="14" height="13" border="0" alt="" /></a></td>
 																	</tr>
 																</table>
 															</td>
@@ -135,7 +135,7 @@
 								<!-- END Top bar -->
 								<!-- Logo -->
 								<tr>
-									<td bgcolor="#ffffff" class="p30-15 img-center" style="padding: 30px; border-radius: 20px 20px 0px 0px; font-size:0pt; line-height:0pt; text-align:center;"><a href="#" target="_blank"><img src="/main/assets/static/images/mail/logo.png" height="100" border="0" alt="" /></a></td>
+									<td bgcolor="#ffffff" class="p30-15 img-center" style="padding: 30px; border-radius: 20px 20px 0px 0px; font-size:0pt; line-height:0pt; text-align:center;"><a href="#" target="_blank"><img src="https://link.tirtakencana.com/isak_backend/ubsp/mail/logo.png" height="100" border="0" alt="" /></a></td>
 								</tr>
 								<!-- END Logo -->
 							</table>
@@ -164,7 +164,7 @@
 									<td>
 										<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#dde8fd">
 											<tr>
-												<td class="fluid-img"style="font-size:0pt; line-height:0pt; text-align:left;"><img src="/main/assets/static/images/mail/free_white_blue.jpg" width="650" height="162" border="0" alt="" /></td>
+												<td class="fluid-img"style="font-size:0pt; line-height:0pt; text-align:left;"><img src="https://link.tirtakencana.com/isak_backend/ubsp/mail/free_white_blue.jpg" width="650" height="162" border="0" alt="" /></td>
 											</tr>
 											<tr>
 												<td class="p0-15" style="padding: 0px 30px;">
@@ -194,7 +194,7 @@
 									</td>
 								</tr>
 								<tr>
-									<td class="fluid-img"style="font-size:0pt; line-height:0pt; text-align:left;"><img src="/main/assets/static/images/mail/free_blue_white.jpg" width="650" height="160" border="0" alt="" /></td>
+									<td class="fluid-img"style="font-size:0pt; line-height:0pt; text-align:left;"><img src="https://link.tirtakencana.com/isak_backend/ubsp/mail/free_blue_white.jpg" width="650" height="160" border="0" alt="" /></td>
 								</tr>
 							</table>
 							<!-- END Section 2 -->
