@@ -44,12 +44,19 @@ Route::get('/forgot-password', function () {
 Route::middleware(['auth', 'verified'])->group(function() {
     //GET REQUEST
     Route::get('/', [MainController::class, 'index']);
-    Route::get('/tabungan/pengajuan', [MainController::class, 'addSaving'])->name('saving-add');
-    Route::get('/tabungan/rekap', [MainController::class, 'recapSaving'])->name('saving-recap');
-    Route::get('/kredit/pengajuan', [MainController::class, 'addCredit'])->name('credit-add');
+    Route::get('/simpanan/pengajuan', [MainController::class, 'addSimpanan'])->name('simpanan-add');
+    Route::get('/simpanan/mutasi', [MainController::class, 'mutationSimpanan'])->name('simpanan-mutation');
+    Route::get('/simpanan/rekap', [MainController::class, 'recapSimpanan'])->name('simpanan-recap');
+
+    Route::get('/tabungan/pengajuan', [MainController::class, 'addTabungan'])->name('tabungan-add');
+    Route::get('/tabungan/mutasi', [MainController::class, 'mutationTabungan'])->name('tabungan-mutation');
+    Route::get('/tabungan/rekap', [MainController::class, 'recapTabungan'])->name('tabungan-recap');
+
+    Route::get('/kredit/pengajuan', [MainController::class, 'addKredit'])->name('credit-add');
     Route::get('/angsuran/pengajuan', [MainController::class, 'addAngsuran'])->name('credit-angsuran-add');
     Route::get('/kredit/rekap', [MainController::class, 'recapCredit'])->name('credit-recap');
     Route::get('/angsuran/rekap', [MainController::class, 'recapAngsuran'])->name('credit-angsuran-recap');
+
     Route::get('/pengaturan/profile', [MainController::class, 'showEditProfile'])->name('profile-setting');
     Route::get('/pengaturan/password', [MainController::class, 'showEditPassword'])->name('password-setting');
 

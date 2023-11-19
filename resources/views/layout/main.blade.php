@@ -14,8 +14,9 @@
     <!-- uncomment for dark mode -->
     <!-- <link rel="stylesheet" href="/main/assets/compiled/css/app-dark.css"> -->
     <link rel="stylesheet" href="/main/assets/compiled/css/iconly.css">
-
+    <link rel="stylesheet" href="/main/assets/extensions/@fortawesome/fontawesome-free/css/all.min.css">
     @yield('vendorCSS')
+
 </head>
 
 <body>
@@ -32,9 +33,7 @@
                         <div class="header-top-right">
 
                             <div class="dropdown">
-                                <a href="#" id="topbarUserDropdown"
-                                    class="user-dropdown d-flex align-items-center dropend dropdown-toggle "
-                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                <a href="#" id="topbarUserDropdown" class="user-dropdown d-flex align-items-center dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                     <div class="avatar avatar-md2">
                                         <img src="/main/assets/compiled/jpg/1.jpg" alt="Avatar">
                                     </div>
@@ -43,8 +42,7 @@
                                         <p class="user-dropdown-status text-sm text-muted">Anggota</p>
                                     </div>
                                 </a>
-                                <ul class="dropdown-menu dropdown-menu-end shadow-lg"
-                                    aria-labelledby="topbarUserDropdown">
+                                <ul class="dropdown-menu dropdown-menu-end shadow-lg" aria-labelledby="topbarUserDropdown">
                                     <li><a class="dropdown-item" href="/logout">Keluar</a></li>
                                 </ul>
                             </div>
@@ -67,18 +65,43 @@
 
                             <li class="menu-item active has-sub">
                                 <a href="#" class="menu-link">
-                                    <span><i class="bi bi-collection-fill"></i> Tabungan</span>
+                                    <span><i class="fas fa-wallet"></i> Simpanan</span>
+                                </a>
+                                <div class="submenu">
+                                    <div class="submenu-group-wrapper">
+                                        <ul class="submenu-group">
+                                            <li class="submenu-item">
+                                                <a href="{{ route('simpanan-add') }}" class="submenu-link">Pengajuan</a>
+                                            </li>
+                                            <li class="submenu-item">
+                                                <a href="{{ route('simpanan-mutation') }}" class="submenu-link">Mutasi Simpanan</a>
+                                            </li>
+                                            <li class="submenu-item">
+                                                <a href="{{ route('simpanan-recap') }}" class="submenu-link">Rekap Simpanan</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="menu-item active has-sub">
+                                <a href="#" class="menu-link">
+                                    {{-- <span><i class="bi bi-collection-fill"></i> Tabungan</span> --}}
+                                    
+                                    <span><i class="fas fa-piggy-bank"></i> Tabungan</span>
                                 </a>
                                 <div class="submenu">
                                     <!-- Wrap to submenu-group-wrapper if you want 3-level submenu. Otherwise remove it. -->
                                     <div class="submenu-group-wrapper">
                                         <ul class="submenu-group">
                                             <li class="submenu-item">
-                                                <a href="{{ route('saving-add') }}" class="submenu-link">Pengajuan</a>
+                                                <a href="{{ route('tabungan-add') }}" class="submenu-link">Pengajuan</a>
                                             </li>
                                             <li class="submenu-item">
-                                                <a href="{{ route('saving-recap') }}" class="submenu-link">Rekap
-                                                    Tabungan</a>
+                                                <a href="{{ route('tabungan-mutation') }}" class="submenu-link">Mutasi Tabungan</a>
+                                            </li>
+                                            <li class="submenu-item">
+                                                <a href="{{ route('tabungan-recap') }}" class="submenu-link">Rekap Tabungan</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -87,7 +110,7 @@
 
                             <li class="menu-item has-sub">
                                 <a href="#" class="menu-link">
-                                    <span><i class="bi bi-cash-stack"></i> Kredit</span>
+                                    <span><i class="fas fa-coins"></i> Kredit</span>
                                 </a>
                                 <div class="submenu">
                                     <!-- Wrap to submenu-group-wrapper if you want 3-level submenu. Otherwise remove it. -->

@@ -14,7 +14,13 @@ class MainController extends Controller
         return view('main.index', compact(['user']));
     }
 
-    public function addSaving() {
+    public function addSimpanan() {
+        $user = Auth::user();
+
+        return view('main.saving-add', compact(['user']));
+    }
+
+    public function addTabungan() {
         $user = Auth::user();
 
         return view('main.saving-add', compact(['user']));
