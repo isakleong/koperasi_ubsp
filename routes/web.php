@@ -31,6 +31,11 @@ Route::get('/email/verify', function(){
 })->middleware('auth')->name('verification.notice');
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
+
+    $user = $request->user();
+
+    // Update the joinDate column
+    $user->update(['joinDate' => now()]); // Set 'joinDate' to the current timestamp
  
     return redirect('/');
 })->middleware(['auth', 'signed'])->name('verification.verify');

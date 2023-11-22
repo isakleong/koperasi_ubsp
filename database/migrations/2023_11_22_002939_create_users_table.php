@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string("memberId")->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('mothername');
-            $table->string('memberId')->unique();
             $table->string('fname')->required();
             $table->string('lname')->required();
             $table->string('birthplace')->required();
@@ -27,7 +27,10 @@ return new class extends Migration
             $table->string('phone')->required();
             $table->string('ktp')->required();
             $table->string('kk')->required();
-            $table->rememberToken();
+            $table->tinyInteger('status')->default(2);
+            $table->timestamp('registDate')->nullable();
+            $table->timestamp('joinDate')->nullable();
+            $table->timestamp('exitDate')->nullable();
             $table->timestamps();
         });
     }

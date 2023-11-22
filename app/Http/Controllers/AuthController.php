@@ -47,6 +47,8 @@ class AuthController extends Controller {
                 $input['kk'] = $destinationPath.$imageName;
             }
 
+            $input['registDate'] = date('Y-m-d H:i:s');
+
             $user = User::create($input);
             Image::make($imageKTP)->resize(1024, 768, function ($constraint) {
                 $constraint->aspectRatio();
@@ -63,8 +65,7 @@ class AuthController extends Controller {
             return redirect('/email/verify');
 
         } catch (\Exception $e) {
-            // dd('masuk catch');
-            //throw $th;
+            throw $e;
         }
     }
 
