@@ -59,6 +59,54 @@
 
                     <form id="formRegister" action="register" method="POST" enctype="multipart/form-data">
                         @csrf
+
+                        <div id="register-section5" class="hidden">
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary mb-3 circular-btn" id="btnBack4"><i class="bi bi-arrow-left"></i></button>
+                                <div class="row">
+                                    <div class="col-md-12 col-12">
+                                        <div class="form-group">
+                                            <label for="nominal">Nominal Simpanan Pokok</label>
+                                            <input type="text" id="nominal" class="form-control" placeholder="Nominal Simpanan Pokok" name="nominal" value="{{old('nominal')}}">
+                                            <p id="nominal-check" style="color: red; display: none;">Nominal Simpanan Pokok harus diisi</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-12">
+                                        <div class="form-group">
+                                            <label for="simpanan">Bukti Pembayaran</label>
+                                            <input type="file" class="image-exif-filepond" name="simpanan" accept="image/*">
+                                        </div>
+                                    </div>
+                                    
+
+                                    <div class="col-12 d-flex justify-content-end">
+                                        <button type="button" class="btn btn-primary me-1 mb-1" id="btnContinue4">Lanjutkan</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="register-section3" class="hidden">
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary mb-3 circular-btn" id="btnBack2"><i class="bi bi-arrow-left"></i></button>
+                                <div class="row">
+                                    <div class="col-md-12 col-12 text-center">
+                                        <img src="/main/assets/compiled/png/simpanan_pokok.png" width="55%" alt="Logo">
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-primary btn-block shadow-lg mt-1" id="openSimpanan">Buka Simpanan Pokok</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-outline-primary btn-block shadow-lg mt-1" id="skipSimpanan">Nanti Saja</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div id="register-section1" class="card-content">
                             <div class="card-body">
                                 <a href="{{route('login')}}" class="btn btn-primary mb-3 circular-btn" role="button"><i class="bi bi-arrow-left"></i></a>
@@ -162,15 +210,14 @@
                             </div>
                         </div>
 
-                        <div id="register-section3" class="hidden">
+                        <div id="register-section4" class="hidden">
                             <div class="card-body">
-                                <button type="button" class="btn btn-primary mb-3 circular-btn" id="btnBack2"><i class="bi bi-arrow-left"></i></button>
+                                <button type="button" class="btn btn-primary mb-3 circular-btn" id="btnBack3"><i class="bi bi-arrow-left"></i></button>
                                 <div class="row">
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="ktp">Foto KTP</label>
-                                            <input type="file" class="image-exif-filepond" name="ktp" accept="image/*">
-                                            {{-- <input class="form-control @error('image') is-invalid @enderror" type="file" id="image" name="image" accept="image/*" onchange="previewImage()"> --}}
+                                            <input type="file" class="image-resize-filepond" name="ktp" accept="image/*">
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-12">
@@ -186,6 +233,7 @@
                                 <p class='text-gray-600'>Sudah punya akun? <a href="{{route('login')}}" class="font-bold">Masuk</a></p>
                             </div>
                         </div>
+                        
                     </form>
                 </div>
             </div>
@@ -211,6 +259,8 @@
 <script src="/main/assets/extensions/filepond/filepond.js"></script>
 <script src="/main/assets/extensions/toastify-js/src/toastify.js"></script>
 <script src="/main/assets/static/js/pages/filepond.js"></script>
+
+<script src="/vendor/sweetalert/sweetalert.all.js"></script>
 
 <script>
     $(document).ready(function() {
@@ -440,6 +490,16 @@
             }
         });
 
+        $("#btnContinue3").click(function() {
+            $("#register-section3").hide();
+            $("#register-section4").show();
+        });
+
+        $("#btnContinue4").click(function() {
+            $("#register-section5").hide();
+            $("#register-section4").show();
+        });
+
         $("#btnBack").click(function() {
             $("#register-section2").hide();
             $("#register-section1").show();
@@ -448,6 +508,38 @@
         $("#btnBack2").click(function() {
             $("#register-section3").hide();
             $("#register-section2").show();
+        });
+
+        $("#btnBack3").click(function() {
+            $("#register-section4").hide();
+            $("#register-section3").show();
+        });
+
+        $("#btnBack4 ").click(function() {
+            $("#register-section5").hide();
+            $("#register-section3").show();
+        });
+
+        $("#openSimpanan").click(function() {
+            $("#register-section3").hide();
+            $("#register-section5").show();
+        });
+
+        $("#skipSimpanan").click(function(event) {
+            event.preventDefault();
+            Swal.fire({
+            title: 'Lewati Buka Simpanan?',
+            text: 'Simpanan pokok harus dibayarkan saat pertama kali menjadi anggota UBSP. Anda dapat melewati ini, namun ingat bahwa akun Anda belum bisa diaktifkan selama belum membayar simpanan pokok.',
+            icon: 'question',
+            showDenyButton: true,
+            confirmButtonText: 'Ya, lewati',
+            denyButtonText: 'Tidak',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $("#register-section3").hide();
+                    $("#register-section4").show();
+                }
+            });
         });
     });
 </script>

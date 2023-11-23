@@ -71,13 +71,10 @@
                                     <div class="submenu-group-wrapper">
                                         <ul class="submenu-group">
                                             <li class="submenu-item">
-                                                <a href="{{ route('simpanan-add') }}" class="submenu-link">Pengajuan</a>
+                                                <a href="{{ route('add-simpanan') }}" class="submenu-link">Pengajuan</a>
                                             </li>
                                             <li class="submenu-item">
-                                                <a href="{{ route('simpanan-mutation') }}" class="submenu-link">Mutasi Simpanan</a>
-                                            </li>
-                                            <li class="submenu-item">
-                                                <a href="{{ route('simpanan-recap') }}" class="submenu-link">Rekap Simpanan</a>
+                                                <a href="{{ route('recap-simpanan') }}" class="submenu-link">Rekap Simpanan</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -95,13 +92,10 @@
                                     <div class="submenu-group-wrapper">
                                         <ul class="submenu-group">
                                             <li class="submenu-item">
-                                                <a href="{{ route('tabungan-add') }}" class="submenu-link">Pengajuan</a>
+                                                <a href="{{ route('add-tabungan') }}" class="submenu-link">Pengajuan</a>
                                             </li>
                                             <li class="submenu-item">
-                                                <a href="{{ route('tabungan-mutation') }}" class="submenu-link">Mutasi Tabungan</a>
-                                            </li>
-                                            <li class="submenu-item">
-                                                <a href="{{ route('tabungan-recap') }}" class="submenu-link">Rekap Tabungan</a>
+                                                <a href="{{ route('recap-tabungan') }}" class="submenu-link">Rekap Tabungan</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -117,16 +111,16 @@
                                     <div class="submenu-group-wrapper">
                                         <ul class="submenu-group">
                                             <li class="submenu-item">
-                                                <a href="{{ route('credit-add') }}" class="submenu-link">Pengajuan</a>
+                                                <a href="{{ route('add-kredit') }}" class="submenu-link">Pengajuan</a>
                                             </li>
                                             <li class="submenu-item">
-                                                <a href="{{ route('credit-angsuran-add') }}" class="submenu-link">Angsuran</a>
+                                                <a href="{{ route('add-angsuran') }}" class="submenu-link">Angsuran</a>
                                             </li>
                                             <li class="submenu-item">
-                                                <a href="{{ route('credit-recap') }}" class="submenu-link">Rekap Kredit</a>
+                                                <a href="{{ route('recap-kredit') }}" class="submenu-link">Rekap Kredit</a>
                                             </li>
                                             <li class="submenu-item">
-                                                <a href="{{ route('credit-angsuran-recap') }}" class="submenu-link">Rekap Angsuran</a>
+                                                <a href="{{ route('recap-angsuran') }}" class="submenu-link">Rekap Angsuran</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -175,10 +169,10 @@
                                     <div class="submenu-group-wrapper">
                                         <ul class="submenu-group">
                                             <li class="submenu-item">
-                                                <a href="{{route('profile-setting')}}" class="submenu-link">Ubah Data Diri</a>
+                                                <a href="{{route('edit-profile')}}" class="submenu-link">Ubah Data Diri</a>
                                             </li>
                                             <li class="submenu-item">
-                                                <a href="{{route('password-setting')}}" class="submenu-link">Ubah Password</a>
+                                                <a href="{{route('edit-password')}}" class="submenu-link">Ubah Password</a>
                                             </li>
                                         </ul>
                                     </div>

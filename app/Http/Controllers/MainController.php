@@ -17,43 +17,49 @@ class MainController extends Controller
     public function addSimpanan() {
         $user = Auth::user();
 
-        return view('main.saving-add', compact(['user']));
+        return view('main.simpanan-add', compact(['user']));
     }
 
     public function addTabungan() {
         $user = Auth::user();
 
-        return view('main.saving-add', compact(['user']));
+        return view('main.tabungan-add', compact(['user']));
     }
 
-    public function addCredit() {
+    public function addKredit() {
         $user = Auth::user();
 
-        return view('main.credit-add', compact(['user']));
+        return view('main.kredit-add', compact(['user']));
     }
 
     public function addAngsuran() {
         $user = Auth::user();
 
-        return view('main.credit-angsuran-add', compact(['user']));
+        return view('main.angsuran-add', compact(['user']));
     }
 
-    public function recapSaving() {
+    public function recapSimpanan() {
         $user = Auth::user();
 
-        return view('main.saving-recap', compact(['user']));
+        return view('main.simpanan-recap', compact(['user']));
     }
 
-    public function recapCredit() {
+    public function recapTabungan() {
         $user = Auth::user();
 
-        return view('main.credit-recap', compact(['user']));
+        return view('main.tabungan-recap', compact(['user']));
+    }
+
+    public function recapKredit() {
+        $user = Auth::user();
+
+        return view('main.kredit-recap', compact(['user']));
     }
 
     public function recapAngsuran() {
         $user = Auth::user();
 
-        return view('main.credit-angsuran-recap', compact(['user']));
+        return view('main.angsuran-recap', compact(['user']));
     }
 
     public function showEditProfile(Request $request) {

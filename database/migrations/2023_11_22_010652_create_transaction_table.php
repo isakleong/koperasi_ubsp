@@ -19,6 +19,7 @@ return new class extends Migration
             $table->bigInteger('total');
             $table->tinyInteger('method');
             $table->timestamp('transactionDate')->nullable();
+            $table->string('image')->nullable();
             $table->string('notes');
             $table->tinyInteger('status')->default(1);
             $table->timestamp('approvedOn')->nullable();
