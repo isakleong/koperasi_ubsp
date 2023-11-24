@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
+use Ramsey\Uuid\Uuid;
 
 class AuthController extends Controller {
     public function register() {
@@ -29,9 +30,12 @@ class AuthController extends Controller {
             $input = $request->all();
 
             $nominal = $input['nominal'];
+            $nominal = str_replace(',', '', $nominal);
 
             $input['password'] = Hash::make($input['password']);
-            $input['memberId'] = 'MUBSP' . date('Ymd') . str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+            
+            $uuid4 = Uuid::uuid4()->getHex();
+            $input['memberId'] = 'MUBSP' . date('Ymd') . $uuid4;
 
             if($imageKTP = $request->file('ktp')) {
                 $destinationPath = 'image/upload/';
@@ -64,6 +68,8 @@ class AuthController extends Controller {
             $input['registDate'] = date('Y-m-d H:i:s');
 
             $user = User::create($input);
+
+
             Image::make($imageKTP)->resize(1024, 768, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($input['ktp']);
@@ -81,7 +87,7 @@ class AuthController extends Controller {
             
             //insert into transaction
             $arrTransaction = [];
-            $arrTransaction["accountId"] = "MUAC-001";
+            $arrTransaction["accountId"] = $userAccount->accountId;
             $arrTransaction["kind"] = "pokok";
             $arrTransaction["total"] = $nominal;
             $arrTransaction["method"] = 1;
@@ -100,6 +106,17 @@ class AuthController extends Controller {
         } catch (\Exception $e) {
             throw $e;
         }
+    }
+
+    public function generateMemberId($user)
+    {
+        $indexNo = sprintf("%04d", $user->id);
+        $joinDate = date('ymd', strtotime($user->created_at));
+
+        // Gabungkan semua elemen untuk membentuk memberId
+        $memberId = "MUBSP" . $joinDate . $indexNo;
+
+        return $memberId;
     }
 
     public function login() {
