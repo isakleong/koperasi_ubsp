@@ -73,21 +73,25 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])->middle
 Route::middleware(['auth', 'verified'])->group(function() {
     //GET REQUEST
     Route::get('/', [MainController::class, 'index']);
-    Route::get('/simpanan/pengajuan', [MainController::class, 'addSimpanan'])->name('add-simpanan');
-    Route::get('/simpanan/rekap', [MainController::class, 'recapSimpanan'])->name('recap-simpanan');
+    Route::get('/simpanan/pengajuan', [MainController::class, 'showFormData'])->name('add-simpanan');
+    Route::get('/simpanan/rekap', [MainController::class, 'showFormData'])->name('recap-simpanan');
 
-    Route::get('/tabungan/pengajuan', [MainController::class, 'addTabungan'])->name('add-tabungan');
-    Route::get('/tabungan/rekap', [MainController::class, 'recapTabungan'])->name('recap-tabungan');
+    Route::get('/tabungan/pengajuan', [MainController::class, 'showFormData'])->name('add-tabungan');
+    Route::get('/tabungan/rekap', [MainController::class, 'showFormData'])->name('recap-tabungan');
 
-    Route::get('/kredit/pengajuan', [MainController::class, 'addKredit'])->name('add-kredit');
-    Route::get('/angsuran/pengajuan', [MainController::class, 'addAngsuran'])->name('add-angsuran');
-    Route::get('/kredit/rekap', [MainController::class, 'recapKredit'])->name('recap-kredit');
-    Route::get('/angsuran/rekap', [MainController::class, 'recapAngsuran'])->name('recap-angsuran');
+    Route::get('/kredit/pengajuan', [MainController::class, 'showFormData'])->name('add-kredit');
+    Route::get('/angsuran/pengajuan', [MainController::class, 'showFormData'])->name('add-angsuran');
+    Route::get('/kredit/rekap', [MainController::class, 'showFormData'])->name('recap-kredit');
+    Route::get('/angsuran/rekap', [MainController::class, 'showFormData'])->name('recap-angsuran');
 
-    Route::get('/pengaturan/profile', [MainController::class, 'showEditProfile'])->name('edit-profile');
-    Route::get('/pengaturan/password', [MainController::class, 'showEditPassword'])->name('edit-password');
+    Route::get('/pengaturan/profile', [MainController::class, 'showFormData'])->name('edit-profile');
+    Route::get('/pengaturan/password', [MainController::class, 'showFormData'])->name('edit-password');
+    //END OF GET REQUEST
 
     //POST REQUEST
+    Route::put('/simpanan/pengajuan', [MainController::class, 'saveSimpanan'])->name('save-simpanan');
+
+
     Route::put('/pengaturan/profile/{id}', [MainController::class, 'editProfile'])->name('profile-update');
     Route::post('/pengaturan/password', [MainController::class, 'editPassword'])->name('password-update');
 });

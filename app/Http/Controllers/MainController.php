@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Str;
 
@@ -21,64 +22,32 @@ class MainController extends Controller
         return view('main.index', compact(['user']));
     }
 
-    public function addSimpanan() {
+    public function showFormData() {
         $user = Auth::user();
 
-        return view('main.simpanan-add', compact(['user']));
-    }
+        $parameter = Route::currentRouteName();
 
-    public function addTabungan() {
-        $user = Auth::user();
-
-        return view('main.tabungan-add', compact(['user']));
-    }
-
-    public function addKredit() {
-        $user = Auth::user();
-
-        return view('main.kredit-add', compact(['user']));
-    }
-
-    public function addAngsuran() {
-        $user = Auth::user();
-
-        return view('main.angsuran-add', compact(['user']));
-    }
-
-    public function recapSimpanan() {
-        $user = Auth::user();
-
-        return view('main.simpanan-recap', compact(['user']));
-    }
-
-    public function recapTabungan() {
-        $user = Auth::user();
-
-        return view('main.tabungan-recap', compact(['user']));
-    }
-
-    public function recapKredit() {
-        $user = Auth::user();
-
-        return view('main.kredit-recap', compact(['user']));
-    }
-
-    public function recapAngsuran() {
-        $user = Auth::user();
-
-        return view('main.angsuran-recap', compact(['user']));
-    }
-
-    public function showEditProfile(Request $request) {
-        $user = Auth::user();
-
-        return view('main.profile-edit', compact(['user']));
-    }
-
-    public function showEditPassword(Request $request) {
-        $user = Auth::user();
-
-        return view('main.password-edit', compact(['user']));
+        if ($parameter == "add-simpanan") {
+            return view('main.simpanan-add', compact(['user']));
+        } elseif ($parameter == "recap-simpanan") {
+            return view('main.simpanan-recap', compact(['user']));
+        } elseif ($parameter == "add-tabungan") {
+            return view('main.tabungan-add', compact(['user']));
+        } elseif ($parameter == "recap-tabungan") {
+            return view('main.tabungan-recap', compact(['user']));
+        } elseif ($parameter == "add-kredit") {
+            return view('main.kredit-add', compact(['user']));
+        } elseif ($parameter == "add-angsuran") {
+            return view('main.angsuran-add', compact(['user']));
+        } elseif ($parameter == "recap-kredit") {
+            return view('main.kredit-recap', compact(['user']));
+        } elseif ($parameter == "recap-angsuran") {
+            return view('main.angsuran-recap', compact(['user']));
+        } elseif ($parameter == "edit-profile") {
+            return view('main.profile-edit', compact(['user']));
+        } elseif ($parameter == "edit-password") {
+            return view('main.password-edit', compact(['user']));
+        }
     }
 
     public function editProfile(Request $request, $id) {
