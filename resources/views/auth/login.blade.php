@@ -53,7 +53,7 @@
                     </form>
                     <div class="text-center mt-5 text-lg fs-4">
                         <p class="text-gray-600">Belum punya akun? <a href="{{route('register')}}" class="font-bold">Daftar</a></p>
-                        <p><a class="font-bold" href="{{route('forgot-password')}}">Lupa Password?</a></p>
+                        <p><a class="font-bold" href="{{route('password.request')}}">Lupa Password?</a></p>
                     </div>
                 </div>
             </div>

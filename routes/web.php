@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MainController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,12 +43,32 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 })->middleware(['auth', 'signed'])->name('verification.verify');
 //END OF USER AUTHENTICATION (LOGIN AND REGISTER)
 
-
+//RESET PASSWORD
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
-})->name('forgot-password');
+})->middleware('guest')->name('password.request');
 
-Route::get('/test', [MainController::class, 'test']);
+Route::post('/forgot-password', function (Request $request) {
+    $request->validate(['email' => 'required|email']);
+ 
+    $status = Password::sendResetLink(
+        $request->only('email')
+    );
+ 
+    return $status === Password::RESET_LINK_SENT
+        ? back()->with(['status' => __($status)])
+        : back()->withErrors(['email' => __($status)]);
+})->middleware('guest')->name('password.email');
+
+Route::get('/reset-password/{token}', function (string $token) {
+    return view('auth.reset-password', ['token' => $token]);
+})->middleware('guest')->name('password.reset');
+
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->middleware('guest')->name('password.update');
+
+//END OF RESET PASSWORD
+
+// Route::get('/test', [MainController::class, 'test']);
 
 Route::middleware(['auth', 'verified'])->group(function() {
     //GET REQUEST

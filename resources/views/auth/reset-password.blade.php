@@ -25,8 +25,8 @@
             <div class="auth-logo text-center">
                 <a href="/"><img src="/main/assets/static/images/logo/UBSP-logos_transparent.png" alt="Logo"></a>
             </div>
-            <h1 class="auth-title">Lupa Password</h1>
-            <p class="auth-subtitle mb-5">Masukkan email dan kami akan mengirimkan link untuk reset password</p>
+            <h1 class="auth-title">Reset Password</h1>
+            <p class="auth-subtitle mb-5">Masukkan password baru Anda</p>
 
             @if ($errors->any())
                 <div class="alert alert-danger">
@@ -43,20 +43,25 @@
                 </div>
             @endif
 
-            <form action="{{route('password.email')}}" method="post">
+            <form action="{{route('password.update')}}" method="post">
                 @csrf
+                <input type="hidden" name="token" value="{{request()->token}}">
+                <input type="hidden" name="email" value="{{request()->email}}">
+
                 <div class="form-group position-relative has-icon-left mb-4">
-                    <input type="email" class="form-control form-control-xl" placeholder="Email" name="email">
+                    <input type="password" class="form-control form-control-xl" placeholder="Password" name="password">
                     <div class="form-control-icon">
-                        <i class="bi bi-envelope"></i>
+                        <i class="bi bi-lock-fill"></i>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Kirim</button>
+                <div class="form-group position-relative has-icon-left mb-4">
+                    <input type="password" class="form-control form-control-xl" placeholder="Konfirmasi Password" name="password_confirmation">
+                    <div class="form-control-icon">
+                        <i class="bi bi-lock-fill"></i>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Reset</button>
             </form>
-            <div class="text-center mt-5 text-lg fs-4">
-                <p class='text-gray-600'>Sudah ingat akun Anda? <a href="{{route('login')}}" class="font-bold">Masuk</a>
-                </p>
-            </div>
         </div>
     </div>
     <div class="col-lg-7 d-none d-lg-block">

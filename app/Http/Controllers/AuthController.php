@@ -13,6 +13,8 @@ use Intervention\Image\Facades\Image;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller {
     public function register() {
@@ -59,7 +61,6 @@ class AuthController extends Controller {
             $char2 = ($minute + $second + ($salt * 7)) % 16;
             $char3 = ($minute + ord($id[0]) + ($salt * 7)) % 16;
             $res = strtoupper(dechex($char1)) . strtoupper(dechex($char2)) . $salt . strtoupper(dechex($char3));
-            $input['lname'] = $res;
             $input['password'] = Hash::make($res.$input['password']);
             // $input['password'] = Hash::make($input['password']);
 
@@ -175,6 +176,45 @@ class AuthController extends Controller {
         return redirect()->back()->withErrors([
             'loginError' => 'Email atau password salah, silahkan coba lagi'
         ]);
+    }
+
+    public function resetPassword(Request $request) {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+     
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                //secure new password with salt
+                $memberId = $user->memberId;
+                $id = substr($memberId, -1);
+                $salt = substr($memberId, 18, 1);
+                $carbonDate = Carbon::parse($user->registDate);
+                $hour = $carbonDate->format('H');
+                $minute = $carbonDate->format('i');
+                $second = $carbonDate->format('s');
+
+                $char1 = ($minute + $hour + ($salt * 7)) % 16;
+                $char2 = ($minute + $second + ($salt * 7)) % 16;
+                $char3 = ($minute + ord($id[0]) + ($salt * 7)) % 16;
+                $res = strtoupper(dechex($char1)) . strtoupper(dechex($char2)) . $salt . strtoupper(dechex($char3));
+
+                $user->forceFill([
+                    'password' => Hash::make($res.$password)
+                ])->setRememberToken(Str::random(60));
+     
+                $user->save();
+     
+                event(new PasswordReset($user));
+            }
+        );
+     
+        return $status === Password::PASSWORD_RESET
+            ? redirect()->route('login')->with('status', __($status))
+            : back()->withErrors(['email' => [__($status)]]);
     }
 
     public function logout() {

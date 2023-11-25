@@ -12,16 +12,7 @@ use Illuminate\Support\Str;
 class MainController extends Controller
 {
     public function test() {
-        $dateTimeString = '2023-11-25 11:03:54';
-        // Parse the datetime string into a Carbon instance
-        $carbonDate = Carbon::parse($dateTimeString);
-
-        // Format hour, minute, and second with leading zeros
-        $hour = $carbonDate->format('H');       // 11
-        $minute = $carbonDate->format('i');     // 03
-        $second = $carbonDate->format('s');
-
-        print($minute);
+        return view('auth.test');
     }
 
     public function index() {
