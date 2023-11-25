@@ -37,7 +37,7 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
     $user = $request->user();
 
     // Update the joinDate column
-    $user->update(['joinDate' => now()]); // Set 'joinDate' to the current timestamp
+    // $user->update(['joinDate' => now()]); // Set 'joinDate' to the current timestamp
  
     return redirect('/');
 })->middleware(['auth', 'signed'])->name('verification.verify');
@@ -84,10 +84,10 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::get('/kredit/rekap', [MainController::class, 'recapKredit'])->name('recap-kredit');
     Route::get('/angsuran/rekap', [MainController::class, 'recapAngsuran'])->name('recap-angsuran');
 
-    Route::get('/pengaturan/profile', [MainController::class, 'editProfile'])->name('edit-profile');
-    Route::get('/pengaturan/password', [MainController::class, 'editPassword'])->name('edit-password');
+    Route::get('/pengaturan/profile', [MainController::class, 'showEditProfile'])->name('edit-profile');
+    Route::get('/pengaturan/password', [MainController::class, 'showEditPassword'])->name('edit-password');
 
     //POST REQUEST
-    // Route::put('/pengaturan/profile/{id}', [MainController::class, 'editProfile'])->name('profile-setting-update');
-    // Route::post('/pengaturan/password', [MainController::class, 'editPassword'])->name('password-setting-update');
+    Route::put('/pengaturan/profile/{id}', [MainController::class, 'editProfile'])->name('profile-update');
+    Route::post('/pengaturan/password', [MainController::class, 'editPassword'])->name('password-update');
 });

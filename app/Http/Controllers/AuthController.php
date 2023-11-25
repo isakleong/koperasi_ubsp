@@ -91,7 +91,7 @@ class AuthController extends Controller {
 
                 $buktiSimpanan = $destinationPath.$imageName;
             }
-
+            $input["status"] = 1;
             $user = User::create($input);
 
 

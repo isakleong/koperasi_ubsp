@@ -11,15 +11,17 @@
         type="image/png">
 
     <link rel="stylesheet" href="/main/assets/compiled/css/app.css">
+    <link rel="stylesheet" href="/main/assets/compiled/css/animation.css">
     <!-- uncomment for dark mode -->
     <!-- <link rel="stylesheet" href="/main/assets/compiled/css/app-dark.css"> -->
     <link rel="stylesheet" href="/main/assets/compiled/css/iconly.css">
     <link rel="stylesheet" href="/main/assets/extensions/@fortawesome/fontawesome-free/css/all.min.css">
+
     @yield('vendorCSS')
 
 </head>
 
-<body>
+<body class="d-flex flex-column h-100">
     <!-- uncomment for dark mode -->
     <!-- <script src="/main/assets/static/js/initTheme.js"></script> -->
     <div id="app">
@@ -184,9 +186,19 @@
                 </nav>
             </header>
 
-            @yield('content')
+            @if ($user->status == 1)
+                <div class="content-wrapper container">
+                    <div class="page-heading">
+                        <h3>Selamat Datang, {{ucfirst($user->fname)}}</h3>
+                    </div>
+            
+                    <div class="pulse d-flex align-items-center justify-content-center mt-5">Akun Anda sedang ditinjau oleh kami. Setelah disetujui, Anda dapat mengakses seluruh fitur di Sistem Akuntansi UBSP</div>
+                </div>
+            @else
+                @yield('content')
+            @endif
 
-            <footer>
+            {{-- <footer>
                 <div class="container">
                     <div class="footer clearfix mb-0 text-muted">
                         <div class="float-end">
@@ -194,7 +206,19 @@
                         </div>
                     </div>
                 </div>
+            </footer> --}}
+
+            <footer id="sticky-at-bottom" class="footer mt-auto py-3">
+                <<div class="container">
+                    <div class="footer clearfix mb-0 text-muted">
+                        <div class="float-end">
+                            <p>2023 &copy; Sistem Akuntansi UBSP</p>
+                        </div>
+                    </div>
+                </div>
             </footer>
+
+
         </div>
     </div>
 

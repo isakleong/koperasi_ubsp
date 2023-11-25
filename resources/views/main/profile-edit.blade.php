@@ -35,7 +35,7 @@
                 <div class="col-12 col-lg-8">
                     <div class="card">
                         <div class="card-body">
-                            <form action="{{ route('profile-setting-update', ['id' => $user->id]) }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('profile-update', ['id' => $user->id]) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <div id="register-section1" class="card-content">

@@ -5,8 +5,9 @@
 @section('content')
 <div class="content-wrapper container">
     <div class="page-heading">
-        <h3>Beranda Anggota</h3>
+        <h3>Selamat Datang, {{ucfirst($user->fname)}}</h3>
     </div>
+
     <div class="page-content">
         <section class="row">
             <div class="col-12 col-lg-12">
@@ -194,6 +195,8 @@
 </div>
 @endsection
 
-@section('vendorJS')
-<script src="/main/assets/static/js/pages/dashboard.js"></script>
-@endsection
+@if ($user->status == 2)
+    @section('vendorJS')
+    <script src="/main/assets/static/js/pages/dashboard.js"></script>
+    @endsection
+@endif
