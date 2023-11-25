@@ -23,7 +23,7 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="" class="form form-vertical" method="post">
+                            <form action="{{route('store.simpanan')}}" class="form form-vertical" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-body">
                                     <div class="row">
@@ -39,6 +39,9 @@
                                                         </select>
                                                     </fieldset>
                                                 </div>
+                                                @error('kind')
+                                                    <p style="color: red">{{$message}}</p>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="col-12">
@@ -48,15 +51,21 @@
                                                     <input type="text" class="form-control" placeholder="Nominal" id="nominal" name="nominal" />
                                                     <div class="form-control-icon"><i class="bi bi-cash"></i></div>
                                                 </div>
+                                                @error('nominal')
+                                                    <p style="color: red">{{$message}}</p>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="col-12">
                                             <div class="form-group has-icon-left">
-                                                <label for="notes">Keterangan</label>
+                                                <label for="notes">Keterangan (opsional)</label>
                                                 <div class="position-relative">
                                                     <textarea class="form-control" id="notes" rows="3" name="notes"></textarea>
                                                     <div class="form-control-icon"><i class="bi bi-info-square-fill"></i></div>
                                                 </div>
+                                                @error('notes')
+                                                    <p style="color: red">{{$message}}</p>
+                                                @enderror
                                             </div>
                                         </div>
 
@@ -81,9 +90,12 @@
                                             <div class="form-group has-icon-left">
                                                 <label for="mobile-id-icon">Bukti Pembayaran</label>
                                                 <div class="position-relative">
-                                                    <input type="file" class="image-exif-filepond" name="image"/>
+                                                    <input type="file" class="image-exif-filepond" name="image" accept="image/*"/>
                                                 </div>
                                             </div>
+                                            @error('image')
+                                                <p style="color: red">{{$message}}</p>
+                                            @enderror
                                         </div>
                                         <div class="col-12 d-flex justify-content-end">
                                             <button type="submit" class="btn btn-primary me-1 mb-1">Ajukan</button>
@@ -125,6 +137,20 @@
                 $('#bukti-trf').show();
             } else {
                 $('#bukti-trf').hide();
+            }
+        });
+
+        $('select').on('change', function() {
+            var data = $(this).val();
+            if(data.toLowerCase() == "simpanan wajib") {
+                $("#nominal").val("50,000");
+                $("#nominal").prop("readonly", true);
+            } else if(data.toLowerCase() == "simpanan sukarela") {
+                $("#nominal").val("");
+                $("#nominal").prop("readonly", false);
+            } else {
+                $("#nominal").val("");
+                $("#nominal").prop("readonly", false);
             }
         });
 

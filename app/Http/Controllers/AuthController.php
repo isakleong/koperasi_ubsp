@@ -85,7 +85,7 @@ class AuthController extends Controller {
             $buktiSimpanan = "";
             if($imageSimpanan = $request->file('simpanan')) {
                 $destinationPath = 'image/upload/';
-                $fileName = pathinfo($imageKK->getClientOriginalName(), PATHINFO_FILENAME);
+                $fileName = pathinfo($imageSimpanan->getClientOriginalName(), PATHINFO_FILENAME);
                 $generatedID = $fileName.hexdec(uniqid())."-".time(). ".";
                 $imageName = $generatedID.$imageSimpanan->getClientOriginalExtension();
 

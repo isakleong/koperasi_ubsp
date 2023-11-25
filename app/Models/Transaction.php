@@ -54,13 +54,13 @@ class Transaction extends Model
         }
 
         // Format the transactionDate (assuming $transactionDate is a valid DateTime object)
-        $formattedDate = $transactionDate->format('ymdHi');
+        $formattedDate = $transactionDate->format('ymd');
 
         // Count the total transactions on that date
         // $totalTransactions = static::whereDate('transactionDate', $transactionDate->toDateString())->count();
         $totalTransactions = static::where('accountId', $accountId)
-        ->whereDate('transactionDate', $transactionDate->format('Y-m-d'))
-        ->count();
+        ->where('transactionDate', 'LIKE', '%' . $transactionDate->format('Y-m-d') . '%')
+        ->count();        
 
         // Increment the total transactions
         $increment = str_pad($totalTransactions + 1, 3, '0', STR_PAD_LEFT);
