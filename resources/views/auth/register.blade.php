@@ -67,8 +67,7 @@
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="nominal">Nominal Simpanan Pokok</label>
-                                            <input type="text" id="nominal" class="form-control" placeholder="Nominal Simpanan Pokok" name="nominal" value="{{old('nominal')}}">
-                                            <p id="nominal-check" style="color: red; display: none;">Nominal Simpanan Pokok harus diisi</p>
+                                            <input type="text" id="nominal" class="form-control" placeholder="Nominal Simpanan Pokok" name="nominal" value="100,000" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-12">

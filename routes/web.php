@@ -46,6 +46,8 @@ Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
 })->name('forgot-password');
 
+Route::get('/test', [MainController::class, 'test']);
+
 Route::middleware(['auth', 'verified'])->group(function() {
     //GET REQUEST
     Route::get('/', [MainController::class, 'index']);

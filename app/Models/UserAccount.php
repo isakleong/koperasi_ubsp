@@ -21,32 +21,4 @@ class UserAccount extends Model
         'openDate',
         'closedDate',
     ];
-    
-    protected static function boot()
-    {
-        parent::boot();
-
-        // Register a creating event to set the custom primary key
-        static::creating(function ($model) {
-            // Check if the model doesn't have a primary key yet
-            if (!$model->getKey()) {
-                // Set the custom primary key
-                $model->setAttribute($model->getKeyName(), static::generateCustomPrimaryKey());
-            }
-        });
-    }
-
-    protected static function generateCustomPrimaryKey()
-    {
-        // Get the latest record
-        $latestRecord = static::latest()->first();
-
-        // Extract the numeric part and increment
-        $number = $latestRecord ? (int) substr($latestRecord->getKey(), 5) + 1 : 1;
-
-        // Format the custom primary key
-        $customPrimaryKey = 'MUAC-'.str_pad($number, 3, '0', STR_PAD_LEFT);
-
-        return $customPrimaryKey;
-    }
 }

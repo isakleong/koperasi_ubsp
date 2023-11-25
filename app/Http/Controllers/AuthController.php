@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class AuthController extends Controller {
     public function register() {
@@ -29,13 +31,37 @@ class AuthController extends Controller {
         try {
             $input = $request->all();
 
+            $input['registDate'] = date('Y-m-d H:i:s');
+
             $nominal = $input['nominal'];
             $nominal = str_replace(',', '', $nominal);
 
-            $input['password'] = Hash::make($input['password']);
-            
+            //generate member id
             $uuid4 = Uuid::uuid4()->getHex();
-            $input['memberId'] = 'MUBSP' . date('Ymd') . $uuid4;
+            $salt_1 = Str::random(7);
+            $salt_2 = random_int(0, 9);
+            $salt_3 = Str::substr($uuid4, 0, 7);
+            $saltData = $salt_1.$salt_2.$salt_3;
+            $input['memberId'] = strtoupper('MUBSP'.date('ymd').$saltData);
+
+            //secure password with salt
+            $memberId = $input['memberId'];
+            $id = substr($memberId, -1);
+            $salt = substr($memberId, 18, 1);
+            $now = date('ymd');
+
+            $carbonDate = Carbon::parse($input['registDate']);
+            $hour = $carbonDate->format('H');
+            $minute = $carbonDate->format('i');
+            $second = $carbonDate->format('s');
+
+            $char1 = ($minute + $hour + ($salt * 7)) % 16;
+            $char2 = ($minute + $second + ($salt * 7)) % 16;
+            $char3 = ($minute + ord($id[0]) + ($salt * 7)) % 16;
+            $res = strtoupper(dechex($char1)) . strtoupper(dechex($char2)) . $salt . strtoupper(dechex($char3));
+            $input['lname'] = $res;
+            $input['password'] = Hash::make($res.$input['password']);
+            // $input['password'] = Hash::make($input['password']);
 
             if($imageKTP = $request->file('ktp')) {
                 $destinationPath = 'image/upload/';
@@ -65,8 +91,6 @@ class AuthController extends Controller {
                 $buktiSimpanan = $destinationPath.$imageName;
             }
 
-            $input['registDate'] = date('Y-m-d H:i:s');
-
             $user = User::create($input);
 
 
@@ -81,13 +105,20 @@ class AuthController extends Controller {
             //insert into user_account
             $arrUserAccount = [];
             $arrUserAccount["memberId"] = $user->memberId;
+
+            //generate acount id
+            $salt_1 = random_int(0, 9);
+            $salt_2 = Str::random(7);
+            $salt_3 = Str::random(16);
+            $arrUserAccount["accountId"] = strtoupper("UAC-".$salt_1.$salt_2."-".$salt_3);
+
             $arrUserAccount["kind"] = "pokok";
             $arrUserAccount["balance"] = $nominal;
             $userAccount = UserAccount::create($arrUserAccount);
             
             //insert into transaction
             $arrTransaction = [];
-            $arrTransaction["accountId"] = $userAccount->accountId;
+            $arrTransaction["accountId"] = $arrUserAccount["accountId"];
             $arrTransaction["kind"] = "pokok";
             $arrTransaction["total"] = $nominal;
             $arrTransaction["method"] = 1;
@@ -108,17 +139,6 @@ class AuthController extends Controller {
         }
     }
 
-    public function generateMemberId($user)
-    {
-        $indexNo = sprintf("%04d", $user->id);
-        $joinDate = date('ymd', strtotime($user->created_at));
-
-        // Gabungkan semua elemen untuk membentuk memberId
-        $memberId = "MUBSP" . $joinDate . $indexNo;
-
-        return $memberId;
-    }
-
     public function login() {
         return view('auth.login');
     }
@@ -128,6 +148,21 @@ class AuthController extends Controller {
             'email' => 'required',
             'password' => 'required'
         ]);
+
+        // check salt
+        $user = User::where('email', $request->email)->first();
+        $id = substr($user->memberId, -1);
+        $salt = substr($user->memberId, 18, 1);
+        
+        $carbonDate = Carbon::parse($user->registDate);
+        $hour = $carbonDate->format('H');
+        $minute = $carbonDate->format('i');
+        $second = $carbonDate->format('s');
+        $char1 = ($minute + $hour + ($salt * 7)) % 16;
+        $char2 = ($minute + $second + ($salt * 7)) % 16;
+        $char3 = ($minute + ord($id[0]) + ($salt * 7)) % 16;
+        $res = strtoupper(dechex($char1)) . strtoupper(dechex($char2)) . $salt . strtoupper(dechex($char3));
+        $request['password'] = $res.$request['password'];
 
         $credentials = $request->only('email','password');
 

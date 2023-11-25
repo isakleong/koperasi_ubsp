@@ -3,11 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Str;
 
 class MainController extends Controller
 {
+    public function test() {
+        $dateTimeString = '2023-11-25 11:03:54';
+        // Parse the datetime string into a Carbon instance
+        $carbonDate = Carbon::parse($dateTimeString);
+
+        // Format hour, minute, and second with leading zeros
+        $hour = $carbonDate->format('H');       // 11
+        $minute = $carbonDate->format('i');     // 03
+        $second = $carbonDate->format('s');
+
+        print($minute);
+    }
+
     public function index() {
         $user = Auth::user();
 
