@@ -172,6 +172,10 @@ class AuthController extends Controller {
                 $request->session()->regenerate();
                 // return redirect('auth.login');
                 return redirect('/');
+            } else {
+                return redirect()->back()->withErrors([
+                    'loginError' => 'Email atau password salah, silahkan coba lagi'
+                ]);    
             }
         } else {
             return redirect()->back()->withErrors([
