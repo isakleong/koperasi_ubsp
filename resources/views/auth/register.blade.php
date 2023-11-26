@@ -113,21 +113,21 @@
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="fname">Nama Depan</label>
-                                            <input type="text" id="fname" class="form-control" placeholder="Nama Depan" name="fname" value="{{old('fname')}}">
+                                            <input type="text" id="fname" class="form-control" placeholder="Nama Depan" name="fname" value="{{old('fname')}}" oninput=capitalizeName(this)>
                                             <p id="fname-check" style="color: red; display: none;">Nama Depan harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="lname">Nama Belakang</label>
-                                            <input type="text" id="lname" class="form-control" placeholder="Nama Belakang" name="lname" value="{{old('lname')}}">
+                                            <input type="text" id="lname" class="form-control" placeholder="Nama Belakang" name="lname" value="{{old('lname')}}" oninput=capitalizeName(this)>
                                             <p id="lname-check" style="color: red; display: none;">Nama Belakang harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="birthplace">Tempat Lahir</label>
-                                            <input type="text" id="birthplace" class="form-control" placeholder="Tempat Lahir" name="birthplace" value="{{old('birthplace')}}">
+                                            <input type="text" id="birthplace" class="form-control" placeholder="Tempat Lahir" name="birthplace" value="{{old('birthplace')}}" oninput=capitalizeName(this)>
                                             <p id="birthplace-check" style="color: red; display: none;">Tempat Lahir harus diisi</p>
                                         </div>
                                     </div>
@@ -141,14 +141,14 @@
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="address">Alamat Tinggal</label>
-                                            <input type="text" id="address" class="form-control" name="address" placeholder="Alamat Tinggal" value="{{old('address')}}">
+                                            <input type="text" id="address" class="form-control" name="address" placeholder="Alamat Tinggal" value="{{old('address')}}" oninput=capitalizeName(this)>
                                             <p id="address-check" style="color: red; display: none;">Alamat Tinggal harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="workAddress">Alamat Kerja</label>
-                                            <input type="text" id="workAddress" class="form-control" name="workAddress" placeholder="Alamat Kerja" value="{{old('workAddress')}}">
+                                            <input type="text" id="workAddress" class="form-control" name="workAddress" placeholder="Alamat Kerja" value="{{old('workAddress')}}" oninput=capitalizeName(this)>
                                             <p id="workAddress-check" style="color: red; display: none;">Alamat Kerja harus diisi</p>
                                         </div>
                                     </div>
@@ -198,7 +198,7 @@
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="mothername">Nama Ibu Kandung</label>
-                                            <input type="text" class="form-control" id="mothername" name="mothername" placeholder="Nama Ibu Kandung" value="{{old('mothername')}}">
+                                            <input type="text" class="form-control" id="mothername" name="mothername" placeholder="Nama Ibu Kandung" value="{{old('mothername')}}" oninput=capitalizeName(this)>
                                             <p id="mothername-check" style="color: red; display: none;">Nama Ibu Kandung harus diisi</p>
                                         </div>
                                     </div>
@@ -262,6 +262,15 @@
 <script src="/vendor/sweetalert/sweetalert.all.js"></script>
 
 <script>
+    //capitalize input
+    function capitalizeName(input) {
+        const name = input.value.toLowerCase();
+        const words = name.split(' ');
+        const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+        input.value = capitalizedWords.join(' ');
+    }
+    //end of capitalize input
+
     $(document).ready(function() {
         //onchange
         // $("#fname").keyup(function () {

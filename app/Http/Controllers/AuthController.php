@@ -152,30 +152,32 @@ class AuthController extends Controller {
 
         // check salt
         $user = User::where('email', $request->email)->first();
-        $id = substr($user->memberId, -1);
-        $salt = substr($user->memberId, 18, 1);
-        
-        $carbonDate = Carbon::parse($user->registDate);
-        $hour = $carbonDate->format('H');
-        $minute = $carbonDate->format('i');
-        $second = $carbonDate->format('s');
-        $char1 = ($minute + $hour + ($salt * 7)) % 16;
-        $char2 = ($minute + $second + ($salt * 7)) % 16;
-        $char3 = ($minute + ord($id[0]) + ($salt * 7)) % 16;
-        $res = strtoupper(dechex($char1)) . strtoupper(dechex($char2)) . $salt . strtoupper(dechex($char3));
-        $request['password'] = $res.$request['password'];
+        if($user) {
+            $id = substr($user->memberId, -1);
+            $salt = substr($user->memberId, 18, 1);
+            
+            $carbonDate = Carbon::parse($user->registDate);
+            $hour = $carbonDate->format('H');
+            $minute = $carbonDate->format('i');
+            $second = $carbonDate->format('s');
+            $char1 = ($minute + $hour + ($salt * 7)) % 16;
+            $char2 = ($minute + $second + ($salt * 7)) % 16;
+            $char3 = ($minute + ord($id[0]) + ($salt * 7)) % 16;
+            $res = strtoupper(dechex($char1)) . strtoupper(dechex($char2)) . $salt . strtoupper(dechex($char3));
+            $request['password'] = $res.$request['password'];
 
-        $credentials = $request->only('email','password');
+            $credentials = $request->only('email','password');
 
-        if(Auth::attempt($credentials)){
-            $request->session()->regenerate();
-            // return redirect('auth.login');
-            return redirect('/');
+            if(Auth::attempt($credentials)){
+                $request->session()->regenerate();
+                // return redirect('auth.login');
+                return redirect('/');
+            }
+        } else {
+            return redirect()->back()->withErrors([
+                'loginError' => 'Email atau password salah, silahkan coba lagi'
+            ]);
         }
-
-        return redirect()->back()->withErrors([
-            'loginError' => 'Email atau password salah, silahkan coba lagi'
-        ]);
     }
 
     public function resetPassword(Request $request) {
