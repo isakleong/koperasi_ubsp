@@ -58,9 +58,9 @@ class Transaction extends Model
 
         // Count the total transactions on that date
         // $totalTransactions = static::whereDate('transactionDate', $transactionDate->toDateString())->count();
-        $totalTransactions = static::where('accountId', $accountId)
-        ->where('transactionDate', 'LIKE', '%' . $transactionDate->format('Y-m-d') . '%')
-        ->count();        
+
+        $totalTransactions = static::where('docId', 'LIKE', '%' . $memberId . '%')
+        ->where('transactionDate', 'LIKE', '%' . $transactionDate->format('Y-m-d') . '%')->count();
 
         // Increment the total transactions
         $increment = str_pad($totalTransactions + 1, 3, '0', STR_PAD_LEFT);

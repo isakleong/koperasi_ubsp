@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Models\UserAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
@@ -77,6 +76,7 @@ class MainController extends Controller
             }
 
             //check if user have user_account
+
             $user = Auth::user();
             $checkUAC = UserAccount::where('memberId', $user->memberId)
             ->where('kind', $input['kind'])
@@ -84,35 +84,52 @@ class MainController extends Controller
             
             //find data UAC
             if($checkUAC) {
-                $buktiSimpanan = "";
-                if($imageSimpanan = $request->file('image')) {
-                    $destinationPath = 'image/upload/'.$user->memberId.'/'.'simpanan/';
-                    File::makeDirectory($destinationPath, 0777, true, true);
-                    $fileName = pathinfo($imageSimpanan->getClientOriginalName(), PATHINFO_FILENAME);
-                    $generatedID = $fileName.hexdec(uniqid())."-".time(). ".";
-                    $imageName = $generatedID.$imageSimpanan->getClientOriginalExtension();
+                if ($checkUAC->openDate === null) { //update data
 
-                    $buktiSimpanan = $destinationPath.$imageName;
+                } else { //new data
+                    //insert into user_account
+                    $arrUserAccount = [];
+                    $arrUserAccount["memberId"] = $user->memberId;
+                    //generate acount id
+                    $salt_1 = random_int(0, 9);
+                    $salt_2 = Str::random(7);
+                    $salt_3 = Str::random(16);
+                    $arrUserAccount["accountId"] = strtoupper("UAC-".$salt_1.$salt_2."-".$salt_3);
+                    $arrUserAccount["kind"] = $input['kind'];
+                    $arrUserAccount["balance"] = $input['nominal'];
+                    UserAccount::create($arrUserAccount);
+                    //end of insert into user_account
+
+                    $buktiSimpanan = "";
+                    if($imageSimpanan = $request->file('image')) {
+                        $destinationPath = 'image/upload/'.$user->memberId.'/';
+                        $fileName = pathinfo($imageSimpanan->getClientOriginalName(), PATHINFO_FILENAME);
+                        $generatedID = $fileName.hexdec(uniqid())."-".time(). ".";
+                        $imageName = $generatedID.$imageSimpanan->getClientOriginalExtension();
+
+                        $buktiSimpanan = $destinationPath.$imageName;
+                    }
+
+                    //insert into transaction
+                    $arrTransaction = [];
+                    $arrTransaction["accountId"] = $arrUserAccount["accountId"];
+                    $arrTransaction["kind"] = $input['kind'];
+                    $arrTransaction["total"] = $input['nominal'];
+                    $arrTransaction["method"] = $input['method'];
+                    $arrTransaction["transactionDate"] = date('Y-m-d H:i:s');
+                    $arrTransaction["image"] = $buktiSimpanan;
+                    $arrTransaction["notes"] = $input['notes'];
+                    $arrTransaction["status"] = 1;
+                    Transaction::create($arrTransaction);
+
+                    if($buktiSimpanan != "") {
+                        Image::make($imageSimpanan)->resize(1024, 768, function ($constraint) {
+                            $constraint->aspectRatio();
+                        })->save($input['image']);
+                    }
+                    //end of insert into transaction
                 }
-
-                //insert into transaction
-                $arrTransaction = [];
-                $arrTransaction["accountId"] = $checkUAC->accountId;
-                $arrTransaction["kind"] = $input['kind'];
-                $arrTransaction["total"] = $input['nominal'];
-                $arrTransaction["method"] = $input['method'];
-                $arrTransaction["transactionDate"] = date('Y-m-d H:i:s');
-                $arrTransaction["image"] = $buktiSimpanan;
-                $arrTransaction["notes"] = $input['notes'];
-                $arrTransaction["status"] = 1;
-                Transaction::create($arrTransaction);
-
-                if($buktiSimpanan != "") {
-                    Image::make($imageSimpanan)->resize(1024, 768, function ($constraint) {
-                        $constraint->aspectRatio();
-                    })->save($input['image']);
-                }
-            } else { //user don't have any account
+            } else { //new data
                 //insert into user_account
                 $arrUserAccount = [];
                 $arrUserAccount["memberId"] = $user->memberId;
@@ -122,14 +139,28 @@ class MainController extends Controller
                 $salt_3 = Str::random(16);
                 $arrUserAccount["accountId"] = strtoupper("UAC-".$salt_1.$salt_2."-".$salt_3);
                 $arrUserAccount["kind"] = $input['kind'];
-                $arrUserAccount["balance"] = 0;
-                UserAccount::create($arrUserAccount);
+                $arrUserAccount["balance"] = $input['nominal'];
+
+                $typeValue = date('Y-m-d');
+                // $results = Transaction::whereRaw('transactionDate like ?', [strtolower("%$typeValue%")])->count(); //works
+
+                $results = Transaction::where('transactionDate', 'LIKE', '%' . date('Y-m-d') . '%')->count(); //works
+
+                
+                $totalTransactions = Transaction::where('accountId', 'UAC-5HHK41SW-P18KE9HJUAU22CDR')
+                ->where('transactionDate', 'LIKE', '%' . date('Y-m-d') . '%')->count();
+                $results = Transaction::where('accountId', $arrUserAccount["accountId"])->count(); //works
+                // $results = Transaction::where('accountId', 'LIKE', '%' . $arrUserAccount["accountId"] . '%' )->count();
+                dd($totalTransactions);
+
+
+
+                //UserAccount::create($arrUserAccount);
                 //end of insert into user_account
 
                 $buktiSimpanan = "";
                 if($imageSimpanan = $request->file('image')) {
-                    $destinationPath = 'image/upload/'.$user->memberId.'/'.'simpanan/';
-                    File::makeDirectory($destinationPath, 0777, true, true);
+                    $destinationPath = 'image/upload/'.$user->memberId.'/';
                     $fileName = pathinfo($imageSimpanan->getClientOriginalName(), PATHINFO_FILENAME);
                     $generatedID = $fileName.hexdec(uniqid())."-".time(). ".";
                     $imageName = $generatedID.$imageSimpanan->getClientOriginalExtension();
