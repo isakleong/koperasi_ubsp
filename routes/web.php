@@ -71,6 +71,9 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])->middle
 // Route::get('/test', [MainController::class, 'test']);
 
 Route::middleware(['auth', 'verified'])->group(function() {
+    //UNVERIFIED
+    Route::get('/user/activation', [MainController::class, 'userActivation'])->name('user.activation');
+
     //GET REQUEST
     Route::get('/', [MainController::class, 'index']);
     Route::get('/simpanan/pengajuan', [MainController::class, 'showFormData'])->name('add.simpanan');
@@ -89,6 +92,8 @@ Route::middleware(['auth', 'verified'])->group(function() {
     //END OF GET REQUEST
 
     //POST REQUEST
+    Route::post('/user/activation', [MainController::class, 'storeUserActivation'])->name('store.user.activation');
+
     Route::post('/simpanan/pengajuan', [MainController::class, 'storeSimpanan'])->name('store.simpanan');
     Route::post('/simpanan/rekap', [MainController::class, 'filterRecapSimpanan'])->name('filter.recap.simpanan');
 

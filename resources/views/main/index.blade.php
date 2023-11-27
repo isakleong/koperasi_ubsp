@@ -3,6 +3,7 @@
 @section('title') Sistem Akuntansi UBSP - Login @endsection
 
 @section('content')
+@include('sweetalert::alert')
 <div class="content-wrapper container">
     <div class="page-heading">
         <h3>Selamat Datang, {{ucfirst($user->fname)}}</h3>
@@ -195,8 +196,12 @@
 </div>
 @endsection
 
+@section('vendorJS')
+    <script src="/vendor/sweetalert/sweetalert.all.js"></script>
+@endsection
+
 @if ($user->status == 2)
     @section('vendorJS')
-    <script src="/main/assets/static/js/pages/dashboard.js"></script>
+        <script src="/main/assets/static/js/pages/dashboard.js"></script>
     @endsection
 @endif

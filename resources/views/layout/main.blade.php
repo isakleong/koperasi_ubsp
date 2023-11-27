@@ -194,6 +194,22 @@
             
                     <div class="pulse d-flex align-items-center justify-content-center mt-5">Akun Anda sedang ditinjau oleh kami. Setelah disetujui, Anda dapat mengakses seluruh fitur di Sistem Akuntansi UBSP</div>
                 </div>
+            @elseif ($user->status == 0)
+                @if (Route::currentRouteName() == 'user.activation')
+                    @yield('content')
+                @else
+                    <div class="content-wrapper container">
+                        <div class="page-heading">
+                            <h3>Selamat Datang, {{ucfirst($user->fname)}}</h3>
+                        </div>
+                
+                        <div class="pulse mt-5 text-center">
+                            <p>Anda belum terdaftar sebagai anggota Sistem Akuntansi UBSP.</p>
+                            <p>Silahkan menyelesaikan proses pendaftaran anggota dengan membayar simpanan pokok. Tekan tombol dibawah ini untuk melanjutkan proses pendaftaran.</p>
+                            <a href="{{route('user.activation')}}" class="btn btn-primary mt-3">Selesaikan Pendaftaran</a>
+                        </div>
+                    </div>
+                @endif
             @else
                 @yield('content')
             @endif
@@ -209,7 +225,7 @@
             </footer> --}}
 
             <footer id="sticky-at-bottom" class="footer mt-auto py-3">
-                <<div class="container">
+                <div class="container">
                     <div class="footer clearfix mb-0 text-muted">
                         <div class="float-end">
                             <p>2023 &copy; Sistem Akuntansi UBSP</p>
