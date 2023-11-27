@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('loan', function (Blueprint $table) {
             $table->string('docId')->primary();
+            $table->string('accountId')->required();
+            $table->foreign('accountId')->references('accountId')->on('user_account')->onDelete('restrict');
             $table->bigInteger('total');
             $table->integer('tenor');
             $table->float('rates');

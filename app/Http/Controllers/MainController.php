@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Loan;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserAccount;
@@ -620,18 +621,22 @@ class MainController extends Controller
             ],
             [
                 'tenor' => 'required|not_in:-- Pilih Lama Angsuran --|in:1 bulan,3 bulan,6 bulan,1 tahun',
-                'nominal' => 'required|numeric|min:50000',
-                'notes' => 'required',
-                'rates' => 'required',
+                'nominal' => 'required|numeric|min:1000000',
+                'notes' => 'required|text',
+                'rates' => 'required|numeric|in:0,5',
             ],
             [
                 'tenor.required' => 'Lama angsuran belum dipilih',
                 'tenor.not_in' => 'Lama angsuran belum dipilih',
                 'tenor.in' => 'Lama angsuran tidak valid',
                 'nominal.required' => 'Nominal belum diisi',
-                'nominal.min' => 'Minimal nominal pinjaman adalah Rp 50,000',
+                'nominal.min' => 'Minimal nominal pinjaman adalah Rp 1,000,000',
+                'nominal.numeric' => 'Nominal tidak valid',
                 'notes.required' => 'Tujuan kredit belum diisi',
-                'rates.required' => 'Bunga pinjaman tidak valid'
+                'notes.text' => 'Tujuan kredit tidak valid',
+                'rates.required' => 'Bunga pinjaman belum diisi',
+                'rates.in' => 'Bunga pinjaman tidak valid',
+                'rates.numeric' => 'Bunga pinjaman tidak valid',
             ],
         );
 
@@ -645,93 +650,31 @@ class MainController extends Controller
             //check if user have user_account
             $user = Auth::user();
 
+            //insert into user_account
+            $arrUserAccount = [];
+            $arrUserAccount["memberId"] = $user->memberId;
+            //generate acount id
+            $salt_1 = random_int(0, 9);
+            $salt_2 = Str::random(7);
+            $salt_3 = Str::random(16);
+            $arrUserAccount["accountId"] = strtoupper("UAC-".$salt_1.$salt_2."-".$salt_3);
+            $arrUserAccount["kind"] = 'kredit';
+            $arrUserAccount["balance"] = 0;
+            UserAccount::create($arrUserAccount);
+            //end of insert into user_account
 
+            //insert into loan
+            $arrLoan = [];
+            $arrLoan["accountId"] = $arrUserAccount["accountId"];
+            $arrLoan["total"] = $input['nominal'];
+            $arrLoan["tenor"] = $input['tenor'];
+            $arrLoan["requestDate"] = date('Y-m-d H:i:s');
+            $arrLoan["notes"] = $input['notes'];
+            $arrLoan["status"] = 1;
+            Loan::create($arrLoan);
+            //end of insert into loan
 
-            $checkUAC = DB::table('user_account as uac')
-                ->select(DB::raw('uac.*'))
-                ->where('memberId', $user->memberId)
-                ->where('kind', $input['kind'])
-                ->get()->first();
-            
-            //find data UAC
-            if($checkUAC) {
-                $buktiSimpanan = "";
-                if($imageSimpanan = $request->file('image')) {
-                    $destinationPath = 'image/upload/'.$user->memberId.'/'.'simpanan/';
-                    File::makeDirectory($destinationPath, 0777, true, true);
-                    $fileName = pathinfo($imageSimpanan->getClientOriginalName(), PATHINFO_FILENAME);
-                    $generatedID = $fileName.hexdec(uniqid())."-".time(). ".";
-                    $imageName = $generatedID.$imageSimpanan->getClientOriginalExtension();
-
-                    $buktiSimpanan = $destinationPath.$imageName;
-                }
-
-                //insert into transaction
-                $arrTransaction = [];
-                $arrTransaction["accountId"] = $checkUAC->accountId;
-                $arrTransaction["kind"] = $input['kind'];
-                $arrTransaction["total"] = $input['nominal'];
-                $arrTransaction["method"] = $input['method'];
-                $arrTransaction["transactionDate"] = date('Y-m-d H:i:s');
-                $arrTransaction["image"] = $buktiSimpanan;
-                $arrTransaction["notes"] = $input['notes'];
-                $arrTransaction["status"] = 1;
-                Transaction::create($arrTransaction);
-
-                if($buktiSimpanan != "") {
-                    Image::make($imageSimpanan)->resize(1024, 768, function ($constraint) {
-                        $constraint->aspectRatio();
-                    })->save($buktiSimpanan);
-                }
-
-                return redirect('/simpanan/pengajuan')->withSuccess('Data pengajuan simpanan berhasil dikirim!');
-            } else { //user don't have any account
-                //insert into user_account
-                $arrUserAccount = [];
-                $arrUserAccount["memberId"] = $user->memberId;
-                //generate acount id
-                $salt_1 = random_int(0, 9);
-                $salt_2 = Str::random(7);
-                $salt_3 = Str::random(16);
-                $arrUserAccount["accountId"] = strtoupper("UAC-".$salt_1.$salt_2."-".$salt_3);
-                $arrUserAccount["kind"] = $input['kind'];
-                $arrUserAccount["balance"] = 0;
-                UserAccount::create($arrUserAccount);
-                //end of insert into user_account
-
-                $buktiSimpanan = "";
-                if($imageSimpanan = $request->file('image')) {
-                    $destinationPath = 'image/upload/'.$user->memberId.'/'.'simpanan/';
-                    File::makeDirectory($destinationPath, 0777, true, true);
-                    $fileName = pathinfo($imageSimpanan->getClientOriginalName(), PATHINFO_FILENAME);
-                    $generatedID = $fileName.hexdec(uniqid())."-".time(). ".";
-                    $imageName = $generatedID.$imageSimpanan->getClientOriginalExtension();
-
-                    $buktiSimpanan = $destinationPath.$imageName;
-                }
-
-                //insert into transaction
-                $arrTransaction = [];
-                $arrTransaction["accountId"] = $arrUserAccount["accountId"];
-                $arrTransaction["kind"] = $input['kind'];
-                $arrTransaction["total"] = $input['nominal'];
-                $arrTransaction["method"] = $input['method'];
-                $arrTransaction["transactionDate"] = date('Y-m-d H:i:s');
-                if($buktiSimpanan != "") {
-                    $arrTransaction["image"] = $buktiSimpanan;
-                }
-                $arrTransaction["notes"] = $input['notes'];
-                $arrTransaction["status"] = 1;
-                Transaction::create($arrTransaction);
-                //end of insert into transaction
-
-                if($buktiSimpanan != "") {
-                    Image::make($imageSimpanan)->resize(1024, 768, function ($constraint) {
-                        $constraint->aspectRatio();
-                    })->save($buktiSimpanan);
-                }
-                return redirect('/simpanan/pengajuan')->withSuccess('Data pengajuan simpanan berhasil dikirim!');
-            }
+            return redirect('/kredit/pengajuan')->withSuccess('Data pengajuan kredit berhasil dikirim!');
         } catch (\Exception $e) {
             throw $e;
         }
