@@ -353,8 +353,27 @@
                     $("#birthdate-check").show();
                     return 0;
                 } else {
-                    $("#birthdate-check").hide();
-                    return 1;
+                    var birthdate = dataValue;
+                    var selectedDate = new Date(birthdate);
+                    var currentDate = new Date();
+                    var minBirthYear = currentDate.getFullYear() - 17;
+                    var minBirthdate = new Date(minBirthYear, currentDate.getMonth(), currentDate.getDate());
+                    if (selectedDate > minBirthdate) {
+                        $("#birthdate-check").text("Usia minimal adalah 17 tahun");
+                        Swal.fire({
+                        title: 'Oops,',
+                        text: 'Anda harus berusia minimal 17 tahun untuk menjadi anggota Sistem Akuntansi UBSP',
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK',
+                        }).then((result) => {
+
+                        });
+                        return 0;
+                    } else {
+                        $("#birthdate-check").hide();
+                        return 1;
+                    }
                 }
             } else if (type == "address") {
                 let dataValue = $("#address").val();
