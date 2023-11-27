@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="/main/assets/compiled/css/app.css">
     <link rel="stylesheet" href="/main/assets/compiled/css/app-dark.css">
     <link rel="stylesheet" href="/main/assets/compiled/css/auth.css">
+    <link rel="stylesheet" href="/main/assets/compiled/css/animation.css">
 
     <link rel="stylesheet" href="/main/assets/extensions/filepond/filepond.css">
     <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
@@ -64,6 +65,14 @@
                             <div class="card-body">
                                 <button type="button" class="btn btn-primary mb-3 circular-btn" id="btnBack4"><i class="bi bi-arrow-left"></i></button>
                                 <div class="row">
+                                    <div class="col-md-12 col-12">
+                                        <div class="form-group pulse mb-3 mt-3 text-center">
+                                            <p>Setoran Keanggotaan Sistem Akuntansi UBSP</p>
+                                            <p>Untuk menjadi anggota, Anda perlu membayar simpanan pokok sebesar Rp 1,000,000 dan simpanan wajib sebesar Rp 100,000.</p>
+                                            <p>Simpanan pokok dibayar sekali saja ketika mendaftar sebagai anggota, sedangkan simpanan wajib dibayarkan setiap bulannya.</p>
+                                            <p>Simpanan pokok dan wajib tidak dapat ditarik selama menjadi anggota, dan akan dikembalikan apabila keluar dari keanggotaan Sistem Akuntansi UBSP.</p>
+                                        </div>
+                                    </div>
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="nominal">Nominal Simpanan Pokok</label>

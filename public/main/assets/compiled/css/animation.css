@@ -1,7 +1,7 @@
 .pulse {
     margin: 0 0 20px;
     padding: 1rem 2rem;
-    display: flex;
+    /* display: flex; */
     -webkit-box-align: stretch;
     align-items: stretch;
     border-radius: 3px;
