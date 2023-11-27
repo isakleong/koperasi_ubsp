@@ -287,6 +287,135 @@ class MainController extends Controller
         }
     }
 
+    public function storeTabungan(Request $request) {
+        $request['nominal'] = str_replace(',', '', $request->input('nominal'));
+
+        $validator = Validator::make(
+            [
+                'nominal' => $request->input('nominal'),
+                'method' => $request->input('method'),
+                'image' => $request->file('image'),
+            ],
+            [
+                'nominal' => 'required|numeric|min:50000',
+                'method' => 'required|in:cash,transfer',
+                'image' => 'required_if:method,transfer',
+            ],
+            [
+                'nominal.required' => 'Nominal belum diisi',
+                'nominal.min' => 'Minimal nominal simpanan adalah Rp 50,000',
+                'method.required' => 'Jenis pembayaran belum diisi',
+                'method.in' => 'Jenis pembayaran tidak valid',
+                'image.required_if' => 'Bukti pembayaran belum diisi',
+            ],
+        );
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors()->first());
+        }
+
+        try {
+            $input = $request->all();
+
+            if(strtolower($input['method']) == "cash") {
+                $input['method'] = 2;
+            } else {
+                $input['method'] = 1;
+            }
+
+            //check if user have user_account
+            $user = Auth::user();
+
+            $checkUAC = DB::table('user_account as uac')
+                ->select(DB::raw('uac.*'))
+                ->where('memberId', $user->memberId)
+                ->where('kind', 'tabungan')
+                ->get()->first();
+            
+            //find data UAC
+            if($checkUAC) {
+                $buktiTabungan = "";
+                if($imageTabungan = $request->file('image')) {
+                    $destinationPath = 'image/upload/'.$user->memberId.'/'.'tabungan/';
+                    File::makeDirectory($destinationPath, 0777, true, true);
+                    $fileName = pathinfo($imageTabungan->getClientOriginalName(), PATHINFO_FILENAME);
+                    $generatedID = $fileName.hexdec(uniqid())."-".time(). ".";
+                    $imageName = $generatedID.$imageTabungan->getClientOriginalExtension();
+
+                    $buktiTabungan = $destinationPath.$imageName;
+                }
+
+                //insert into transaction
+                $arrTransaction = [];
+                $arrTransaction["accountId"] = $checkUAC->accountId;
+                $arrTransaction["kind"] = 'tabungan';
+                $arrTransaction["total"] = $input['nominal'];
+                $arrTransaction["method"] = $input['method'];
+                $arrTransaction["transactionDate"] = date('Y-m-d H:i:s');
+                $arrTransaction["image"] = $buktiTabungan;
+                $arrTransaction["notes"] = $input['notes'];
+                $arrTransaction["status"] = 1;
+                Transaction::create($arrTransaction);
+
+                if($buktiTabungan != "") {
+                    Image::make($imageTabungan)->resize(1024, 768, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->save($buktiTabungan);
+                }
+
+                return redirect('/tabungan/pengajuan')->withSuccess('Data pengajuan tabungan berhasil dikirim!');
+            } else { //user don't have any account
+                //insert into user_account
+                $arrUserAccount = [];
+                $arrUserAccount["memberId"] = $user->memberId;
+                //generate acount id
+                $salt_1 = random_int(0, 9);
+                $salt_2 = Str::random(7);
+                $salt_3 = Str::random(16);
+                $arrUserAccount["accountId"] = strtoupper("UAC-".$salt_1.$salt_2."-".$salt_3);
+                $arrUserAccount["kind"] = 'tabungan';
+                $arrUserAccount["balance"] = 0;
+                UserAccount::create($arrUserAccount);
+                //end of insert into user_account
+
+                $buktiTabungan = "";
+                if($imageTabungan = $request->file('image')) {
+                    $destinationPath = 'image/upload/'.$user->memberId.'/'.'tabungan/';
+                    File::makeDirectory($destinationPath, 0777, true, true);
+                    $fileName = pathinfo($imageTabungan->getClientOriginalName(), PATHINFO_FILENAME);
+                    $generatedID = $fileName.hexdec(uniqid())."-".time(). ".";
+                    $imageName = $generatedID.$imageTabungan->getClientOriginalExtension();
+
+                    $buktiTabungan = $destinationPath.$imageName;
+                }
+
+                //insert into transaction
+                $arrTransaction = [];
+                $arrTransaction["accountId"] = $arrUserAccount["accountId"];
+                $arrTransaction["kind"] = 'tabungan';
+                $arrTransaction["total"] = $input['nominal'];
+                $arrTransaction["method"] = $input['method'];
+                $arrTransaction["transactionDate"] = date('Y-m-d H:i:s');
+                if($buktiTabungan != "") {
+                    $arrTransaction["image"] = $buktiTabungan;
+                }
+                $arrTransaction["notes"] = $input['notes'];
+                $arrTransaction["status"] = 1;
+                Transaction::create($arrTransaction);
+                //end of insert into transaction
+
+                if($buktiTabungan != "") {
+                    Image::make($imageTabungan)->resize(1024, 768, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->save($buktiTabungan);
+                }
+                return redirect('/tabungan/pengajuan')->withSuccess('Data pengajuan tabungan berhasil dikirim!');
+            }
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
     public function editProfile(Request $request, $id) {
         // Retrieve existing user data
         $user = User::find($id);
