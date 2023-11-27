@@ -10,6 +10,7 @@
 
 
 @section('content')
+@include('sweetalert::alert')
 <div class="content-wrapper container">
     <div class="page-heading">
         <h3>Pengajuan Simpanan</h3>
@@ -39,9 +40,6 @@
                                                         </select>
                                                     </fieldset>
                                                 </div>
-                                                @error('kind')
-                                                    <p style="color: red">{{$message}}</p>
-                                                @enderror
                                             </div>
                                         </div>
                                         <div class="col-12">
@@ -51,9 +49,6 @@
                                                     <input type="text" class="form-control" placeholder="Nominal" id="nominal" name="nominal" />
                                                     <div class="form-control-icon"><i class="bi bi-cash"></i></div>
                                                 </div>
-                                                @error('nominal')
-                                                    <p style="color: red">{{$message}}</p>
-                                                @enderror
                                             </div>
                                         </div>
                                         <div class="col-12">
@@ -63,9 +58,6 @@
                                                     <textarea class="form-control" id="notes" rows="3" name="notes"></textarea>
                                                     <div class="form-control-icon"><i class="bi bi-info-square-fill"></i></div>
                                                 </div>
-                                                @error('notes')
-                                                    <p style="color: red">{{$message}}</p>
-                                                @enderror
                                             </div>
                                         </div>
 
@@ -93,12 +85,9 @@
                                                     <input type="file" class="image-exif-filepond" name="image" accept="image/*"/>
                                                 </div>
                                             </div>
-                                            @error('image')
-                                                <p style="color: red">{{$message}}</p>
-                                            @enderror
                                         </div>
                                         <div class="col-12 d-flex justify-content-end">
-                                            <button type="submit" class="btn btn-primary me-1 mb-1">Ajukan</button>
+                                            <button type="submit" class="btn btn-primary me-1 mb-1 show_confirm">Ajukan</button>
                                             <button type="reset"class="btn btn-light-secondary me-1 mb-1">Reset</button>
                                         </div>
                                     </div>
@@ -127,8 +116,31 @@
 <script src="/main/assets/extensions/toastify-js/src/toastify.js"></script>
 <script src="/main/assets/static/js/pages/filepond.js"></script>
 
+<script src="/vendor/sweetalert/sweetalert.all.js"></script>
+
 <script>
     $(document).ready(function () {
+        $('.show_confirm').click(function(event) {
+            event.preventDefault();
+
+            var form =  $(this).closest("form");
+
+            Swal.fire({
+                title: 'Ajukan simpanan?',
+                text: "Setiap pengajuan data simpanan akan direview oleh admin terlebih dahulu.",
+                icon: 'question',
+                showDenyButton: true,
+                confirmButtonText: 'Ya, ajukan',
+                denyButtonText: 'Batal',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                } else if (result.isDenied) {
+                    // Swal.fire('Changes are not saved', '', 'info');
+                }
+            });
+        });
+
         $('input[type="radio"]').on('change', function () {
             // Get the selected value
             var selectedValue = $('input[name="method"]:checked').val();

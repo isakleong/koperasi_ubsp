@@ -7,8 +7,10 @@ use App\Models\User;
 use App\Models\UserAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
@@ -53,16 +55,45 @@ class MainController extends Controller
     }
 
     public function storeSimpanan(Request $request) {
-        $request->validate([
-            'kind' => ['required', 'not_in:-- Pilih Simpanan --'],
-            'nominal' => 'required',
-            'method' => 'required'
-        ]);
+        // $request->validate([
+        //     'kind' => ['required', 'not_in:-- Pilih Simpanan --', 'in:Simpanan Wajib,Simpanan Sukarela'],
+        //     'nominal' => 'required',
+        //     'method' => 'required'
+        // ]);
+
+        $request['nominal'] = str_replace(',', '', $request->input('nominal'));
+
+        $validator = Validator::make(
+            [
+                'kind' => $request->input('kind'),
+                'nominal' => $request->input('nominal'),
+                'method' => $request->input('method'),
+                'image' => $request->file('image'),
+            ],
+            [
+                'kind' => 'required|not_in:-- Pilih Simpanan --|in:Simpanan Wajib,Simpanan Sukarela',
+                'nominal' => 'required|numeric|min:50000',
+                'method' => 'required|in:cash,transfer',
+                'image' => 'required_if:method,transfer',
+            ],
+            [
+                'kind.required' => 'Jenis simpanan belum dipilih',
+                'kind.not_in' => 'Jenis simpanan belum dipilih',
+                'kind.in' => 'Jenis simpanan tidak dikenal',
+                'nominal.required' => 'Nominal belum diisi',
+                'nominal.min' => 'Minimal nominal simpanan adalah Rp 50,000',
+                'method.required' => 'Jenis pembayaran belum diisi',
+                'method.in' => 'Jenis pembayaran tidak dikenal',
+                'image.required_if' => 'Bukti pembayaran belum diisi',
+            ],
+        );
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors()->first());
+        }
 
         try {
             $input = $request->all();
-
-            $input['nominal'] = str_replace(',', '', $input['nominal']);
 
             if(strtolower($input['method']) == "cash") {
                 $input['method'] = 2;
@@ -78,9 +109,17 @@ class MainController extends Controller
 
             //check if user have user_account
             $user = Auth::user();
-            $checkUAC = UserAccount::where('memberId', $user->memberId)
-            ->where('kind', $input['kind'])
-            ->first();
+
+            //ini aneh, jalan, tapi nda bisa dapat accountId ($checkUAC->accountId)
+            // $checkUAC = UserAccount::where('memberId', $user->memberId)
+            // ->where('kind', $input['kind'])
+            // ->get()->first();
+
+            $checkUAC = DB::table('user_account as uac')
+                ->select(DB::raw('uac.*'))
+                ->where('memberId', $user->memberId)
+                ->where('kind', $input['kind'])
+                ->get()->first();
             
             //find data UAC
             if($checkUAC) {
@@ -110,8 +149,10 @@ class MainController extends Controller
                 if($buktiSimpanan != "") {
                     Image::make($imageSimpanan)->resize(1024, 768, function ($constraint) {
                         $constraint->aspectRatio();
-                    })->save($input['image']);
+                    })->save($buktiSimpanan);
                 }
+
+                return redirect('/simpanan/pengajuan')->withSuccess('Data pengajuan simpanan berhasil dikirim!');
             } else { //user don't have any account
                 //insert into user_account
                 $arrUserAccount = [];
@@ -150,19 +191,18 @@ class MainController extends Controller
                 $arrTransaction["notes"] = $input['notes'];
                 $arrTransaction["status"] = 1;
                 Transaction::create($arrTransaction);
+                //end of insert into transaction
 
                 if($buktiSimpanan != "") {
                     Image::make($imageSimpanan)->resize(1024, 768, function ($constraint) {
                         $constraint->aspectRatio();
                     })->save($buktiSimpanan);
                 }
-                //end of insert into transaction
+                return redirect('/simpanan/pengajuan')->withSuccess('Data pengajuan simpanan berhasil dikirim!');
             }
-
         } catch (\Exception $e) {
             throw $e;
-        } 
-
+        }
     }
 
     public function editProfile(Request $request, $id) {
