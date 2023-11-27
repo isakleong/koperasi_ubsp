@@ -12,6 +12,7 @@
 
 
 @section('content')
+@include('sweetalert::alert')
     <div class="content-wrapper container">
         <div class="page-heading">
             <h3>Pengajuan Kredit</h3>
@@ -20,12 +21,13 @@
             <section class="row">
                 <div class="col-12 col-lg-12">
                     <div class="card">
-                        {{-- <div class="card-header">
-                        <h4 class="card-title">Vertical Form with Icons</h4>
-                    </div> --}}
+                        <div class="card-header">
+                            <h4 class="card-title">Data Kredit</h4>
+                        </div>
                         <div class="card-content">
                             <div class="card-body">
-                                <form class="form form-vertical">
+                                <form action="{{route('store.kredit')}}" class="form form-vertical" method="post">
+                                    @csrf
                                     <div class="form-body">
                                         <div class="row">
                                             <div class="col-12">
@@ -33,7 +35,7 @@
                                                     <label for="first-name-icon">Lama Angsuran</label>
                                                     <div class="position-relative">
                                                         <fieldset class="form-group">
-                                                            <select class="form-select" id="basicSelect">
+                                                            <select class="form-select" id="basicSelect" name="tenor">
                                                                 <option>-- Pilih Lama Angsuran --</option>
                                                                 <option>1 bulan</option>
                                                                 <option>3 bulan</option>
@@ -46,22 +48,18 @@
                                             </div>
                                             <div class="col-12">
                                                 <div class="form-group has-icon-left">
-                                                    <label for="email-id-icon">Nominal</label>
+                                                    <label for="nominal">Nominal</label>
                                                     <div class="position-relative">
-                                                        <input type="text" class="form-control" placeholder="Nominal"
-                                                            id="email-id-icon" />
-                                                        <div class="form-control-icon">
-                                                            <i class="bi bi-cash-coin"></i>
-                                                        </div>
+                                                        <input type="text" class="form-control" placeholder="Nominal" id="nominal" name="nominal" />
+                                                        <div class="form-control-icon"><i class="bi bi-cash"></i></div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-12">
                                                 <div class="form-group has-icon-left">
-                                                    <label for="email-id-icon">Bunga</label>
+                                                    <label for="rates">Bunga</label>
                                                     <div class="position-relative">
-                                                        <input type="text" class="form-control" placeholder="Bunga"
-                                                            id="email-id-icon" value="0,5" disabled />
+                                                        <input type="text" class="form-control" placeholder="Bunga" id="rates" value="0,5" name="rates" disabled />
                                                         <div class="form-control-icon">
                                                             <i class="bi bi-percent"></i>
                                                         </div>
@@ -70,22 +68,16 @@
                                             </div>
                                             <div class="col-12">
                                                 <div class="form-group has-icon-left">
-                                                    <label for="mobile-id-icon">Tujuan Pinjaman</label>
+                                                    <label for="notes">Tujuan kredit</label>
                                                     <div class="position-relative">
-                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                                                        <div class="form-control-icon">
-                                                            <i class="bi bi-info-square-fill"></i>
-                                                        </div>
+                                                        <textarea class="form-control" id="notes" rows="3" name="notes"></textarea>
+                                                        <div class="form-control-icon"><i class="bi bi-info-square-fill"></i></div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-12 d-flex justify-content-end">
-                                                <button type="submit" class="btn btn-primary me-1 mb-1">
-                                                    Simpan
-                                                </button>
-                                                <button type="reset" class="btn btn-light-secondary me-1 mb-1">
-                                                    Reset
-                                                </button>
+                                                <button type="submit" class="btn btn-primary me-1 mb-1 show_confirm">Ajukan</button>
+                                                <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
                                             </div>
                                         </div>
                                     </div>
@@ -100,6 +92,7 @@
 @endsection
 
 @section('vendorJS')
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="/main/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js">
     </script>
     <script src="/main/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js">
@@ -114,4 +107,55 @@
     <script src="/main/assets/extensions/filepond/filepond.js"></script>
     <script src="/main/assets/extensions/toastify-js/src/toastify.js"></script>
     <script src="/main/assets/static/js/pages/filepond.js"></script>
+
+    <script src="/vendor/sweetalert/sweetalert.all.js"></script>
+
+    <script>
+        $('.show_confirm').click(function(event) {
+            event.preventDefault();
+
+            var form =  $(this).closest("form");
+
+            Swal.fire({
+                title: 'Ajukan kredit?',
+                text: "Setiap pengajuan data kredit akan direview oleh admin terlebih dahulu.",
+                icon: 'question',
+                showDenyButton: true,
+                confirmButtonText: 'Ya, ajukan',
+                denyButtonText: 'Batal',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                } else if (result.isDenied) {
+                    // Swal.fire('Changes are not saved', '', 'info');
+                }
+            });
+        });
+
+        $(function(){
+            $("#nominal").keyup(function(e){
+                $(this).val(format($(this).val()));
+            });
+        });
+
+        var format = function(num) {
+            var str = num.toString().replace("", ""), parts = false, output = [], i = 1, formatted = null;
+            if(str.indexOf(".") > 0) {
+                parts = str.split(".");
+                str = parts[0];
+            }
+            str = str.split("").reverse();
+            for(var j = 0, len = str.length; j < len; j++) {
+                if(str[j] != ",") {
+                output.push(str[j]);
+                if(i%3 == 0 && j < (len - 1)) {
+                    output.push(",");
+                }
+                i++;
+                }
+            }
+            formatted = output.reverse().join("");
+            return("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
+        };
+    </script>
 @endsection

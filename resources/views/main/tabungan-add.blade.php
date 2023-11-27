@@ -110,8 +110,8 @@
             var form =  $(this).closest("form");
 
             Swal.fire({
-                title: 'Ajukan simpanan?',
-                text: "Setiap pengajuan data simpanan akan direview oleh admin terlebih dahulu.",
+                title: 'Ajukan tabungan?',
+                text: "Setiap pengajuan data tabungan akan direview oleh admin terlebih dahulu.",
                 icon: 'question',
                 showDenyButton: true,
                 confirmButtonText: 'Ya, ajukan',

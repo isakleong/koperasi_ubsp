@@ -16,7 +16,7 @@
     <div class="content-wrapper container">
         <div class="page-heading">
             <h3>Rekap Tabungan</h3>
-            <form method="post" action="{{ route('filter.recap.simpanan') }}">
+            <form method="post" action="{{ route('filter.recap.tabungan') }}">
                 @csrf
                 <label for="startDate">Tanggal Awal :</label>
                 {{-- <input type="date" name="startDate" id="startDate" required> --}}
