@@ -31,7 +31,7 @@
                 {{-- <input type="date" name="endDate" id="endDate" required> --}}
                 <input placeholder="Pilih tanggal akhir" type="text" id="endDate" class="form-control datepicker mb-3" name="endDate" required>
             
-                <button type="submit" class="btn btn-primary me-1 mb-1">Filter</button>
+                <button type="submit" class="btn btn-primary me-1 mb-1">Cari</button>
             </form>
         </div>
 
