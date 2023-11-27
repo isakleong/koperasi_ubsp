@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserAccount;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +35,32 @@ class MainController extends Controller
         if ($parameter == "add.simpanan") {
             return view('main.simpanan-add', compact(['user']));
         } elseif ($parameter == "recap.simpanan") {
-            return view('main.simpanan-recap', compact(['user']));
+            $startDate = Carbon::now()->subMonth();
+            $transaction = Transaction::where('transactionDate', '>=', $startDate)
+                            ->get();
+
+            // $transaction = Transaction::all();
+
+            //format total, tanggal
+            $transactionData = $transaction->map(function ($item) {
+                $item->total = 'Rp ' . number_format($item->total, 0, ',', ',');
+
+                if ($item->transactionDate !== null) {
+                    $item->transactionDate = Carbon::parse($item->transactionDate)->format('d-m-Y H:i:s');
+                } else {
+                    $item->transactionDate = "-";
+                }
+
+                if ($item->approvedOn !== null) {
+                    $item->approvedOn = Carbon::parse($item->approvedOn)->format('d-m-Y H:i:s');
+                } else {
+                    $item->approvedOn = "-";
+                }
+                
+                return $item;
+            });
+            
+            return view('main.simpanan-recap', compact(['user','transactionData','transaction']));
         } elseif ($parameter == "add.tabungan") {
             return view('main.tabungan-add', compact(['user']));
         } elseif ($parameter == "recap.tabungan") {
@@ -52,6 +78,62 @@ class MainController extends Controller
         } elseif ($parameter == "edit.password") {
             return view('main.password-edit', compact(['user']));
         }
+    }
+
+    public function filterRecapSimpanan(Request $request) {
+        $validator = Validator::make(
+            [
+                'startDate' => $request->input('startDate'),
+                'endDate' => $request->input('endDate'),
+            ],
+            [
+                'startDate' => 'required|date',
+                'endDate' => 'required|date|after_or_equal:startDate|max_one_month_difference:startDate|before_or_equal:' . now()->toDateString(),
+            ],
+            [
+                'startDate.required' => 'Tanggal awal belum dipilih',
+                'startDate.date' => 'Tanggal awal tidak valid',
+                'endDate.required' => 'Tanggal akhir belum dipilih',
+                'endDate.date' => 'Tanggal akhir tidak valid',
+                'endDate.after_or_equal' => 'Tanggal akhir tidak boleh lebih kecil dari tanggal awal',
+                'endDate.before_or_equal' => 'Limit periode pencarian adalah 1 bulan',
+                'endDate.max_one_month_difference' => 'Limit periode pencarian adalah 1 bulan',
+            ],
+        );
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors()->first());
+        }
+
+        $user = Auth::user();
+
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+        $endDate = Carbon::parse($endDate)->endOfDay(); //adjust to include full day
+
+        $transaction = Transaction::whereBetween('transactionDate', [$startDate, $endDate])
+        ->get();
+
+        //format total, tanggal
+        $transactionData = $transaction->map(function ($item) {
+            $item->total = 'Rp ' . number_format($item->total, 0, ',', ',');
+
+            if ($item->transactionDate !== null) {
+                $item->transactionDate = Carbon::parse($item->transactionDate)->format('d-m-Y H:i:s');
+            } else {
+                $item->transactionDate = "-";
+            }
+
+            if ($item->approvedOn !== null) {
+                $item->approvedOn = Carbon::parse($item->approvedOn)->format('d-m-Y H:i:s');
+            } else {
+                $item->approvedOn = "-";
+            }
+            
+            return $item;
+        });
+        
+        return view('main.simpanan-recap', compact(['user','transactionData','transaction']));
     }
 
     public function storeSimpanan(Request $request) {
@@ -79,11 +161,11 @@ class MainController extends Controller
             [
                 'kind.required' => 'Jenis simpanan belum dipilih',
                 'kind.not_in' => 'Jenis simpanan belum dipilih',
-                'kind.in' => 'Jenis simpanan tidak dikenal',
+                'kind.in' => 'Jenis simpanan tidak valid',
                 'nominal.required' => 'Nominal belum diisi',
                 'nominal.min' => 'Minimal nominal simpanan adalah Rp 50,000',
                 'method.required' => 'Jenis pembayaran belum diisi',
-                'method.in' => 'Jenis pembayaran tidak dikenal',
+                'method.in' => 'Jenis pembayaran tidak valid',
                 'image.required_if' => 'Bukti pembayaran belum diisi',
             ],
         );

@@ -90,6 +90,7 @@ Route::middleware(['auth', 'verified'])->group(function() {
 
     //POST REQUEST
     Route::post('/simpanan/pengajuan', [MainController::class, 'storeSimpanan'])->name('store.simpanan');
+    Route::post('/simpanan/rekap', [MainController::class, 'filterRecapSimpanan'])->name('filter.recap.simpanan');
 
 
     Route::put('/pengaturan/profile/{id}', [MainController::class, 'editProfile'])->name('profile-update');
