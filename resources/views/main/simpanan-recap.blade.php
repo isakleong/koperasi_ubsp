@@ -60,7 +60,11 @@
                                             <td>{{$item->transactionDate}}</td>
                                             <td>{{ucfirst($item->kind)}}</td>
                                             <td>{{$item->total}}</td>
-                                            <td>{{$item->notes}}</td>
+                                            @if ($item->notes != null)
+                                                <td>{{$item->notes}}</td>
+                                            @else
+                                                <td>-</td>
+                                            @endif
                                             @if ($item->method == 1)
                                                 <td>Transfer</td>   
                                             @else

@@ -34,6 +34,7 @@ class MainController extends Controller
 
         if ($parameter == "add.simpanan") {
             return view('main.simpanan-add', compact(['user']));
+
         } elseif ($parameter == "recap.simpanan") {
             $startDate = Carbon::now()->subMonth();
             $transaction = Transaction::where('transactionDate', '>=', $startDate)
@@ -62,22 +63,54 @@ class MainController extends Controller
             });
             
             return view('main.simpanan-recap', compact(['user','transactionData','transaction']));
+
         } elseif ($parameter == "add.tabungan") {
             return view('main.tabungan-add', compact(['user']));
+
         } elseif ($parameter == "recap.tabungan") {
-            return view('main.tabungan-recap', compact(['user']));
+            $startDate = Carbon::now()->subMonth();
+            $transaction = Transaction::where('transactionDate', '>=', $startDate)
+                            ->where('kind', 'like', 'tabungan')
+                            ->get();
+
+            //format total, tanggal
+            $transactionData = $transaction->map(function ($item) {
+                $item->total = 'Rp ' . number_format($item->total, 0, ',', ',');
+
+                if ($item->transactionDate !== null) {
+                    $item->transactionDate = Carbon::parse($item->transactionDate)->format('d-m-Y H:i:s');
+                } else {
+                    $item->transactionDate = "-";
+                }
+
+                if ($item->approvedOn !== null) {
+                    $item->approvedOn = Carbon::parse($item->approvedOn)->format('d-m-Y H:i:s');
+                } else {
+                    $item->approvedOn = "-";
+                }
+                
+                return $item;
+            });
+
+            return view('main.tabungan-recap', compact(['user', 'transactionData']));
         } elseif ($parameter == "add.kredit") {
             return view('main.kredit-add', compact(['user']));
+
         } elseif ($parameter == "add.angsuran") {
             return view('main.angsuran-add', compact(['user']));
+
         } elseif ($parameter == "recap.kredit") {
             return view('main.kredit-recap', compact(['user']));
+
         } elseif ($parameter == "recap.angsuran") {
             return view('main.angsuran-recap', compact(['user']));
+
         } elseif ($parameter == "edit.profile") {
             return view('main.profile-edit', compact(['user']));
+
         } elseif ($parameter == "edit.password") {
             return view('main.password-edit', compact(['user']));
+
         }
     }
 
