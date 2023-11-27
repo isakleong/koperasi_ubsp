@@ -37,6 +37,7 @@ class MainController extends Controller
         } elseif ($parameter == "recap.simpanan") {
             $startDate = Carbon::now()->subMonth();
             $transaction = Transaction::where('transactionDate', '>=', $startDate)
+                            ->where('kind', 'not like', 'tabungan')
                             ->get();
 
             // $transaction = Transaction::all();
