@@ -35,7 +35,7 @@
                                                     <label for="first-name-icon">Lama Angsuran</label>
                                                     <div class="position-relative">
                                                         <fieldset class="form-group">
-                                                            <select class="form-select" id="basicSelect" name="tenor">
+                                                            <select class="form-select" id="tenor" name="tenor">
                                                                 <option>-- Pilih Lama Angsuran --</option>
                                                                 <option>1 bulan</option>
                                                                 <option>3 bulan</option>
@@ -66,9 +66,41 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <div class="text-center">
+                                                        <button type="button" class="btn btn-outline-primary simulasi mt-3" data-bs-toggle="modal" data-bs-target="#exampleModalScrollable">Simulasi Angsuran</button>
+                                                        <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="exampleModalScrollableTitle">Simulasi Angsuran</h5>
+                                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">Tutup</button>
+                                                                    </div>
+                                                                    <div class="modal-body text-start">
+                                                                        <h6>Total Kredit</h6>
+                                                                        <p id="simulasiTotalKredit">Rp 0</p>
+                                                                        <h6>Suku Bunga</h6>
+                                                                        <p id="simulasiBunga">0,5%</p>
+                                                                        <h6>Lama Angsuran (dalam bulan)</h6>
+                                                                        <p id="simulasiTenor">0</p>
+                                                                        <h6>Angsuran Pokok (per bulan)</h6>
+                                                                        <p id="simulasiAngsuranPokok">Rp 0</p>
+                                                                        <h6>Bunga Kredit (per bulan)</h6>
+                                                                        <p id="simulasiBungaPerBulan">Rp 0</p>
+                                                                        <h6>Total bunga yang harus dibayar</h6>
+                                                                        <p id="simulasiTotalBungaPerBulan">Rp 0</p>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="col-12">
                                                 <div class="form-group has-icon-left">
-                                                    <label for="notes">Tujuan kredit</label>
+                                                    <label for="notes">Tujuan Kredit</label>
                                                     <div class="position-relative">
                                                         <textarea class="form-control" id="notes" rows="3" name="notes"></textarea>
                                                         <div class="form-control-icon"><i class="bi bi-info-square-fill"></i></div>
@@ -131,6 +163,52 @@
                 }
             });
         });
+
+        $('.simulasi').click(function(event) {
+            $("#simulasiTenor").text("0");
+
+            //validate lama angsuran
+            var lamaAngsuran = $('#tenor').val();
+            var tenor = 0;
+            var arrTenor = lamaAngsuran.split(' ');
+            if (arrTenor.length == 2) {
+                if (arrTenor[1].toLowerCase() == 'bulan') {
+                    tenor = arrTenor[0];
+                    $("#simulasiTenor").text(tenor);
+                } else if (arrTenor[1].toLowerCase() == 'tahun') {
+                    tenor = arrTenor[0] * 12;
+                    $("#simulasiTenor").text(tenor);
+                } else {
+                    //invalid
+                    alert('Lama Angsuran tidak valid');
+                }
+            } else {
+                //invalid
+                alert('Lama Angsuran belum dipilih');
+            }
+
+            //validate total pinjaman
+            var nominalData = $("#nominal").val();
+            var totalPinjaman = 0;
+            if(nominalData == "") {
+                alert("Nominal belum diisi")
+            } else {
+                totalPinjaman = nominalData;
+                $("#simulasiTotalKredit").text("Rp "+totalPinjaman);
+            }
+
+            //hitung angsuran pokok per bulan
+            var angsuranPokok = ((totalPinjaman.replace(/,/g, '')) / tenor);
+            $("#simulasiAngsuranPokok").text("Rp "+format(Math.ceil(angsuranPokok)));
+
+            //hitung bunga per bulan
+            var bungaPerBulan = ((totalPinjaman.replace(/,/g, '')) * 0.5 / 100) / 12;
+            $("#simulasiBungaPerBulan").text("Rp "+format(Math.ceil(bungaPerBulan)));
+
+            //hitung total bunga yang harus dibayar
+            var totalBungaPerBulan = Math.ceil(bungaPerBulan) * tenor;
+            $("#simulasiTotalBungaPerBulan").text("Rp "+format(Math.ceil(totalBungaPerBulan)));
+        });  
 
         $(function(){
             $("#nominal").keyup(function(e){
