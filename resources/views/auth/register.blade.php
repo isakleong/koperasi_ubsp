@@ -68,8 +68,7 @@
                                     <div class="col-md-12 col-12">
                                         <div class="form-group pulse mb-3 mt-3 text-center">
                                             <p>Setoran Keanggotaan Sistem Akuntansi UBSP</p>
-                                            <p>Untuk menjadi anggota, Anda perlu membayar simpanan pokok sebesar Rp 1,000,000 dan simpanan wajib sebesar Rp 100,000.</p>
-                                            <p>Simpanan pokok dibayar sekali saja ketika mendaftar sebagai anggota, sedangkan simpanan wajib dibayarkan setiap bulannya.</p>
+                                            <p>Untuk menjadi anggota, Anda perlu membayar simpanan pokok sebesar Rp 1,000,000 (hanya sekali) dan simpanan wajib sebesar Rp 100,000 (tiap bulan).</p>
                                             <p>Simpanan pokok dan wajib tidak dapat ditarik selama menjadi anggota, dan akan dikembalikan apabila keluar dari keanggotaan Sistem Akuntansi UBSP.</p>
                                         </div>
                                     </div>
