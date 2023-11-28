@@ -622,7 +622,7 @@ class MainController extends Controller
             [
                 'tenor' => 'required|not_in:-- Pilih Lama Angsuran --|in:1 bulan,3 bulan,6 bulan,1 tahun',
                 'nominal' => 'required|numeric|min:1000000',
-                'notes' => 'required|text',
+                'notes' => 'required',
                 'rates' => 'required|numeric|in:0,5',
             ],
             [
@@ -633,7 +633,6 @@ class MainController extends Controller
                 'nominal.min' => 'Minimal nominal pinjaman adalah Rp 1,000,000',
                 'nominal.numeric' => 'Nominal tidak valid',
                 'notes.required' => 'Tujuan kredit belum diisi',
-                'notes.text' => 'Tujuan kredit tidak valid',
                 'rates.required' => 'Bunga pinjaman belum diisi',
                 'rates.in' => 'Bunga pinjaman tidak valid',
                 'rates.numeric' => 'Bunga pinjaman tidak valid',
@@ -671,8 +670,15 @@ class MainController extends Controller
             $arrLoan["requestDate"] = date('Y-m-d H:i:s');
             $arrLoan["notes"] = $input['notes'];
             $arrLoan["status"] = 1;
-            Loan::create($arrLoan);
+            $loan = Loan::create($arrLoan);
             //end of insert into loan
+
+            //insert into loan detail
+            $arrLoanDetail = [];
+            $arrLoanDetail["loanDocId"] = $loan->docId;
+            $arrLoanDetail["docId"] = $loan->docId;
+
+            //end of insert into loan detail
 
             return redirect('/kredit/pengajuan')->withSuccess('Data pengajuan kredit berhasil dikirim!');
         } catch (\Exception $e) {

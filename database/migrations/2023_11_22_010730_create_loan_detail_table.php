@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('loan_detail', function (Blueprint $table) {
-            $table->string('docId')->primary();
+            $table->id();
             $table->string('loanDocId')->required();
             $table->foreign('loanDocId')->references('docId')->on('loan')->onDelete('restrict');
             $table->integer('indexCicilan');

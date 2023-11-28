@@ -50,7 +50,7 @@
                                                 <div class="form-group has-icon-left">
                                                     <label for="nominal">Nominal</label>
                                                     <div class="position-relative">
-                                                        <input type="text" class="form-control" placeholder="Nominal" id="nominal" name="nominal" />
+                                                        <input type="text" class="form-control" placeholder="Nominal" id="nominal" name="nominal" value="{{old('nominal')}}" />
                                                         <div class="form-control-icon"><i class="bi bi-cash"></i></div>
                                                     </div>
                                                 </div>
@@ -59,7 +59,7 @@
                                                 <div class="form-group has-icon-left">
                                                     <label for="rates">Bunga</label>
                                                     <div class="position-relative">
-                                                        <input type="text" class="form-control" placeholder="Bunga" id="rates" value="0,5" name="rates" disabled />
+                                                        <input type="text" class="form-control" placeholder="Bunga" id="rates" value="0,5" name="rates" value="{{old('rates')}}" disabled />
                                                         <div class="form-control-icon">
                                                             <i class="bi bi-percent"></i>
                                                         </div>
@@ -102,9 +102,12 @@
                                                 <div class="form-group has-icon-left">
                                                     <label for="notes">Tujuan Kredit</label>
                                                     <div class="position-relative">
-                                                        <textarea class="form-control" id="notes" rows="3" name="notes"></textarea>
+                                                        <textarea class="form-control" id="notes" rows="3" name="notes" value="{{old('notes')}}"></textarea>
                                                         <div class="form-control-icon"><i class="bi bi-info-square-fill"></i></div>
                                                     </div>
+                                                    @error('notes')
+                                                        <p style="color: red">{{$message}}</p>
+                                                    @enderror
                                                 </div>
                                             </div>
                                             <div class="col-12 d-flex justify-content-end">
