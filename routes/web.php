@@ -100,7 +100,7 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::post('/tabungan/pengajuan', [MainController::class, 'storeTabungan'])->name('store.tabungan');
     Route::post('/tabungan/rekap', [MainController::class, 'filterRecapTabungan'])->name('filter.recap.tabungan');
 
-    Route::post('/simulasi', [MainController::class, 'simulasiKredit'])->name('simulasi.kredit');
+    Route::post('/simulasi/kredit', [MainController::class, 'simulasiKredit'])->name('simulasi.kredit');
     Route::post('/kredit/pengajuan', [MainController::class, 'storeKredit'])->name('store.kredit');
     Route::post('/kredit/rekap', [MainController::class, 'filterRecapKredit'])->name('filter.recap.kredit');
 

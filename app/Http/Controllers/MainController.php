@@ -610,57 +610,20 @@ class MainController extends Controller
     }
 
     public function simulasiKredit(Request $request) {
-        // Your logic here
-        $formData = $request->all();
-        dd($formData);
+        $request['nominal'] = str_replace(',', '', $request->input('nominal'));
 
-        // $("#simulasiTenor").text("0");
-        
+        $tenor = $request['tenor'];
+        $nominal = $request['nominal'];
+        $rates = $request['rates'];
 
-        //     //validate lama angsuran
-        //     var lamaAngsuran = $('#tenor').val();
-        //     var tenor = 0;
-        //     var arrTenor = lamaAngsuran.split(' ');
-        //     if (arrTenor.length == 2) {
-        //         if (arrTenor[1].toLowerCase() == 'bulan') {
-        //             tenor = arrTenor[0];
-        //             $("#simulasiTenor").text(tenor);
-        //         } else if (arrTenor[1].toLowerCase() == 'tahun') {
-        //             tenor = arrTenor[0] * 12;
-        //             $("#simulasiTenor").text(tenor);
-        //         } else {
-        //             //invalid
-        //             alert('Lama Angsuran tidak valid');
-        //         }
-        //     } else {
-        //         //invalid
-        //         alert('Lama Angsuran belum dipilih');
-        //     }
+        //hitung angsuran pokok tiap bulan
+        $angsuranPokok = $nominal / $tenor;
+        $bungaPerBulan = ($nominal * $rates / 100) / 12;
+        $totalBunga = $bungaPerBulan * $tenor;
 
-        //     //validate total pinjaman
-        //     var nominalData = $("#nominal").val();
-        //     var totalPinjaman = 0;
-        //     if(nominalData == "") {
-        //         alert("Nominal belum diisi")
-        //     } else {
-        //         totalPinjaman = nominalData;
-        //         $("#simulasiTotalKredit").text("Rp "+totalPinjaman);
-        //     }
+        $angsuranPokok = sprintf("%0.2f", $angsuranPokok);
 
-        //     //hitung angsuran pokok per bulan
-        //     var angsuranPokok = ((totalPinjaman.replace(/,/g, '')) / tenor);
-        //     $("#simulasiAngsuranPokok").text("Rp "+format(Math.ceil(angsuranPokok)));
-
-        //     //hitung bunga per bulan
-        //     var bungaPerBulan = ((totalPinjaman.replace(/,/g, '')) * 0.5 / 100) / 12;
-        //     $("#simulasiBungaPerBulan").text("Rp "+format(Math.ceil(bungaPerBulan)));
-
-        //     //hitung total bunga yang harus dibayar
-        //     var totalBungaPerBulan = Math.ceil(bungaPerBulan) * tenor;
-        //     $("#simulasiTotalBungaPerBulan").text("Rp "+format(Math.ceil(totalBungaPerBulan)));
-
-        // Process the data and send a response
-        return response()->json(['message' => 'Success', 'data' => $formData]);
+        echo $angsuranPokok.' -- '.$rates.' -- '.$totalBunga.' -- ';
     }
 
     public function storeKredit(Request $request) {
