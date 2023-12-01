@@ -1,0 +1,20 @@
+div.loan-simulation-res { padding:0px 0px 50px 0px; }
+.loan-simulation-res .sum { display:table; width:100%; box-shadow: 0px -5px 10px -2px rgba(0,0,0,0.17); -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; border-top-left-radius: 5px; border-top-right-radius: 5px; }
+.loan-simulation-res .sum-left { display:table-cell; /*width:37.5%;*/ width:40%; padding:19px 30px 22px 30px; }
+.loan-simulation-res .sum-right { display:table-cell; /*width:62.5%;*/ width:60%; background:#F2F5F8; padding:24px 30px 5px 30px; }
+div.sum-left p { color:#ABAAAA; margin-bottom:6px; }
+div.sum-left p.pinstallment { color:#003B70; font-size:35px; line-height:44px; margin-bottom:16px; font-weight:bold; letter-spacing: 0.015px; }
+div.sum-left p.wbtop { padding-top:16px; padding-bottom:0; border-top:1px solid #D8D8D8;  }
+div.sum-right h2 { font-size:18px; line-height:24px; margin-bottom:15px; font-weight:600; text-transform: uppercase; color:#003B70; }
+table.installment-sum td { padding:0px 25px 16px 0px; }
+table.installment-sum td:last-child { color:#003B70; font-weight:600; }
+
+.loan-simulation-res .sum, .loan-simulation-res .sum-left, .loan-simulation-res .sum-right { display:block; width:auto; }
+    .loan-simulation-res .sum-left { padding:30px 30px 5px 30px; }
+    div.sum-left p.pinstallment { font-size:28px; line-height: 35px; }
+    div.res-table { width:100%; max-width:100%; overflow:hidden; overflow-x:visible; margin-bottom:40px; }
+    div.res-table table.rate-table { margin-bottom:0; }
+    div.res-table table.rate-table thead td, div.res-table table.rate-table thead th, div.res-table table.rate-table tbody td, div.res-table table.rate-table tfoot th { font-size:14px; line-height:18px; padding:12px 10px; }
+    div.res-table table.rate-table thead td, div.res-table table.rate-table thead th { padding:5px 10px; }
+    table.installment-sum { width:100%; }
+    table.installment-sum td:last-child { text-align:right; padding-right:0; }

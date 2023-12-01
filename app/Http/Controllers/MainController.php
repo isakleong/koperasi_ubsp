@@ -611,17 +611,23 @@ class MainController extends Controller
 
     public function simulasiKredit(Request $request) {
         $request['nominal'] = str_replace(',', '', $request->input('nominal'));
+        $request['nominal'] = str_replace('Rp', '', $request->input('nominal'));
+
+        $request['rates'] = str_replace('%', '', $request->input('rates'));
+        $request['rates'] = str_replace('%', '', $request->input('rates'));
+
+        $request['tenor'] = str_replace(' bulan', '', $request->input('tenor'));
 
         $tenor = $request['tenor'];
         $nominal = $request['nominal'];
-        $rates = $request['rates'];
+        $rates = intval($request['rates']);
 
         //hitung angsuran pokok tiap bulan
         $angsuranPokok = $nominal / $tenor;
         $bungaPerBulan = ($nominal * $rates / 100) / 12;
         $totalBunga = $bungaPerBulan * $tenor;
 
-        $angsuranPokok = sprintf("%0.2f", $angsuranPokok);
+        $angsuranPokok = number_format($angsuranPokok, 0, ',', '.');
 
         echo $angsuranPokok.' -- '.$rates.' -- '.$totalBunga.' -- ';
     }
