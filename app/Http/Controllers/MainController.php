@@ -618,7 +618,6 @@ class MainController extends Controller
         $request['nominal'] = str_replace('Rp', '', $request->input('nominal'));
 
         $request['rates'] = str_replace('%', '', $request->input('rates'));
-        $request['rates'] = str_replace('%', '', $request->input('rates'));
 
         $request['tenor'] = str_replace(' bulan', '', $request->input('tenor'));
 
@@ -637,7 +636,25 @@ class MainController extends Controller
     }
 
     public function storeKredit(Request $request) {
+        dd($request->all());
         $request['nominal'] = str_replace(',', '', $request->input('nominal'));
+        $request['nominal'] = str_replace('Rp', '', $request->input('nominal'));
+
+        $request['rates'] = str_replace('%', '', $request->input('rates'));
+
+        $request['tenor'] = str_replace(' bulan', '', $request->input('tenor'));
+
+        //hitung angsuran
+        $tenor = $request['tenor'];
+        $nominal = $request['nominal'];
+        $rates = intval($request['rates']);
+
+        //hitung angsuran pokok tiap bulan
+        $hasilAngsuranPokok = ceil($nominal / $tenor);
+        $hasilBungaPerBulan = ceil(($nominal * $rates / 100) / 12);
+        $hasilTotalBunga = $hasilBungaPerBulan * $tenor;
+
+        $hasilTotalAngsuran = ceil($hasilAngsuranPokok+$hasilBungaPerBulan);
 
         $validator = Validator::make(
             [
@@ -647,10 +664,10 @@ class MainController extends Controller
                 'notes' => $request->input('notes'),
             ],
             [
-                'tenor' => 'required|not_in:-- Pilih Lama Angsuran --|in:1 bulan,3 bulan,6 bulan,1 tahun',
+                'tenor' => 'required|not_in:-- Pilih Lama Angsuran --|in:3,6,12,36',
                 'nominal' => 'required|numeric|min:1000000',
                 'notes' => 'required',
-                'rates' => 'required|numeric|in:0,5',
+                'rates' => 'required|numeric|in:0.50',
             ],
             [
                 'tenor.required' => 'Lama angsuran belum dipilih',
@@ -696,21 +713,32 @@ class MainController extends Controller
             $arrLoan["accountId"] = $arrUserAccount["accountId"];
             $arrLoan["total"] = $input['nominal'];
             $arrLoan["tenor"] = $input['tenor'];
-            $arrLoan["requestDate"] = date('Y-m-d H:i:s');
+            $arrLoan["rates"] = $input['rates'];
+            $arrLoan["baseCicilan"] = $hasilAngsuranPokok;
+            $arrLoan["monthlyCicilan"] = $hasilTotalAngsuran;
             $arrLoan["notes"] = $input['notes'];
             $arrLoan["status"] = 1;
+            $arrLoan["requestDate"] = date('Y-m-d H:i:s');
             $loan = Loan::create($arrLoan);
             //end of insert into loan
 
             //insert into loan detail
-            $arrLoanDetail = [];
-            $arrLoanDetail["loanDocId"] = $loan->docId;
-            $arrLoanDetail["docId"] = $loan->docId;
+            for($i = 0; $i < $tenor; $i++) {
+                $arrLoanDetail = [];
+                $arrLoanDetail["loanDocId"] = $loan->docId;
+                $arrLoanDetail["indexCicilan"] = $i;
+                
+                $currentDate = Carbon::now();
+                $dueDate = $currentDate->addMonths(36);
 
-            // for($x = 0; $x < ) {
+                $arrLoanDetail["dueDate"] = $dueDate;
+                $arrLoanDetail["total"] = 0;
+                $arrLoanDetail["charges"] = 0;
+                $arrLoanDetail["method"] = "";
+                $arrLoanDetail["status"] = 1;
 
-            // }
-
+                $loanDetail = LoanDetail::create($arrLoan);
+            }
             //end of insert into loan detail
 
             return redirect('/kredit/pengajuan')->withSuccess('Data pengajuan kredit berhasil dikirim!');

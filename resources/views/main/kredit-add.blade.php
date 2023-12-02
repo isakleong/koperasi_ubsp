@@ -28,7 +28,7 @@
                             <p>Silahkan pilih menu Simulasi Kredit atau Pengajuan Kredit</p>
                         </div>
                         <div class="card-body">
-                            <form class="form form-vertical" id="formSimulasiKredit">
+                            <form action="{{route('store.kredit')}}" class="form form-vertical" id="formSimulasiKredit" method="post">
                                 {{ csrf_field() }}
                                 <div class="form-body">
                                     <div class="row">
@@ -62,7 +62,7 @@
                                             <div class="form-group has-icon-left">
                                                 <label for="rates">Bunga Per Tahun</label>
                                                 <div class="position-relative">
-                                                    <input type="text" class="form-control" placeholder="Bunga" id="rates" name="rates" />
+                                                    <input type="text" class="form-control" placeholder="Bunga" id="rates" value="0.5" name="rates" readonly />
                                                     {{-- <div class="form-control-icon">
                                                         <i class="bi bi-percent"></i>
                                                     </div> --}}
