@@ -22,6 +22,7 @@ class Loan extends Model
         'total',
         'tenor',
         'rates',
+        'monthlyRates',
         'baseCicilan',
         'monthlyCicilan',
         'notes',

@@ -100,7 +100,16 @@ class MainController extends Controller
 
             return view('main.tabungan-recap', compact(['user', 'transactionData']));
         } elseif ($parameter == "add.kredit") {
-            return view('main.kredit-add', compact(['user']));
+            //check if user have outstanding loan
+            $cntActiveLoan = UserAccount::where('memberId', $user->memberId)
+                ->where('kind', 'kredit')
+                ->where(function ($query) {
+                    $query->whereNull('closedDate')
+                        ->orWhereNull('openDate');
+                })
+                ->count();
+
+            return view('main.kredit-add', compact(['user', 'cntActiveLoan']));
 
         } elseif ($parameter == "add.angsuran") {
             return view('main.angsuran-add', compact(['user']));
@@ -130,7 +139,93 @@ class MainController extends Controller
             return view('main.kredit-recap', compact(['user', 'loanData']));
 
         } elseif ($parameter == "recap.angsuran") {
-            return view('main.angsuran-recap', compact(['user']));
+            $dataTotalKredit = 0;
+            $dataRates = 0;
+            $dataTenor = 0;
+            $dataBaseCicilan = 0;
+            $dataMonthlyCicilan = 0;
+            $dataMonthlyRates = 0;
+
+            //get current loan data
+            $activeLoan = UserAccount::where('memberId', $user->memberId)
+                ->where('kind', 'kredit')
+                ->where(function ($query) {
+                    $query->whereNull('closedDate')
+                        ->orWhereNull('openDate');
+                })
+                ->first();
+
+            $loan = Loan::where('accountId', $activeLoan['accountId'])->get();
+
+            //format total, tanggal
+            $loanData = $loan->map(function ($item) {
+                $loanDocId = $item->docId;
+
+                $item->total = 'Rp ' . number_format($item->total, 0, ',', ',');
+                $item->baseCicilan = 'Rp ' . number_format($item->baseCicilan, 0, ',', ',');
+                $item->monthlyCicilan = 'Rp ' . number_format($item->monthlyCicilan, 0, ',', ',');
+                $item->monthlyRates = 'Rp ' . number_format($item->monthlyRates, 0, ',', ',');
+
+                if ($item->requestDate !== null) {
+                    $item->requestDate = Carbon::parse($item->requestDate)->format('d-m-Y H:i:s');
+                } else {
+                    $item->requestDate = "-";
+                }
+
+                if ($item->approvedOn !== null) {
+                    $item->approvedOn = Carbon::parse($item->approvedOn)->format('d-m-Y H:i:s');
+                } else {
+                    $item->approvedOn = "-";
+                }
+                
+                return $item;
+            });
+
+            if(count($loanData) > 0) {
+                $dataTotalKredit = $loanData[0]->total;
+                $dataRates = $loanData[0]->rates;
+                $dataTenor = $loanData[0]->tenor;
+                $dataBaseCicilan = $loanData[0]->baseCicilan;
+                $dataMonthlyCicilan = $loanData[0]->monthlyCicilan;
+                $dataMonthlyRates = $loanData[0]->monthlyRates;
+
+                $loanDetail = LoanDetail::where('loanDocId', $loanData[0]->docId)->get();
+                //format total, tanggal
+                $loanDetailData = $loanDetail->map(function ($item) {
+                    $item->total = 'Rp ' . number_format($item->total, 0, ',', ',');
+                    $item->charges = 'Rp ' . number_format($item->charges, 0, ',', ',');
+
+                    if ($item->dueDate !== null) {
+                        $item->dueDate = Carbon::parse($item->dueDate)->format('d-m-Y');
+                    } else {
+                        $item->dueDate = "-";
+                    }
+
+                    if ($item->transactionDate !== null) {
+                        $item->transactionDate = Carbon::parse($item->transactionDate)->format('d-m-Y H:i:s');
+                    } else {
+                        $item->transactionDate = "Belum bayar";
+                    }
+
+                    if ($item->approvedOn !== null) {
+                        $item->approvedOn = Carbon::parse($item->approvedOn)->format('d-m-Y H:i:s');
+                    } else {
+                        $item->approvedOn = "-";
+                    }
+                    
+                    return $item;
+                });
+            }
+
+            $arrDataHeader = [];
+            $arrDataHeader[0]["totalKredit"] = $dataTotalKredit;
+            $arrDataHeader[0]["rates"] = $dataRates;
+            $arrDataHeader[0]["tenor"] = $dataTenor;
+            $arrDataHeader[0]["baseCicilan"] = $dataBaseCicilan;
+            $arrDataHeader[0]["monthlyCicilan"] = $dataMonthlyCicilan;
+            $arrDataHeader[0]["monthlyRates"] = $dataMonthlyRates;
+
+            return view('main.angsuran-recap', compact(['user', 'loanData', 'arrDataHeader', 'loanDetailData']));
 
         } elseif ($parameter == "edit.profile") {
             return view('main.profile-edit', compact(['user']));
@@ -756,7 +851,8 @@ class MainController extends Controller
         //hitung angsuran
         $tenor = $request['tenor'];
         $nominal = $request['nominal'];
-        $rates = intval($request['rates']);
+        $rates = rtrim(number_format($request['rates'], 2), '0');
+        $rates = rtrim($rates, '.');
 
         //hitung angsuran pokok tiap bulan
         $hasilAngsuranPokok = ceil($nominal / $tenor);
@@ -766,11 +862,11 @@ class MainController extends Controller
         $hasilTotalAngsuran = ceil($hasilAngsuranPokok+$hasilBungaPerBulan);
 
         try {
-            $input = $request->all();
-
             //check if user have user_account
             $user = Auth::user();
 
+            $input = $request->all();
+            
             //insert into user_account
             $arrUserAccount = [];
             $arrUserAccount["memberId"] = $user->memberId;
@@ -790,6 +886,7 @@ class MainController extends Controller
             $arrLoan["total"] = $input['nominal'];
             $arrLoan["tenor"] = $input['tenor'];
             $arrLoan["rates"] = $input['rates'];
+            $arrLoan["monthlyRates"] = $hasilBungaPerBulan;
             $arrLoan["baseCicilan"] = $hasilAngsuranPokok;
             $arrLoan["monthlyCicilan"] = $hasilTotalAngsuran;
             $arrLoan["notes"] = $input['notes'];
@@ -807,7 +904,7 @@ class MainController extends Controller
                 $currentDate = Carbon::now();
                 $dueDate = $currentDate->addMonths($tenor);
                 $arrLoanDetail["dueDate"] = $dueDate;
-                $arrLoanDetail["total"] = 0;
+                $arrLoanDetail["total"] = $hasilTotalAngsuran;
                 $arrLoanDetail["charges"] = 0;
                 $arrLoanDetail['method'] = 0;
                 $arrLoanDetail["status"] = 1;

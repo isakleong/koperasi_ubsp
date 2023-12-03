@@ -18,6 +18,7 @@ return new class extends Migration
             $table->bigInteger('total');
             $table->integer('tenor');
             $table->float('rates');
+            $table->bigInteger('monthlyRates');
             $table->bigInteger('baseCicilan');
             $table->bigInteger('monthlyCicilan');
             $table->string('notes');
