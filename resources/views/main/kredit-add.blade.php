@@ -9,11 +9,17 @@
 <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
 <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
 <link rel="stylesheet" href="/main/assets/compiled/css/kredit.css">
-{{-- <meta name="csrf-token" content="{{ csrf_token() }}" /> --}}
+
+<style>
+    h6.labelResultSimulasi {
+        color: #000000;
+    }
+</style>
+
 @endsection
 
 @section('content')
-
+@include('sweetalert::alert')
 <div class="content-wrapper container">
     <div class="page-heading">
         <h3>Pengajuan Kredit</h3>
@@ -25,7 +31,6 @@
                     <div class="card">
                         <div class="card-header">
                             <h4>Data Pengajuan Kredit</h4>
-                            <p>Silahkan pilih menu Simulasi Kredit atau Pengajuan Kredit</p>
                         </div>
                         <div class="card-body">
                             <form action="{{route('store.kredit')}}" class="form form-vertical" id="formSimulasiKredit" method="post">
@@ -81,26 +86,26 @@
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <h6>Total Kredit</h6>
+                                                        <h6 class="labelResultSimulasi">Total Kredit</h6>
                                                         <p id="hasilTotalKredit">Rp 0</p>
 
-                                                        <h6>Suku Bunga (Per Tahun)</h6>
+                                                        <h6 class="labelResultSimulasi">Suku Bunga (Per Tahun)</h6>
                                                         <p id="hasilRates">0%</p>
 
-                                                        <h6>Lama Angsuran</h6>
+                                                        <h6 class="labelResultSimulasi">Lama Angsuran</h6>
                                                         <p id="hasilTenor">0</p>
 
                                                         <div class="divider">
-                                                            <div class="divider-text">Rincian Angsuran</div>
+                                                            <div class="divider-text" style="font-weight: bold; color:#000000;">Rincian Angsuran (Per Bulan)</div>
                                                         </div>
 
-                                                        <h6>Angsuran Pokok (Per Bulan)</h6>
+                                                        <h6 class="labelResultSimulasi">Angsuran Pokok</h6>
                                                         <p id="hasilAngsuranPokok">Rp 0</p>
 
-                                                        <h6>Angsuran Bunga (Per Bulan)</h6>
+                                                        <h6 class="labelResultSimulasi">Angsuran Bunga</h6>
                                                         <p id="hasilBungaPerBulan">Rp 0</p>
 
-                                                        <h6>Total Angsuran Yang Dibayar</h6>
+                                                        <h6 class="labelResultSimulasi">Total Angsuran Yang Dibayar</h6>
                                                         <p id="hasilTotalAngsuran">Rp 0</p>
                                                     </div>
                                                     <div class="modal-footer">

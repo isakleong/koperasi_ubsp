@@ -638,25 +638,13 @@ class MainController extends Controller
     }
 
     public function storeKredit(Request $request) {
-        dd($request->all());
+
         $request['nominal'] = str_replace(',', '', $request->input('nominal'));
         $request['nominal'] = str_replace('Rp', '', $request->input('nominal'));
 
         $request['rates'] = str_replace('%', '', $request->input('rates'));
 
         $request['tenor'] = str_replace(' bulan', '', $request->input('tenor'));
-
-        //hitung angsuran
-        $tenor = $request['tenor'];
-        $nominal = $request['nominal'];
-        $rates = intval($request['rates']);
-
-        //hitung angsuran pokok tiap bulan
-        $hasilAngsuranPokok = ceil($nominal / $tenor);
-        $hasilBungaPerBulan = ceil(($nominal * $rates / 100) / 12);
-        $hasilTotalBunga = $hasilBungaPerBulan * $tenor;
-
-        $hasilTotalAngsuran = ceil($hasilAngsuranPokok+$hasilBungaPerBulan);
 
         $validator = Validator::make(
             [
@@ -666,15 +654,15 @@ class MainController extends Controller
                 'notes' => $request->input('notes'),
             ],
             [
-                'tenor' => 'required|not_in:-- Pilih Lama Angsuran --|in:3,6,12,36',
+                'tenor' => 'required|not_in:-- Pilih Lama Pinjaman --|in:3,6,12,24,36',
                 'nominal' => 'required|numeric|min:1000000',
                 'notes' => 'required',
                 'rates' => 'required|numeric|in:0.50',
             ],
             [
-                'tenor.required' => 'Lama angsuran belum dipilih',
-                'tenor.not_in' => 'Lama angsuran belum dipilih',
-                'tenor.in' => 'Lama angsuran tidak valid',
+                'tenor.required' => 'Lama pinjaman belum dipilih',
+                'tenor.not_in' => 'Lama pinjaman belum dipilih',
+                'tenor.in' => 'Lama pinjaman tidak valid',
                 'nominal.required' => 'Nominal belum diisi',
                 'nominal.min' => 'Minimal nominal pinjaman adalah Rp 1,000,000',
                 'nominal.numeric' => 'Nominal tidak valid',
@@ -689,10 +677,20 @@ class MainController extends Controller
             return redirect()->back()->withErrors($validator->errors()->first());
         }
 
+        //hitung angsuran
+        $tenor = $request['tenor'];
+        $nominal = $request['nominal'];
+        $rates = intval($request['rates']);
+
+        //hitung angsuran pokok tiap bulan
+        $hasilAngsuranPokok = ceil($nominal / $tenor);
+        $hasilBungaPerBulan = ceil(($nominal * $rates / 100) / 12);
+        $hasilTotalBunga = $hasilBungaPerBulan * $tenor;
+
+        $hasilTotalAngsuran = ceil($hasilAngsuranPokok+$hasilBungaPerBulan);
+
         try {
             $input = $request->all();
-
-            dd($input['tenor']);
 
             //check if user have user_account
             $user = Auth::user();
@@ -722,6 +720,7 @@ class MainController extends Controller
             $arrLoan["status"] = 1;
             $arrLoan["requestDate"] = date('Y-m-d H:i:s');
             $loan = Loan::create($arrLoan);
+            $loan->save();
             //end of insert into loan
 
             //insert into loan detail
@@ -729,17 +728,15 @@ class MainController extends Controller
                 $arrLoanDetail = [];
                 $arrLoanDetail["loanDocId"] = $loan->docId;
                 $arrLoanDetail["indexCicilan"] = $i;
-                
                 $currentDate = Carbon::now();
                 $dueDate = $currentDate->addMonths($tenor);
-
                 $arrLoanDetail["dueDate"] = $dueDate;
                 $arrLoanDetail["total"] = 0;
                 $arrLoanDetail["charges"] = 0;
-                $arrLoanDetail["method"] = "";
+                $arrLoanDetail['method'] = 0;
                 $arrLoanDetail["status"] = 1;
-
-                $loanDetail = LoanDetail::create($arrLoan);
+                // $loanDetail = LoanDetail::create($arrLoanDetail);
+                $loan->loanDetails()->create($arrLoanDetail);
             }
             //end of insert into loan detail
 

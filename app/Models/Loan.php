@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\LoanDetail;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Loan extends Model
 {
@@ -12,6 +13,8 @@ class Loan extends Model
     protected $table = 'loan';
 
     protected $primaryKey = 'docId';
+
+    public $incrementing = false;
 
     protected $fillable = [
         'docId',
@@ -26,6 +29,10 @@ class Loan extends Model
         'requestDate',
         'approvedOn',
     ];
+
+    public function loanDetails(){
+        return $this->hasMany(LoanDetail::class, 'loanDocId', 'docId');
+    }
 
     protected static function boot()
     {

@@ -25,5 +25,11 @@ class LoanDetail extends Model
         'approvedOn',
     ];
 
-    
+    public function loan() {
+        return $this->belongsTo(Loan::class, 'loanDocId', 'docID');
+    }
+
+    // public function loanDetail(): BelongsTo {
+    //     return $this->belongsTo(Loan::class, 'loanDocId', 'docId');
+    // }
 }
