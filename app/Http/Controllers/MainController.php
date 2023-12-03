@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Loan;
+use App\Models\LoanDetail;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserAccount;
@@ -623,7 +624,8 @@ class MainController extends Controller
 
         $tenor = $request['tenor'];
         $nominal = $request['nominal'];
-        $rates = intval($request['rates']);
+        $rates = rtrim(number_format($request['rates'], 2), '0');
+        $rates = rtrim($rates, '.');
 
         //hitung angsuran pokok tiap bulan
         $hasilAngsuranPokok = ceil($nominal / $tenor);
@@ -729,7 +731,7 @@ class MainController extends Controller
                 $arrLoanDetail["indexCicilan"] = $i;
                 
                 $currentDate = Carbon::now();
-                $dueDate = $currentDate->addMonths(36);
+                $dueDate = $currentDate->addMonths($tenor);
 
                 $arrLoanDetail["dueDate"] = $dueDate;
                 $arrLoanDetail["total"] = 0;
