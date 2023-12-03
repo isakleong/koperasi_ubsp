@@ -22,7 +22,7 @@ return new class extends Migration
             $table->bigInteger('charges');
             $table->tinyInteger('method');
             $table->string('image')->nullable();
-            $table->string('notes');
+            $table->string('notes')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->timestamp('approvedOn')->nullable();
             $table->timestamps();

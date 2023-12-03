@@ -9,7 +9,7 @@ class Loan extends Model
 {
     use HasFactory;
 
-    protected $table = 'transaction';
+    protected $table = 'loan';
 
     protected $primaryKey = 'docId';
 
