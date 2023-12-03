@@ -106,7 +106,28 @@ class MainController extends Controller
             return view('main.angsuran-add', compact(['user']));
 
         } elseif ($parameter == "recap.kredit") {
-            return view('main.kredit-recap', compact(['user']));
+            $startDate = Carbon::now()->subMonth();
+            $loan = Loan::where('docId', 'like', '%' . $user->memberId . '%')->get();
+            //format total, tanggal
+            $loanData = $loan->map(function ($item) {
+                $item->total = 'Rp ' . number_format($item->total, 0, ',', ',');
+
+                if ($item->requestDate !== null) {
+                    $item->requestDate = Carbon::parse($item->requestDate)->format('d-m-Y H:i:s');
+                } else {
+                    $item->requestDate = "-";
+                }
+
+                if ($item->approvedOn !== null) {
+                    $item->approvedOn = Carbon::parse($item->approvedOn)->format('d-m-Y H:i:s');
+                } else {
+                    $item->approvedOn = "-";
+                }
+                
+                return $item;
+            });
+
+            return view('main.kredit-recap', compact(['user', 'loanData']));
 
         } elseif ($parameter == "recap.angsuran") {
             return view('main.angsuran-recap', compact(['user']));
@@ -233,6 +254,61 @@ class MainController extends Controller
         });
         
         return view('main.tabungan-recap', compact(['user','transactionData','transaction']));
+    }
+
+    public function filterRecapKredit(Request $request) {
+        $validator = Validator::make(
+            [
+                'startDate' => $request->input('startDate'),
+                'endDate' => $request->input('endDate'),
+            ],
+            [
+                'startDate' => 'required|date',
+                'endDate' => 'required|date|after_or_equal:startDate|max_one_month_difference:startDate|before_or_equal:' . now()->toDateString(),
+            ],
+            [
+                'startDate.required' => 'Tanggal awal belum dipilih',
+                'startDate.date' => 'Tanggal awal tidak valid',
+                'endDate.required' => 'Tanggal akhir belum dipilih',
+                'endDate.date' => 'Tanggal akhir tidak valid',
+                'endDate.after_or_equal' => 'Tanggal akhir tidak boleh lebih kecil dari tanggal awal',
+                'endDate.before_or_equal' => 'Limit periode pencarian adalah 1 bulan',
+                'endDate.max_one_month_difference' => 'Limit periode pencarian adalah 1 bulan',
+            ],
+        );
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors()->first());
+        }
+
+        $user = Auth::user();
+
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+        $endDate = Carbon::parse($endDate)->endOfDay(); //adjust to include full day
+
+        $loan = Loan::whereBetween('requestDate', [$startDate, $endDate])->get();
+
+        //format total, tanggal
+        $loanData = $loan->map(function ($item) {
+            $item->total = 'Rp ' . number_format($item->total, 0, ',', ',');
+
+            if ($item->transactionDate !== null) {
+                $item->transactionDate = Carbon::parse($item->transactionDate)->format('d-m-Y H:i:s');
+            } else {
+                $item->transactionDate = "-";
+            }
+
+            if ($item->approvedOn !== null) {
+                $item->approvedOn = Carbon::parse($item->approvedOn)->format('d-m-Y H:i:s');
+            } else {
+                $item->approvedOn = "-";
+            }
+            
+            return $item;
+        });
+        
+        return view('main.kredit-recap', compact(['user','loanData','loan']));
     }
 
     public function storeUserActivation(Request $request) {

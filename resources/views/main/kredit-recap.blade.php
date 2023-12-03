@@ -8,14 +8,24 @@
     <link rel="stylesheet" href="/main/assets/extensions/simple-datatables/style.css">
     <link rel="stylesheet" href="/main/assets/compiled/css/table-datatable.css">
     <link rel="stylesheet" href="/main/assets/extensions/flatpickr/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" integrity="sha512-34s5cpvaNG3BknEWSuOncX28vz97bRI59UnVtEEpFX536A7BtZSJHsDyFoCl8S7Dt2TPzcrCEoHBGeM4SUBDBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 @endsection
 
 @section('content')
+@include('sweetalert::alert')
     <div class="content-wrapper container">
-        <div class="page-heading">
-            <h3>Rekap Kredit</h3>
-            <input type="date" class="form-control flatpickr-range mb-3" placeholder="Pilih periode tanggal...">
-        </div>
+        <form method="post" action="{{ route('filter.recap.kredit') }}">
+            @csrf
+            <label for="startDate">Tanggal Awal :</label>
+            {{-- <input type="date" name="startDate" id="startDate" required> --}}
+            <input placeholder="Pilih tanggal awal" type="text" id="startDate" class="form-control datepicker mb-3" name="startDate" required>
+            
+            <label for="endDate">Tanggal Akhir :</label>
+            {{-- <input type="date" name="endDate" id="endDate" required> --}}
+            <input placeholder="Pilih tanggal akhir" type="text" id="endDate" class="form-control datepicker mb-3" name="endDate" required>
+        
+            <button type="submit" class="btn btn-primary me-1 mb-1">Cari</button>
+        </form>
         <div class="page-content">
             <section class="row">
                 <div class="col-12 col-lg-12">
@@ -33,35 +43,30 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>28-10-2023</td>
-                                        <td>1 Bulan</td>
-                                        <td>Rp 650,000</td>
-                                        <td>0,5%</td>
-                                        <td>Beli mesin</td>
-                                        <td>
-                                            <span class="badge bg-success">Disetujui</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>22-01-2023</td>
-                                        <td>3 Bulan</td>
-                                        <td>Rp 1,200,000</td>
-                                        <td>0,5%</td>
-                                        <td>Renovasi rumah</td>
-                                        <td>
-                                            <span class="badge bg-success">Disetujui</span>
-                                        </td>
-                                    </tr>
-                                    {{-- <tr>
-                                        <td>Nathaniel</td>
-                                        <td>mi.Duis@diam.edu</td>
-                                        <td>(012165) 76278</td>
-                                        <td>Grumo Appula</td>
-                                        <td>
-                                            <span class="badge bg-danger">Inactive</span>
-                                        </td>
-                                    </tr> --}}
+                                    @foreach ($loanData as $item)
+                                        <tr>
+                                            <td>{{$item->requestDate}}</td>
+                                            <td>{{$item->tenor}}</td>
+                                            <td>{{$item->total}}</td>
+                                            <td>{{$item->rates}}</td>
+                                            <td>{{$item->notes}}</td>
+
+                                            @if ($item->status == 1)
+                                                <td>
+                                                    <span class="badge bg-warning">Menunggu Persetujuan</span>
+                                                </td>
+                                            @elseif ($item->status == 2)
+                                                <td>
+                                                    <span class="badge bg-success">Disetujui</span>
+                                                </td>
+                                            @elseif ($item->status == 3)
+                                                <td>
+                                                    <span class="badge bg-danger">Ditolak</span>
+                                                </td>
+                                            @endif
+                                            <td>{{$item->approvedOn}}</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -73,9 +78,25 @@
 @endsection
 
 @section('vendorJS')
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
 <script src="/main/assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
 <script src="/main/assets/static/js/pages/simple-datatables.js"></script>
 
 <script src="/main/assets/extensions/flatpickr/flatpickr.min.js"></script>
 <script src="/main/assets/static/js/pages/date-picker.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js" integrity="sha512-LsnSViqQyaXpD4mBBdRYeP6sRwJiJveh2ZIbW41EBrNmKxgr/LFZIiWT6yr+nycvhvauz8c2nYMhrP80YhG7Cw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="/vendor/sweetalert/sweetalert.all.js"></script>
+
+<script type="text/javascript">
+    $(function(){
+        $(".datepicker").datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true,
+        });
+    });
+</script>
 @endsection
