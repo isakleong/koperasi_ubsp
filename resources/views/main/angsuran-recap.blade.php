@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="/main/assets/compiled/css/table-datatable.css">
     <link rel="stylesheet" href="/main/assets/extensions/flatpickr/flatpickr.min.css">
     <link rel="stylesheet" href="/main/assets/compiled/css/extra-component-comment.css">
+    <link rel="stylesheet" href="/main/assets/extensions/filepond/filepond.css">
+    <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
+    <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
     <style>
         table tbody tr td {
           text-align: left;
@@ -109,13 +112,75 @@
                                             <h6>Denda</h6>
                                             <p>{{ $item->charges }}</p>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-6 mb-3">
-                                            <a href="{{ route('add.angsuran') }}" class="btn icon icon-left btn-primary me-2 text-nowrap" >Bayar Angsuran</a>
+                                        <div class="col-lg-6">
+                                            <h6>Status</h6>
+                                            <p>{{ $item->charges }}</p>
                                         </div>
                                         <div class="col-lg-6">
-                                            <a href="{{ route('add.angsuran') }}" class="btn icon icon-left btn-warning me-2 text-nowrap" >Detail Pembayaran</a>
+                                            <h6>Tanggal Approve</h6>
+                                            <p>{{ $item->charges }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        {{-- <div class="col-lg-6 mb-3">
+                                            <a href="{{ route('add.angsuran') }}" class="btn icon icon-left btn-primary me-2 text-nowrap" >Bayar Angsuran</a>
+                                        </div> --}}
+
+                                        <div class="col-lg-12 mb-3">
+                                            <button id="hitungSimulasi" type="button" class="btn btn-primary simulasi" data-bs-toggle="modal" data-bs-target="#bayarAngsuran">Bayar Angsuran</button>
+                                        </div>
+                                        
+                                        <div class="modal fade" id="bayarAngsuran" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="staticBackdropLabel">Bayar Angsuran</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form class="form form-vertical" >
+                                                            @csrf
+                                                            <div class="form-body">
+                                                                <div class="row">
+                                                                    <div class="col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="mobile-id-icon">Jenis Pembayaran</label>
+                                                                            <div class="form-check">
+                                                                                <input class="form-check-input" type="radio" name="tipe-pembayaran" id="tipe-cash" value="cash" checked>
+                                                                                <label class="form-check-label" for="flexRadioDefault1">
+                                                                                    Cash
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="form-check">
+                                                                                <input class="form-check-input" type="radio" name="tipe-pembayaran" id="tipe-transfer" value="transfer">
+                                                                                <label class="form-check-label" for="flexRadioDefault2">
+                                                                                    Transfer
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-12" id="bukti-trf" style="display: none;">
+                                                                        <div class="form-group has-icon-left">
+                                                                            <label for="mobile-id-icon">Bukti Pembayaran</label>
+                                                                            <div class="position-relative">
+                                                                                <input type="file" class="image-exif-filepond" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-12 d-flex justify-content-end">
+                                                                        <button type="submit" class="btn btn-primary me-1 mb-1">
+                                                                            Simpan
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -131,4 +196,35 @@
 @section('vendorJS')
 <script src="/main/assets/extensions/flatpickr/flatpickr.min.js"></script>
 <script src="/main/assets/static/js/pages/date-picker.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="/main/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js">
+</script>
+<script src="/main/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js">
+</script>
+<script src="/main/assets/extensions/filepond-plugin-image-crop/filepond-plugin-image-crop.min.js"></script>
+<script
+    src="/main/assets/extensions/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js">
+</script>
+<script src="/main/assets/extensions/filepond-plugin-image-filter/filepond-plugin-image-filter.min.js"></script>
+<script src="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js"></script>
+<script src="/main/assets/extensions/filepond-plugin-image-resize/filepond-plugin-image-resize.min.js"></script>
+<script src="/main/assets/extensions/filepond/filepond.js"></script>
+<script src="/main/assets/extensions/toastify-js/src/toastify.js"></script>
+<script src="/main/assets/static/js/pages/filepond.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('input[type="radio"]').on('change', function () {
+            // Get the selected value
+            var selectedValue = $('input[name="tipe-pembayaran"]:checked').val();
+            
+            if(selectedValue == 'transfer') {
+                $('#bukti-trf').show();
+            } else {
+                $('#bukti-trf').hide();
+            }
+        });
+    });
+</script>
 @endsection
