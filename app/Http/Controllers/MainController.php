@@ -146,6 +146,14 @@ class MainController extends Controller
             $dataMonthlyCicilan = 0;
             $dataMonthlyRates = 0;
 
+            $cntPendingLoan = UserAccount::where('memberId', $user->memberId)
+                ->where('kind', 'kredit')
+                ->where(function ($query) {
+                    $query->whereNull('closedDate')
+                        ->orWhereNull('openDate');
+                })
+                ->count();
+
             //get current loan data
             $activeLoan = UserAccount::where('memberId', $user->memberId)
                 ->where('kind', 'kredit')
