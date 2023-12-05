@@ -28,6 +28,7 @@
         .circles {
             display: flex;
         }
+        
         .circle-with-text {
             background: linear-gradient(#9733EE, #DA22FF);
             justify-content: center;
@@ -41,6 +42,45 @@
             height: 160px;
             width: 160px;
             color: #fff;
+        }
+
+        .timeline-with-icons {
+            border-left: 3px solid hsl(0, 0%, 90%);
+            position: relative;
+            list-style: none;
+        }
+
+        .timeline-with-icons .timeline-item {
+            position: relative;
+        }
+
+        .timeline-with-icons .timeline-item:after {
+            position: absolute;
+            display: block;
+            top: 0;
+        }
+
+        .timeline-with-icons .timeline-icon {
+            position: absolute;
+            left: -48px;
+            background-color: hsl(217, 88.2%, 90%);
+            color: hsl(217, 88.8%, 35.1%);
+            border-radius: 50%;
+            height: 31px;
+            width: 31px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-tabs .nav-item .nav-link {
+            background-color:lavender;
+            color: #000;
+        }
+
+        .nav-tabs .nav-item .nav-link.active {
+            color: white;
+            background: linear-gradient(#4e54c8, #8f94fb );
         }
     </style>
 @endsection
@@ -78,13 +118,435 @@
                 </tbody>    
             </table>
         </div>
+        
+        <ul class="nav nav-tabs nav-justified" role="tablist">
+            <li class="nav-item" role="presentation">
+              <a class="nav-link active" id="justified-tab-0" data-bs-toggle="tab" href="#justified-tabpanel-0" role="tab" aria-controls="justified-tabpanel-0" aria-selected="true">Aktif</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="justified-tab-1" data-bs-toggle="tab" href="#justified-tabpanel-1" role="tab" aria-controls="justified-tabpanel-1" aria-selected="false">Pending</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="justified-tab-2" data-bs-toggle="tab" href="#justified-tabpanel-2" role="tab" aria-controls="justified-tabpanel-2" aria-selected="false">Disetujui</a>
+            </li>
+        </ul>
+        <div class="tab-content pt-5" id="tab-content">
+            <div class="tab-pane active" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
+                <div class="page-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Angsuran Mendatang</h4>
+                        </div>
+                        <div class="card-body">
+                            <section class="p-2">
+                                <ul class="timeline-with-icons">
+                                    @foreach ($loanDetailData as $item)
+                                        <li class="timeline-item mb-5">                        
+                                            <span class="timeline-icon">
+                                            <i class="fas fa-money-bill-wave text-primary fa-sm fa-fw"></i>
+                                            </span>
+                                            <h5 class="fw-bold">Angsuran Ke-{{ $item->indexCicilan+1 }}</h5>
+                                            <p class="text-muted fw-bold mb-0">Jatuh Tempo</p>
+                                            <p class="mb-1">{{ $item->dueDate }}</p>
+                                            <p class="text-muted fw-bold mb-0">Tanggal Bayar</p>
+                                            <p class="mb-1">{{ $item->transactionDate }}</p>
+                                            <p class="text-muted fw-bold mb-0">Total Angsuran</p>
+                                            <p class="mb-1">{{ $item->total }}</p>
+                                            <p class="text-muted fw-bold mb-0">Total Denda</p>
+                                            <p class="mb-1">{{ $item->charges }}</p>
+                                            <p class="text-muted fw-bold mb-0">Tanggal Approved</p>
+                                            <p class="mb-1">{{ $item->charges }}</p>
+                                            <p class="text-muted fw-bold mb-0">Metode Pembayaran</p>
+                                            <p class="mb-1">{{ $item->method }}</p>
+                                            <p class="text-muted fw-bold mb-0">Bukti Transfer</p>
+                                            <p class="mb-1">{{ $item->method }}</p>
+                                            <div class="col-lg-12 mb-3">
+                                                <button id="hitungSimulasi" type="button" class="btn btn-primary simulasi" data-bs-toggle="modal" data-bs-target="#bayarAngsuran">Bayar Angsuran</button>
+                                            </div>
+                                            
+                                            <div class="modal fade" id="bayarAngsuran" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="staticBackdropLabel">Bayar Angsuran</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form class="form form-vertical" >
+                                                                @csrf
+                                                                <div class="form-body">
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <div class="form-group">
+                                                                                <label for="mobile-id-icon">Jenis Pembayaran</label>
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="radio" name="tipe-pembayaran" id="tipe-cash" value="cash" checked>
+                                                                                    <label class="form-check-label" for="flexRadioDefault1">
+                                                                                        Cash
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="radio" name="tipe-pembayaran" id="tipe-transfer" value="transfer">
+                                                                                    <label class="form-check-label" for="flexRadioDefault2">
+                                                                                        Transfer
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12" id="bukti-trf" style="display: none;">
+                                                                            <div class="form-group has-icon-left">
+                                                                                <label for="mobile-id-icon">Bukti Pembayaran</label>
+                                                                                <div class="position-relative">
+                                                                                    <input type="file" class="image-exif-filepond" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 d-flex justify-content-end">
+                                                                            <button type="submit" class="btn btn-primary me-1 mb-1">
+                                                                                Simpan
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- pending --}}
+            <div class="tab-pane" id="justified-tabpanel-1" role="tabpanel" aria-labelledby="justified-tab-1">
+                <div class="page-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Riwayat Angsuran (Menunggu ACC)</h4>
+                        </div>
+                        <div class="card-body">
+                            @foreach ($loanDetailData as $item)
+                                <div class="comment">
+                                    <div class="comment-header">
+                                        <div class="pr-50">
+                                            <div class="circles">
+                                                <div class="circle-with-text">
+                                                    Angsuran<br>Ke {{ $item->indexCicilan+1 }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="comment-body">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <h6>Tanggal Jatuh Tempo</h6>
+                                                    <p>{{ $item->dueDate }}</p>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <h6>Tanggal Bayar</h6>
+                                                    <p>{{ $item->transactionDate }}</p>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <h6>Total Angsuran</h6>
+                                                    <p>{{ $item->total }}</p>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <h6>Denda</h6>
+                                                    <p>{{ $item->charges }}</p>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <h6>Status</h6>
+                                                    <p>{{ $item->charges }}</p>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <h6>Tanggal Approve</h6>
+                                                    <p>{{ $item->charges }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-6 mb-3">
+                                                    <a href="{{ route('add.angsuran') }}" class="btn icon icon-left btn-primary me-2 text-nowrap" >Bayar Angsuran</a>
+                                                </div>
+        
+                                                <div class="col-lg-12 mb-3">
+                                                    <button id="hitungSimulasi" type="button" class="btn btn-primary simulasi" data-bs-toggle="modal" data-bs-target="#bayarAngsuran">Bayar Angsuran</button>
+                                                </div>
+                                                
+                                                <div class="modal fade" id="bayarAngsuran" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="staticBackdropLabel">Bayar Angsuran</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form class="form form-vertical" >
+                                                                    @csrf
+                                                                    <div class="form-body">
+                                                                        <div class="row">
+                                                                            <div class="col-12">
+                                                                                <div class="form-group">
+                                                                                    <label for="mobile-id-icon">Jenis Pembayaran</label>
+                                                                                    <div class="form-check">
+                                                                                        <input class="form-check-input" type="radio" name="tipe-pembayaran" id="tipe-cash" value="cash" checked>
+                                                                                        <label class="form-check-label" for="flexRadioDefault1">
+                                                                                            Cash
+                                                                                        </label>
+                                                                                    </div>
+                                                                                    <div class="form-check">
+                                                                                        <input class="form-check-input" type="radio" name="tipe-pembayaran" id="tipe-transfer" value="transfer">
+                                                                                        <label class="form-check-label" for="flexRadioDefault2">
+                                                                                            Transfer
+                                                                                        </label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-12" id="bukti-trf" style="display: none;">
+                                                                                <div class="form-group has-icon-left">
+                                                                                    <label for="mobile-id-icon">Bukti Pembayaran</label>
+                                                                                    <div class="position-relative">
+                                                                                        <input type="file" class="image-exif-filepond" />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-12 d-flex justify-content-end">
+                                                                                <button type="submit" class="btn btn-primary me-1 mb-1">
+                                                                                    Simpan
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="tab-pane" id="justified-tabpanel-2" role="tabpanel" aria-labelledby="justified-tab-2">
+                <div class="page-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Riwayat Angsuran (Sudah ACC)</h4>
+                        </div>
+                        <div class="card-body">
+                            @foreach ($loanDetailData as $item)
+                                <div class="comment">
+                                    <div class="comment-header">
+                                        <div class="pr-50">
+                                            <div class="circles">
+                                                <div class="circle-with-text">
+                                                    Angsuran<br>Ke {{ $item->indexCicilan+1 }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="comment-body">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <h6>Tanggal Jatuh Tempo</h6>
+                                                    <p>{{ $item->dueDate }}</p>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <h6>Tanggal Bayar</h6>
+                                                    <p>{{ $item->transactionDate }}</p>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <h6>Total Angsuran</h6>
+                                                    <p>{{ $item->total }}</p>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <h6>Denda</h6>
+                                                    <p>{{ $item->charges }}</p>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <h6>Status</h6>
+                                                    <p>{{ $item->charges }}</p>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <h6>Tanggal Approve</h6>
+                                                    <p>{{ $item->charges }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-6 mb-3">
+                                                    <a href="{{ route('add.angsuran') }}" class="btn icon icon-left btn-primary me-2 text-nowrap" >Bayar Angsuran</a>
+                                                </div>
+        
+                                                <div class="col-lg-12 mb-3">
+                                                    <button id="hitungSimulasi" type="button" class="btn btn-primary simulasi" data-bs-toggle="modal" data-bs-target="#bayarAngsuran">Bayar Angsuran</button>
+                                                </div>
+                                                
+                                                <div class="modal fade" id="bayarAngsuran" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="staticBackdropLabel">Bayar Angsuran</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form class="form form-vertical" >
+                                                                    @csrf
+                                                                    <div class="form-body">
+                                                                        <div class="row">
+                                                                            <div class="col-12">
+                                                                                <div class="form-group">
+                                                                                    <label for="mobile-id-icon">Jenis Pembayaran</label>
+                                                                                    <div class="form-check">
+                                                                                        <input class="form-check-input" type="radio" name="tipe-pembayaran" id="tipe-cash" value="cash" checked>
+                                                                                        <label class="form-check-label" for="flexRadioDefault1">
+                                                                                            Cash
+                                                                                        </label>
+                                                                                    </div>
+                                                                                    <div class="form-check">
+                                                                                        <input class="form-check-input" type="radio" name="tipe-pembayaran" id="tipe-transfer" value="transfer">
+                                                                                        <label class="form-check-label" for="flexRadioDefault2">
+                                                                                            Transfer
+                                                                                        </label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-12" id="bukti-trf" style="display: none;">
+                                                                                <div class="form-group has-icon-left">
+                                                                                    <label for="mobile-id-icon">Bukti Pembayaran</label>
+                                                                                    <div class="position-relative">
+                                                                                        <input type="file" class="image-exif-filepond" />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-12 d-flex justify-content-end">
+                                                                                <button type="submit" class="btn btn-primary me-1 mb-1">
+                                                                                    Simpan
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="page-content">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Data Angsuran</h4>
+                    <h4 class="card-title">Riwayat Angsuran</h4>
                 </div>
                 <div class="card-body">
-                    @foreach ($loanDetailData as $item)
+                    <section class="p-2">
+                        <ul class="timeline-with-icons">
+                            @foreach ($loanDetailData as $item)
+                                <li class="timeline-item mb-5">                        
+                                    <span class="timeline-icon">
+                                    <i class="fas fa-money-bill-wave text-primary fa-sm fa-fw"></i>
+                                    </span>
+                                    <h5 class="fw-bold">Angsuran Ke-{{ $item->indexCicilan+1 }}</h5>
+                                    <p class="text-muted fw-bold mb-0">Jatuh Tempo</p>
+                                    <p class="mb-1">{{ $item->dueDate }}</p>
+                                    <p class="text-muted fw-bold mb-0">Tanggal Bayar</p>
+                                    <p class="mb-1">{{ $item->transactionDate }}</p>
+                                    <p class="text-muted fw-bold mb-0">Total Angsuran</p>
+                                    <p class="mb-1">{{ $item->total }}</p>
+                                    <p class="text-muted fw-bold mb-0">Total Denda</p>
+                                    <p class="mb-1">{{ $item->charges }}</p>
+                                    <p class="text-muted fw-bold mb-0">Tanggal Approved</p>
+                                    <p class="mb-1">{{ $item->charges }}</p>
+                                    <p class="text-muted fw-bold mb-0">Metode Pembayaran</p>
+                                    <p class="mb-1">{{ $item->method }}</p>
+                                    <p class="text-muted fw-bold mb-0">Bukti Transfer</p>
+                                    <p class="mb-1">{{ $item->method }}</p>
+                                    <div class="col-lg-12 mb-3">
+                                        <button id="hitungSimulasi" type="button" class="btn btn-primary simulasi" data-bs-toggle="modal" data-bs-target="#bayarAngsuran">Bayar Angsuran</button>
+                                    </div>
+                                    
+                                    <div class="modal fade" id="bayarAngsuran" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="staticBackdropLabel">Bayar Angsuran</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form class="form form-vertical" >
+                                                        @csrf
+                                                        <div class="form-body">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        <label for="mobile-id-icon">Jenis Pembayaran</label>
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input" type="radio" name="tipe-pembayaran" id="tipe-cash" value="cash" checked>
+                                                                            <label class="form-check-label" for="flexRadioDefault1">
+                                                                                Cash
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input" type="radio" name="tipe-pembayaran" id="tipe-transfer" value="transfer">
+                                                                            <label class="form-check-label" for="flexRadioDefault2">
+                                                                                Transfer
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12" id="bukti-trf" style="display: none;">
+                                                                    <div class="form-group has-icon-left">
+                                                                        <label for="mobile-id-icon">Bukti Pembayaran</label>
+                                                                        <div class="position-relative">
+                                                                            <input type="file" class="image-exif-filepond" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12 d-flex justify-content-end">
+                                                                    <button type="submit" class="btn btn-primary me-1 mb-1">
+                                                                        Simpan
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </section>
+                    {{-- @foreach ($loanDetailData as $item)
                         <div class="comment">
                             <div class="comment-header">
                                 <div class="pr-50">
@@ -122,9 +584,9 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        {{-- <div class="col-lg-6 mb-3">
+                                        <div class="col-lg-6 mb-3">
                                             <a href="{{ route('add.angsuran') }}" class="btn icon icon-left btn-primary me-2 text-nowrap" >Bayar Angsuran</a>
-                                        </div> --}}
+                                        </div>
 
                                         <div class="col-lg-12 mb-3">
                                             <button id="hitungSimulasi" type="button" class="btn btn-primary simulasi" data-bs-toggle="modal" data-bs-target="#bayarAngsuran">Bayar Angsuran</button>
@@ -186,7 +648,7 @@
                                 </div>
                             </div>
                         </div>
-                    @endforeach
+                    @endforeach --}}
                 </div>
             </div>
         </div>
