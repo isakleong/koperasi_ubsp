@@ -46,9 +46,12 @@
                                             <div class="form-group has-icon-left">
                                                 <label for="nominal">Nominal</label>
                                                 <div class="position-relative">
-                                                    <input type="text" class="form-control" placeholder="Nominal" id="nominal" name="nominal" />
+                                                    <input type="text" class="form-control" placeholder="Nominal" id="nominal" name="nominal" required value="{{ old('nominal') }}" />
                                                     <div class="form-control-icon"><i class="bi bi-cash"></i></div>
                                                 </div>
+                                                @error('nominal')
+                                                    <p style="color: red">{{$message}}</p>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="col-12">
