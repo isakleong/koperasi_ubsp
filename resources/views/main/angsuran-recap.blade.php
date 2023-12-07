@@ -100,6 +100,7 @@
 @endsection
 
 @section('content')
+@include('sweetalert::alert')
     <div class="content-wrapper container">
         <div class="page-heading">
             <h3>Data Kredit</h3>
@@ -184,25 +185,27 @@
                                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title" id="staticBackdropLabel">Bayar Angsuran</h5>
+                                                                <h5 class="modal-title" id="staticBackdropLabel">Bayar Angsuran Ke {{ $item->indexCicilan+1 }}</h5>
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <form class="form form-vertical" >
+                                                                <form action="{{route('store.angsuran')}}" class="form form-vertical" method="post" enctype="multipart/form-data">
                                                                     @csrf
                                                                     <div class="form-body">
                                                                         <div class="row">
                                                                             <div class="col-12">
                                                                                 <div class="form-group">
+                                                                                    <input type="hidden" name="loanDocId" value="{{$item->loanDocId}}">
+                                                                                    <input type="hidden" name="indexCicilan" value="{{$item->indexCicilan}}">
                                                                                     <label for="mobile-id-icon">Jenis Pembayaran</label>
                                                                                     <div class="form-check">
-                                                                                        <input class="form-check-input" type="radio" name="tipe-pembayaran" id="tipe-cash" value="cash" checked>
+                                                                                        <input class="form-check-input" type="radio" name="method" id="cash" value="cash" checked>
                                                                                         <label class="form-check-label" for="flexRadioDefault1">
                                                                                             Cash
                                                                                         </label>
                                                                                     </div>
                                                                                     <div class="form-check">
-                                                                                        <input class="form-check-input" type="radio" name="tipe-pembayaran" id="tipe-transfer" value="transfer">
+                                                                                        <input class="form-check-input" type="radio" name="method" id="transfer" value="transfer">
                                                                                         <label class="form-check-label" for="flexRadioDefault2">
                                                                                             Transfer
                                                                                         </label>
@@ -213,21 +216,28 @@
                                                                                 <div class="form-group has-icon-left">
                                                                                     <label for="mobile-id-icon">Bukti Pembayaran</label>
                                                                                     <div class="position-relative">
-                                                                                        <input type="file" class="image-exif-filepond" />
+                                                                                        <input type="file" class="image-exif-filepond" name="image" accept="image/*" />
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-12 d-flex justify-content-end">
-                                                                                <button type="submit" class="btn btn-primary me-1 mb-1">
-                                                                                    Simpan
-                                                                                </button>
+                                                                            <div class="col-12">
+                                                                                <div class="form-group has-icon-left">
+                                                                                    <label for="notes">Keterangan (opsional)</label>
+                                                                                    <div class="position-relative">
+                                                                                        <textarea class="form-control" id="notes" rows="3" name="notes"></textarea>
+                                                                                        <div class="form-control-icon"><i class="bi bi-info-square-fill"></i></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-12 d-flex justify-content-center">
+                                                                                <button type="submit" class="btn btn-primary me-1 mb-1 show_confirm">Bayar Angsuran</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </form>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
+                                                                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Tutup</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -468,11 +478,34 @@
 <script src="/main/assets/extensions/toastify-js/src/toastify.js"></script>
 <script src="/main/assets/static/js/pages/filepond.js"></script>
 
+<script src="/vendor/sweetalert/sweetalert.all.js"></script>
+
 <script>
     $(document).ready(function () {
+        $('.show_confirm').click(function(event) {
+            event.preventDefault();
+
+            var form =  $(this).closest("form");
+
+            Swal.fire({
+                title: 'Ajukan pembayaran?',
+                text: "Setiap pengajuan pembayaran angsuran akan direview oleh admin terlebih dahulu.",
+                icon: 'question',
+                showDenyButton: true,
+                confirmButtonText: 'Ya, ajukan',
+                denyButtonText: 'Batal',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                } else if (result.isDenied) {
+                    // Swal.fire('Changes are not saved', '', 'info');
+                }
+            });
+        });
+
         $('input[type="radio"]').on('change', function () {
             // Get the selected value
-            var selectedValue = $('input[name="tipe-pembayaran"]:checked').val();
+            var selectedValue = $('input[name="method"]:checked').val();
             
             if(selectedValue == 'transfer') {
                 $('#bukti-trf').show();

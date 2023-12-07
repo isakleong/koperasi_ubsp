@@ -103,7 +103,7 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::post('/simulasi/kredit', [MainController::class, 'simulasiKredit'])->name('simulasi.kredit');
     Route::post('/kredit/pengajuan', [MainController::class, 'storeKredit'])->name('store.kredit');
     Route::post('/kredit/rekap', [MainController::class, 'filterRecapKredit'])->name('filter.recap.kredit');
-
+    Route::post('/angsuran/rekap', [MainController::class, 'storeAngsuran'])->name('store.angsuran');
 
     Route::put('/pengaturan/profile/{id}', [MainController::class, 'editProfile'])->name('profile-update');
     Route::post('/pengaturan/password', [MainController::class, 'editPassword'])->name('password-update');

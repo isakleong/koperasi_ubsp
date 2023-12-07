@@ -941,6 +941,74 @@ class MainController extends Controller
         }
     }
 
+    public function storeAngsuran(Request $request) {        
+
+        $validator = Validator::make(
+            [
+                'method' => $request->input('method'),
+                'image' => $request->file('image'),
+            ],
+            [
+                'method' => 'required|in:cash,transfer',
+                'image' => 'required_if:method,transfer',
+            ],
+            [
+                'method.required' => 'Jenis pembayaran belum diisi',
+                'method.in' => 'Jenis pembayaran tidak valid',
+                'image.required_if' => 'Bukti pembayaran belum diisi',
+            ],
+        );
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors()->first());
+        }
+
+        try {
+            //check if user have user_account
+            $user = Auth::user();
+
+            $input = $request->all();
+            
+            $loanDocId = $request->input('loanDocId');
+            $indexCicilan = $request->input('indexCicilan');
+
+            if(strtolower($input['method']) == "cash") {
+                $input['method'] = 2;
+            } else {
+                $input['method'] = 1;
+            }
+
+            $buktiAngsuran = "";
+            if($imageAngsuran = $request->file('image')) {
+                $destinationPath = 'image/upload/'.$user->memberId.'/'.'angsuran/';
+                File::makeDirectory($destinationPath, 0777, true, true);
+                $fileName = pathinfo($imageAngsuran->getClientOriginalName(), PATHINFO_FILENAME);
+                $generatedID = $fileName.hexdec(uniqid())."-".time(). ".";
+                $imageName = $generatedID.$imageAngsuran->getClientOriginalExtension();
+
+                $buktiAngsuran = $destinationPath.$imageName;
+            }
+
+            DB::beginTransaction();
+            DB::table('loan_detail')
+                ->where('loanDocId', $loanDocId)
+                ->where('indexCicilan', $indexCicilan)
+                ->update([
+                    'transactionDate' => date('Y-m-d H:i:s'),
+                    'method' => $input['method'],
+                    'image' => $buktiAngsuran,
+                    'notes' => $input['notes'],
+                    'status' => 1
+                ]);
+            DB::commit();
+
+            return redirect('/angsuran/rekap')->withSuccess('Data pengajuan pembayaran angsuran berhasil dikirim!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
     public function editProfile(Request $request, $id) {
         // Retrieve existing user data
         $user = User::find($id);

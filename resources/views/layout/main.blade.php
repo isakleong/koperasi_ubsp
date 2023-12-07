@@ -116,13 +116,10 @@
                                                 <a href="{{ route('add.kredit') }}" class="submenu-link">Pengajuan</a>
                                             </li>
                                             <li class="submenu-item">
-                                                <a href="{{ route('add.angsuran') }}" class="submenu-link">Angsuran</a>
-                                            </li>
-                                            <li class="submenu-item">
                                                 <a href="{{ route('recap.kredit') }}" class="submenu-link">Rekap Kredit</a>
                                             </li>
                                             <li class="submenu-item">
-                                                <a href="{{ route('recap.angsuran') }}" class="submenu-link">Rekap Angsuran</a>
+                                                <a href="{{ route('recap.angsuran') }}" class="submenu-link">Angsuran</a>
                                             </li>
                                         </ul>
                                     </div>
