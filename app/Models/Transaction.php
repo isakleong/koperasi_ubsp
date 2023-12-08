@@ -26,6 +26,10 @@ class Transaction extends Model
         'approvedOn',
     ];
 
+    public function userAccount() {
+        return $this->belongsTo(UserAccount::class, 'accountId', 'accountId');
+    }
+
     protected static function boot()
     {
         parent::boot();

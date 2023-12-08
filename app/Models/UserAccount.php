@@ -13,6 +13,8 @@ class UserAccount extends Model
 
     protected $primaryKey = 'accountId';
 
+    public $incrementing = false;
+
     protected $fillable = [
         'accountId',
         'memberId',
@@ -21,4 +23,8 @@ class UserAccount extends Model
         'openDate',
         'closedDate',
     ];
+
+    public function transaction(){
+        return $this->hasMany(Transaction::class, 'accountId', 'accountId');
+    }
 }

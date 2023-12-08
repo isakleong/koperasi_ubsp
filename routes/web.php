@@ -24,6 +24,8 @@ Route::get('/email/verify', function(){
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
     $user = $request->user();
+    // Update the joinDate column
+    $user->update(['status' => 1]);
     return redirect('/');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 //END OF USER AUTHENTICATION (LOGIN AND REGISTER)
