@@ -14,6 +14,8 @@ use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller {
@@ -22,10 +24,8 @@ class AuthController extends Controller {
     }
 
     public function registerProcess(Request $request) {
-        // return redirect('/login')->withSuccess('Post Created Successfully!');
 
         $request->validate([
-            // 'fname' => 'required',
             'ktp' => 'required',
             'kk' => 'required',
         ]);
@@ -45,6 +45,7 @@ class AuthController extends Controller {
             $salt_3 = Str::substr($uuid4, 0, 7);
             $saltData = $salt_1.$salt_2.$salt_3;
             $input['memberId'] = strtoupper('MUBSP'.date('ymd').$saltData);
+            //end of generate member id
 
             //secure password with salt
             $memberId = $input['memberId'];
@@ -62,73 +63,86 @@ class AuthController extends Controller {
             $char3 = ($minute + ord($id[0]) + ($salt * 7)) % 16;
             $res = strtoupper(dechex($char1)) . strtoupper(dechex($char2)) . $salt . strtoupper(dechex($char3));
             $input['password'] = Hash::make($res.$input['password']);
-            // $input['password'] = Hash::make($input['password']);
+            //end of secure password with salt
 
+            //image handler
             if($imageKTP = $request->file('ktp')) {
-                $destinationPath = 'image/upload/';
-                $fileName = pathinfo($imageKTP->getClientOriginalName(), PATHINFO_FILENAME);
-                $generatedID = $fileName.hexdec(uniqid())."-".time(). ".";
-                $imageName = $generatedID.$imageKTP->getClientOriginalExtension();            
+                $destinationPath = 'image/upload/'.$memberId.'/'.'profile/';
+                File::makeDirectory($destinationPath, 0777, true, true);
 
+                $imageName = "ktp_".$memberId.time().Str::random(5);
                 $input['ktp'] = $destinationPath.$imageName;
             }
 
             if($imageKK = $request->file('kk')) {
-                $destinationPath = 'image/upload/';
-                $fileName = pathinfo($imageKK->getClientOriginalName(), PATHINFO_FILENAME);
-                $generatedID = $fileName.hexdec(uniqid())."-".time(). ".";
-                $imageName = $generatedID.$imageKK->getClientOriginalExtension();
-
+                $destinationPath = 'image/upload/'.$memberId.'/'.'profile/';
+                File::makeDirectory($destinationPath, 0777, true, true);
+                
+                $imageName = "kk_".$memberId.time().Str::random(5);
                 $input['kk'] = $destinationPath.$imageName;
             }
 
             $buktiSimpanan = "";
             if($imageSimpanan = $request->file('simpanan')) {
-                $destinationPath = 'image/upload/';
-                $fileName = pathinfo($imageSimpanan->getClientOriginalName(), PATHINFO_FILENAME);
-                $generatedID = $fileName.hexdec(uniqid())."-".time(). ".";
-                $imageName = $generatedID.$imageSimpanan->getClientOriginalExtension();
+                $destinationPath = 'image/upload/'.$memberId.'/'.'simpanan/pokok/';
+                File::makeDirectory($destinationPath, 0777, true, true);
 
+                $imageName = $memberId."_".time().Str::random(5);
                 $buktiSimpanan = $destinationPath.$imageName;
             }
-            $input["status"] = 1;
-            $user = User::create($input);
+            //end of image handler
 
+            $input["status"] = 0;
 
-            Image::make($imageKTP)->resize(1024, 768, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($input['ktp']);
+            $user = null;
+            DB::transaction(function($user) use($input, $imageKTP, $imageKK, $imageSimpanan, $buktiSimpanan) {
+                $user = User::create($input);
+                $user->save();
 
-            Image::make($imageKK)->resize(1024, 768, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($input['kk']);
+                Image::make($imageKTP)->resize(800, 600, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($input['ktp']);
+    
+                Image::make($imageKK)->resize(800, 600, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($input['kk']);
+    
+                Image::make($imageSimpanan)->resize(800, 600, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($buktiSimpanan);
+            });
 
-            //insert into user_account
-            $arrUserAccount = [];
-            $arrUserAccount["memberId"] = $user->memberId;
+            DB::transaction(function ($user, $nominal, $buktiSimpanan) {
+                //insert into user_account
+                $arrUserAccount = [];
+                $arrUserAccount["memberId"] = $user->memberId;
 
-            //generate acount id
-            $salt_1 = random_int(0, 9);
-            $salt_2 = Str::random(7);
-            $salt_3 = Str::random(16);
-            $arrUserAccount["accountId"] = strtoupper("UAC-".$salt_1.$salt_2."-".$salt_3);
+                //generate acount id
+                $salt_1 = random_int(0, 9);
+                $salt_2 = Str::random(7);
+                $salt_3 = Str::random(16);
+                $arrUserAccount["accountId"] = strtoupper("UAC-".$salt_1.$salt_2."-".$salt_3);
 
-            $arrUserAccount["kind"] = "pokok";
-            $arrUserAccount["balance"] = $nominal;
-            $userAccount = UserAccount::create($arrUserAccount);
+                $arrUserAccount["kind"] = "pokok";
+                $arrUserAccount["balance"] = $nominal;
+                $userAccount = UserAccount::create($arrUserAccount);
+
+                $userAccount = UserAccount::create($arrUserAccount);
+                $userAccount->save();
+
+                //insert into transaction
+                $arrTransaction = [];
+                $arrTransaction["accountId"] = $userAccount->accountId;
+                $arrTransaction["kind"] = "pokok";
+                $arrTransaction["total"] = $nominal;
+                $arrTransaction["method"] = 1;
+                $arrTransaction["transactionDate"] = date('Y-m-d H:i:s');
+                $arrTransaction["image"] = $buktiSimpanan;
+                $arrTransaction["notes"] = "registrasi simpanan pokok";
+                $arrTransaction["status"] = 0;
+                $userAccount->transaction()->create($arrTransaction);
+            });
             
-            //insert into transaction
-            $arrTransaction = [];
-            $arrTransaction["accountId"] = $arrUserAccount["accountId"];
-            $arrTransaction["kind"] = "pokok";
-            $arrTransaction["total"] = $nominal;
-            $arrTransaction["method"] = 1;
-            $arrTransaction["transactionDate"] = date('Y-m-d H:i:s');
-            $arrTransaction["image"] = $buktiSimpanan;
-            $arrTransaction["notes"] = "registrasi simpanan pokok";
-            $arrTransaction["status"] = 1;
-            $transaction = Transaction::create($arrTransaction);
-
             event(new Registered($user));
 
             Auth::login($user);
@@ -136,7 +150,9 @@ class AuthController extends Controller {
             return redirect('/email/verify');
 
         } catch (\Exception $e) {
-            throw $e;
+            DB::rollback();
+            $errorMsg = $e->getMessage();
+            return view('layout.error', compact(['errorMsg']));
         }
     }
 
