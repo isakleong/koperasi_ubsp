@@ -1,22 +1,12 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MainController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 Route::get('/tes/aja', function () {
     return view('auth.mail-verification');
@@ -33,12 +23,7 @@ Route::get('/email/verify', function(){
 })->middleware('auth')->name('verification.notice');
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
-
     $user = $request->user();
-
-    // Update the joinDate column
-    // $user->update(['joinDate' => now()]); // Set 'joinDate' to the current timestamp
- 
     return redirect('/');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 //END OF USER AUTHENTICATION (LOGIN AND REGISTER)
@@ -70,6 +55,7 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])->middle
 
 // Route::get('/test', [MainController::class, 'test']);
 
+//USER
 Route::middleware(['auth', 'verified'])->group(function() {
     //UNVERIFIED
     Route::get('/user/activation', [MainController::class, 'userActivation'])->name('user.activation');
@@ -108,3 +94,18 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::put('/pengaturan/profile/{id}', [MainController::class, 'editProfile'])->name('profile-update');
     Route::post('/pengaturan/password', [MainController::class, 'editPassword'])->name('password-update');
 });
+//END OF USER
+
+//ADMIN
+// Route::group([
+//     'prefix' => '/admin',
+//     'as' => 'admin.'
+// ], function (){
+//     Route::get('s', [AuthController::class, 'loginAdmin'])->name('login');
+// });
+
+Route::prefix('admin')->name('admin.')->group(function() {
+    Route::get('login', [AuthController::class, 'loginAdmin'])->name('login');
+    Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+});
+//END OF ADMIN

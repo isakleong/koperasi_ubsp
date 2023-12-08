@@ -144,6 +144,10 @@ class AuthController extends Controller {
         return view('auth.login');
     }
 
+    public function loginAdmin() {
+        return view('auth.admin.login');
+    }
+
     public function authenticate(Request $request) {
         $request->validate([
             'email' => 'required',
