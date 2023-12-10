@@ -95,7 +95,7 @@ class AuthController extends Controller {
             $input["status"] = 0;
 
             $user = null;
-            DB::transaction(function($user) use($input, $imageKTP, $imageKK, $imageSimpanan, $buktiSimpanan) {
+            DB::transaction(function($user) use($input, $imageKTP, $imageKK, $imageSimpanan, $buktiSimpanan, $nominal) {
                 $user = User::create($input);
                 $user->save();
 
@@ -110,9 +110,8 @@ class AuthController extends Controller {
                 Image::make($imageSimpanan)->resize(800, 600, function ($constraint) {
                     $constraint->aspectRatio();
                 })->save($buktiSimpanan);
-            });
 
-            DB::transaction(function ($user, $nominal, $buktiSimpanan) {
+
                 //insert into user_account
                 $arrUserAccount = [];
                 $arrUserAccount["memberId"] = $user->memberId;
@@ -125,10 +124,12 @@ class AuthController extends Controller {
 
                 $arrUserAccount["kind"] = "pokok";
                 $arrUserAccount["balance"] = $nominal;
-                $userAccount = UserAccount::create($arrUserAccount);
 
-                $userAccount = UserAccount::create($arrUserAccount);
+                $userAccount = $user->userAccount()->create($arrUserAccount);
                 $userAccount->save();
+
+                // $userAccount = UserAccount::create($arrUserAccount);
+                // $userAccount->save();
 
                 //insert into transaction
                 $arrTransaction = [];
@@ -141,14 +142,15 @@ class AuthController extends Controller {
                 $arrTransaction["notes"] = "registrasi simpanan pokok";
                 $arrTransaction["status"] = 0;
                 $userAccount->transaction()->create($arrTransaction);
-            });
-            
-            event(new Registered($user));
 
-            Auth::login($user);
+                event(new Registered($user));
+
+                Auth::login($user);
+            });
+
+            DB::commit();
 
             return redirect('/email/verify');
-
         } catch (\Exception $e) {
             DB::rollback();
             $errorMsg = $e->getMessage();

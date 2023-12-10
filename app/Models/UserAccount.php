@@ -27,4 +27,8 @@ class UserAccount extends Model
     public function transaction(){
         return $this->hasMany(Transaction::class, 'accountId', 'accountId');
     }
+
+    public function user() {
+        return $this->belongsTo(User::class, 'memberId', 'memberId');
+    }
 }

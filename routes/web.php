@@ -99,15 +99,17 @@ Route::middleware(['auth', 'verified'])->group(function() {
 //END OF USER
 
 //ADMIN
-// Route::group([
-//     'prefix' => '/admin',
-//     'as' => 'admin.'
-// ], function (){
-//     Route::get('s', [AuthController::class, 'loginAdmin'])->name('login');
-// });
 
 Route::prefix('admin')->name('admin.')->group(function() {
+    //GET REQUEST
     Route::get('login', [AuthController::class, 'loginAdmin'])->name('login');
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+
+    Route::get('/anggota', [AdminController::class, 'anggota'])->name('anggota');
+    Route::get('/anggota/add', [AdminController::class, 'addAnggota'])->name('add.anggota');
+    Route::get('/anggota/edit', [AdminController::class, 'editAnggota'])->name('edit.anggota');
+
+    //POST REQUEST
+    Route::post('/anggota/add', [AdminController::class, 'storeAnggota'])->name('store.anggota');
 });
 //END OF ADMIN
