@@ -58,7 +58,7 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])->middle
 // Route::get('/test', [MainController::class, 'test']);
 
 //USER
-Route::middleware(['auth', 'verified'])->group(function() {
+Route::middleware(['auth.user', 'verified'])->group(function() {
     //UNVERIFIED
     Route::get('/user/activation', [MainController::class, 'userActivation'])->name('user.activation');
 
@@ -100,9 +100,13 @@ Route::middleware(['auth', 'verified'])->group(function() {
 
 //ADMIN
 
-Route::prefix('admin')->name('admin.')->group(function() {
+Route::get('/admin/login', [AuthController::class, 'loginAdmin'])->name('login');
+Route::post('/admin/login', [AuthController::class, 'authenticateAdmin']);
+Route::get('/admin/logout', [AuthController::class, 'logoutAdmin']);
+
+Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(function() {
+    // dd("sdsd");
     //GET REQUEST
-    Route::get('login', [AuthController::class, 'loginAdmin'])->name('login');
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
     Route::get('/anggota', [AdminController::class, 'anggota'])->name('anggota');

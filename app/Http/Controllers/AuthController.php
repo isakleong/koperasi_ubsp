@@ -190,7 +190,7 @@ class AuthController extends Controller {
 
             $credentials = $request->only('email','password');
 
-            if(Auth::attempt($credentials)){
+            if(Auth::guard('web')->attempt($credentials)){
                 $request->session()->regenerate();
                 // return redirect('auth.login');
                 return redirect('/');
@@ -204,6 +204,24 @@ class AuthController extends Controller {
                 'loginError' => 'Email atau password salah, silahkan coba lagi'
             ]);
         }
+    }
+
+    public function authenticateAdmin(Request $request) {
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required'
+        ]);
+
+        $credentials = $request->only('username','password');
+
+        if(Auth::guard('admin')->attempt($credentials)){
+            $request->session()->regenerate();
+            return redirect('/admin');
+        }
+
+        return redirect()->back()->withErrors([
+            'loginError' => 'Email atau password salah, silahkan coba lagi'
+        ]);
     }
 
     public function resetPassword(Request $request) {
@@ -245,8 +263,13 @@ class AuthController extends Controller {
             : back()->withErrors(['email' => [__($status)]]);
     }
 
+    public function logoutAdmin() {
+        Auth::guard('admin')->logout();
+        return redirect('/admin/login');
+    }
+
     public function logout() {
-        Auth::logout();
+        Auth::guard('user')->logout();
         return redirect('/login');
     }
 
