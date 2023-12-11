@@ -46,6 +46,8 @@ class AdminController extends Controller
             $input['registDate'] = date('Y-m-d H:i:s');
 
             $nominal = $input['nominal'];
+            $nominal = str_replace('Rp', '', $nominal);
+            $nominal = str_replace(' ', '', $nominal);
             $nominal = str_replace(',', '', $nominal);
 
             //generate member id
