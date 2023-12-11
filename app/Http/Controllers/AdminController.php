@@ -30,7 +30,9 @@ class AdminController extends Controller
     }
 
     public function editAnggota() {
-        return view('admin.anggota-edit');
+        $anggota = DB::table('users')->paginate(10);
+        
+        return view('admin.anggota-edit', compact('anggota'));
     }
 
     public function storeAnggota(Request $request) {
@@ -169,4 +171,5 @@ class AdminController extends Controller
             return view('layout.admin.error', compact(['errorMsg']));
         }
     }
+
 }
