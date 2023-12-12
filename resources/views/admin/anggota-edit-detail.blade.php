@@ -35,7 +35,7 @@
       <li class="menu-header small text-uppercase"><span class="menu-header-text">master data</span></li>
       <!-- Cards -->
       <li class="menu-item active">
-        <a href="{{ route('admin.anggota') }}" class="menu-link">
+        <a href="/admin/anggota" class="menu-link">
           <i class="menu-icon tf-icons bx bx-group"></i>
           <div data-i18n="Basic">Anggota</div>
         </a>
@@ -100,9 +100,9 @@
                 </div>
 
                 <div class="card-body">
-                    @foreach ($usersDetail as $item)
+                    @foreach ($user as $item)
                         <div class="mt-3">
-                            <form action="{{ route('admin.store.anggota') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('admin.anggota.update', ['anggotum' => $item]) }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="mb-3">
                                     <div class="form-floating">
@@ -124,7 +124,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <div class="form-floating">
-                                        <input type="date" class="form-control mb-3" id="birthdate" name="birthdate" value="{{old('birthdate')}}" value="{{ $item->birthdate }}">
+                                        <input type="date" class="form-control mb-3" id="birthdate" name="birthdate" value="{{ $item->birthdate }}">
                                         <label for="birthdate">Tanggal Lahir</label>
                                     </div>
                                 </div>
@@ -161,21 +161,35 @@
                                 <div class="mb-3">
                                     <div class="form-group">
                                         <label for="ktp">Foto KTP</label>
+                                        @if ($item->ktp != "")
+                                            <img style="width: 220px;" src="/{{$item->ktp}}" alt="" class="img-fluid mb-3 mt-3 col-4 d-block"> 
+                                        @else
+                                            <img class="img-preview img-fluid mb-3 mt-3 col-4">
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-group">
                                         <input type="file" class="image-resize-filepond" name="ktp" accept="image/*">
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <div class="form-group">
-                                        <label for="kk">Foto Kartu Keluarga</label>
+                                        <label for="ktp">Foto KK</label>
+                                        @if ($item->kk != "")
+                                            <img style="width: 220px;" src="/{{$item->kk}}" alt="" class="img-fluid mb-3 mt-3 col-4 d-block"> 
+                                        @else
+                                            <img class="img-preview img-fluid mb-3 mt-3 col-4">
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-group">
                                         <input type="file" class="image-preview-filepond" name="kk" accept="image/*">
                                     </div>
                                 </div>
                                 <div class="divider divider-warning">
-                                    <div class="divider-text">Settingan Awal</div>
-                                </div>
-                                <div class="mb-3">
-                                    <label>Default Password</label>
-                                    <input type="text" readonly class="form-control-plaintext" id="defaultPassword" name="password" value="Ubsp.123" />
+                                    <div class="divider-text">Data Simpanan</div>
                                 </div>
                                 <div class="mb-3">
                                     <label>Simpanan Pokok</label>
@@ -184,27 +198,7 @@
                                 <div class="divider divider-warning">
                                     <div class="divider-text"></div>
                                 </div>
-                                <div class="col-md mb-3">
-                                    <label class="">Jenis Pembayaran</small>
-                                    <div class="form-check mt-3 mb-2">
-                                        <input name="method" class="form-check-input" type="radio" value="cash" id="cash" />
-                                        <label class="form-check-label" for="cash"> Cash </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input name="method" class="form-check-input" type="radio" value="transfer" id="transfer" />
-                                        <label class="form-check-label" for="transfer"> Transfer </label>
-                                    </div>
-                                </div>
-                                <div class="mb-3" id="bukti-trf" style="display: none;">
-                                    <div class="form-group has-icon-left">
-                                        <label for="image">Bukti Pembayaran</label>
-                                        <div class="position-relative">
-                                            <input type="file" class="image-exif-filepond" name="simpanan" accept="image/*"/>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="text-end">
-                                    <button type="button" class="btn btn-outline-secondary me-3" data-bs-dismiss="modal">Tutup</button>
                                     <button type="submit" class="btn btn-primary show_confirm">Update Data</button>
                                 </div>
                             </form>
@@ -219,9 +213,6 @@
 @endsection
 
 @section('vendorJS')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>
-
 <script src="/main/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js"></script>
 <script src="/main/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js"></script>
 <script src="/main/assets/extensions/filepond-plugin-image-crop/filepond-plugin-image-crop.min.js"></script>

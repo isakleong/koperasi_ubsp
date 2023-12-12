@@ -60,7 +60,7 @@
       <li class="menu-header small text-uppercase"><span class="menu-header-text">master data</span></li>
       <!-- Cards -->
       <li class="menu-item active">
-        <a href="{{ route('admin.anggota') }}" class="menu-link">
+        <a href="/admin/anggota" class="menu-link">
           <i class="menu-icon tf-icons bx bx-group"></i>
           <div data-i18n="Basic">Anggota</div>
         </a>
@@ -125,7 +125,7 @@
                     {{-- <small class="text-muted float-end">Sistem Akuntansi UBSP</small> --}}
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.store.anggota') }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ route('admin.anggota.store') }}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
                             <div class="form-floating">

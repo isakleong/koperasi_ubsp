@@ -29,7 +29,7 @@
       <li class="menu-header small text-uppercase"><span class="menu-header-text">master data</span></li>
       <!-- Cards -->
       <li class="menu-item">
-        <a href="{{ route('admin.anggota') }}" class="menu-link">
+        <a href="/admin/anggota" class="menu-link">
           <i class="menu-icon tf-icons bx bx-group"></i>
           <div data-i18n="Basic">Anggota</div>
         </a>

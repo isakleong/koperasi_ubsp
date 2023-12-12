@@ -4,6 +4,13 @@
 <link rel="stylesheet" href="/main/assets/extensions/filepond/filepond.css">
 <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
 <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
+
+<style>
+    #loadingFilter {
+        display: flex;
+        justify-content: center;
+    }
+</style>
 @endsection
 
 @section('navbar')
@@ -35,7 +42,7 @@
       <li class="menu-header small text-uppercase"><span class="menu-header-text">master data</span></li>
       <!-- Cards -->
       <li class="menu-item active">
-        <a href="{{ route('admin.anggota') }}" class="menu-link">
+        <a href="/admin/anggota" class="menu-link">
           <i class="menu-icon tf-icons bx bx-group"></i>
           <div data-i18n="Basic">Anggota</div>
         </a>
@@ -98,15 +105,19 @@
         <div class="card-header d-flex justify-content-between align-items-center">
           <h5 class="mb-0">Data Anggota UBSP</h5>
 
-          <div class="input-group">
-            <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
-              <option selected>Pilih Status...</option>
-              <option value="1">Aktif</option>
-              <option value="2">Non Aktif</option>
-              <option value="3">Belum Verifikasi</option>
-              <option value="3">Belum Disetujui</option>
-            </select>
-            <button class="btn btn-outline-primary" type="button">Button</button>
+          <div class="mb-3">
+            <form id="filterForm" action="/admin/anggota/edit" method="get">
+                {{ csrf_field() }}
+                <div class="row">
+                    <label for="filterStatus" class="form-label float-end">Filter Status</label>
+                    <select id="filterStatus" class="form-select form-select" name="status" value="{{ $request->status }}">
+                        <option value="aktif" {{ $request->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                        <option value="non-aktif" {{ $request->status == 'non-aktif' ? 'selected' : '' }}>Non Aktif</option>
+                        <option value="not-verified" {{ $request->status == 'not-verified' ? 'selected' : '' }}>Belum Verifikasi</option>
+                        <option value="not-acc" {{ $request->status == 'not-acc' ? 'selected' : '' }}>Belum Disetujui</option>
+                    </select>
+                </div>
+            </form>
           </div>
 
           {{-- <div class="btn-group float-end">
@@ -123,19 +134,37 @@
         </div>
         
         <div class="card-body">
-          <div class="scrolling-pagination">
-            @foreach ($users as $item)
-            <div class="card shadow bg-transparent border border-success mb-3">
-              <div class="card-body">
-                <h5 class="card-title">{{ $item->fname.' '.$item->lname }}</h5>
-                <input type="hidden" id="memberId" value="{{ $item->memberId }}">
-                <div class="mt-3">
-                  <a href="/admin/anggota/edit/{{ $item->memberId }}" type="button" class="btn btn-primary">Edit Data</a>
-                </div>
-              </div>
+            <div id="loadingFilter" style="display: none;">
+                    <img class="mb-5" src="/administrator/assets/img/icons/loading.gif" alt="Loading..." />
             </div>
-            @endforeach
-            {{ $users->links() }}          
+            <div class="scrolling-pagination" id="mainData">
+                @foreach ($users as $item)
+                    @php
+                        $borderClass = '';
+
+                        // Check the status and set the border class accordingly
+                        if ($item->status == 3) {
+                            $borderClass = 'border-danger';
+                        } elseif ($item->status == 2) {
+                            $borderClass = 'border-success';
+                        } elseif ($item->status == 1) {
+                            $borderClass = 'border-warning';
+                        }
+                        elseif ($item->status == 0) {
+                            $borderClass = 'border-info';
+                        }
+                    @endphp
+                    <div class="card shadow-lg bg-transparent border {{ $borderClass }} mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $item->fname.' '.$item->lname }}</h5>
+                            <input type="hidden" id="memberId" value="{{ $item->memberId }}">
+                            <div class="mt-3">
+                            <a href="{{ route('admin.anggota.edit', $item->id) }}" type="button" class="btn btn-primary">Edit Data</a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+                {{ $users->links() }}          
           </div>
         </div>
       </div>
@@ -185,6 +214,38 @@
                   $('ul.pagination').remove();
               }
           });
+      });
+
+      $('select').on('change', function(e) {
+        e.preventDefault();
+
+        var selectedStatus = $(this).val();
+
+        // Disable the select while loading
+        $(this).prop('disabled', true);
+
+        $('#mainData').html("");
+
+        $('#loadingFilter').show();
+        
+        setTimeout(function() {
+            $.ajax({
+                url: '/admin/anggota/edit',
+                type: 'GET',
+                data: { status: selectedStatus },
+                success: function(response) {
+                    $('#loadingFilter').hide();
+                    $('#mainData').html(response); //update the data with filtered result
+                    $("#filterStatus").prop('disabled', false);
+                    history.pushState({}, '', '/admin/anggota/edit?status=' + selectedStatus);
+                },
+                error: function(xhr) {
+                    console.log('AJAX error:', xhr.responseText);
+                    $('#loadingFilter').hide();
+                    $("#filterStatus").prop('disabled', false);
+                }
+            });
+        }, 800);
       });
 
       $('#openModalButton').on('click', function() {

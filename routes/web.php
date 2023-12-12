@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -105,16 +106,19 @@ Route::post('/admin/login', [AuthController::class, 'authenticateAdmin']);
 Route::get('/admin/logout', [AuthController::class, 'logoutAdmin']);
 
 Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(function() {
-    // dd("sdsd");
     //GET REQUEST
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
-    Route::get('/anggota', [AdminController::class, 'anggota'])->name('anggota');
-    Route::get('/anggota/add', [AdminController::class, 'addAnggota'])->name('add.anggota');
-    Route::get('/anggota/edit', [AdminController::class, 'editAnggota'])->name('edit.anggota');
-    Route::get('/anggota/edit/{users:memberId}', [AdminController::class, 'getAnggotaDetail'])->name('show.edit.detail');
+    // Route::get('/anggota', [AdminController::class, 'anggota'])->name('anggota');
+    // Route::get('/anggota/add', [AdminController::class, 'addAnggota'])->name('add.anggota');
+    // Route::get('/anggota/edit', [AdminController::class, 'editAnggota'])->name('edit.anggota');
+    // // Route::post('/anggota/edit', [AdminController::class, 'filterEditAnggota'])->name('filter.edit.anggota');
+    // Route::get('/anggota/edit/{users:memberId}', [AdminController::class, 'getAnggotaDetail'])->name('show.edit.detail');
 
-    //POST REQUEST
-    Route::post('/anggota/add', [AdminController::class, 'storeAnggota'])->name('store.anggota');
+    // //POST REQUEST
+    // Route::post('/anggota/add', [AdminController::class, 'storeAnggota'])->name('store.anggota');
+    // Route::post('/anggota/edit', [AdminController::class, 'updateAnggota'])->name('update.anggota');
+
+    Route::resource('/anggota', UserController::class);
 });
 //END OF ADMIN

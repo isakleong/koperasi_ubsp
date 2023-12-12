@@ -2,29 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transaction;
 use App\Models\User;
-use App\Models\UserAccount;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Intervention\Image\Facades\Image;
-use Ramsey\Uuid\Uuid;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
-use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Hash;
+use Ramsey\Uuid\Uuid;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Str;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 
-class AuthController extends Controller {
-    public function register() {
-        return view('auth.register');
+class UserController extends Controller
+{
+    public function index()
+    {
+        return view('admin.anggota');
     }
 
-    public function registerProcess(Request $request) {
+    public function create()
+    {
+        return view('admin.anggota-add');
+    }
 
+    public function store(Request $request)
+    {
         $request->validate([
             'ktp' => 'required',
             'kk' => 'required',
@@ -36,6 +39,8 @@ class AuthController extends Controller {
             $input['registDate'] = date('Y-m-d H:i:s');
 
             $nominal = $input['nominal'];
+            $nominal = str_replace('Rp', '', $nominal);
+            $nominal = str_replace(' ', '', $nominal);
             $nominal = str_replace(',', '', $nominal);
 
             //generate member id
@@ -70,7 +75,7 @@ class AuthController extends Controller {
                 $destinationPath = 'image/upload/'.$memberId.'/'.'profile/';
                 File::makeDirectory($destinationPath, 0777, true, true);
 
-                $imageName = "ktp_".$memberId.time().Str::random(5).$imageKTP->getClientOriginalExtension();
+                $imageName = "ktp_".$memberId.time().Str::random(5);
                 $input['ktp'] = $destinationPath.$imageName;
             }
 
@@ -78,7 +83,7 @@ class AuthController extends Controller {
                 $destinationPath = 'image/upload/'.$memberId.'/'.'profile/';
                 File::makeDirectory($destinationPath, 0777, true, true);
                 
-                $imageName = "kk_".$memberId.time().Str::random(5).$imageKK->getClientOriginalExtension();
+                $imageName = "kk_".$memberId.time().Str::random(5);
                 $input['kk'] = $destinationPath.$imageName;
             }
 
@@ -87,12 +92,12 @@ class AuthController extends Controller {
                 $destinationPath = 'image/upload/'.$memberId.'/'.'simpanan/pokok/';
                 File::makeDirectory($destinationPath, 0777, true, true);
 
-                $imageName = $memberId."_".time().Str::random(5).$imageSimpanan->getClientOriginalExtension();
+                $imageName = $memberId."_".time().Str::random(5);
                 $buktiSimpanan = $destinationPath.$imageName;
             }
             //end of image handler
 
-            $input["status"] = 0;
+            $input["status"] = 2;
 
             $user = null;
             DB::transaction(function($user) use($input, $imageKTP, $imageKK, $imageSimpanan, $buktiSimpanan, $nominal) {
@@ -154,123 +159,58 @@ class AuthController extends Controller {
         } catch (\Exception $e) {
             DB::rollback();
             $errorMsg = $e->getMessage();
-            return view('layout.error', compact(['errorMsg']));
+            return view('layout.admin.error', compact(['errorMsg']));
         }
     }
 
-    public function login() {
-        return view('auth.login');
-    }
+    public function show(Request $request, User $user)
+    {
+        $status = $request->has('status') ? $request->input('status') : "aktif";
 
-    public function loginAdmin() {
-        return view('auth.admin.login');
-    }
-
-    public function authenticate(Request $request) {
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required'
-        ]);
-
-        // check salt
-        $user = User::where('email', $request->email)->first();
-        if($user) {
-            $id = substr($user->memberId, -1);
-            $salt = substr($user->memberId, 18, 1);
-            
-            $carbonDate = Carbon::parse($user->registDate);
-            $hour = $carbonDate->format('H');
-            $minute = $carbonDate->format('i');
-            $second = $carbonDate->format('s');
-            $char1 = ($minute + $hour + ($salt * 7)) % 16;
-            $char2 = ($minute + $second + ($salt * 7)) % 16;
-            $char3 = ($minute + ord($id[0]) + ($salt * 7)) % 16;
-            $res = strtoupper(dechex($char1)) . strtoupper(dechex($char2)) . $salt . strtoupper(dechex($char3));
-            $request['password'] = $res.$request['password'];
-
-            $credentials = $request->only('email','password');
-
-            if(Auth::guard('web')->attempt($credentials)){
-                $request->session()->regenerate();
-                // return redirect('auth.login');
-                return redirect('/');
-            } else {
-                return redirect()->back()->withErrors([
-                    'loginError' => 'Email atau password salah, silahkan coba lagi'
-                ]);    
-            }
-        } else {
-            return redirect()->back()->withErrors([
-                'loginError' => 'Email atau password salah, silahkan coba lagi'
-            ]);
-        }
-    }
-
-    public function authenticateAdmin(Request $request) {
-        $request->validate([
-            'username' => 'required',
-            'password' => 'required'
-        ]);
-
-        $credentials = $request->only('username','password');
-
-        if(Auth::guard('admin')->attempt($credentials)){
-            $request->session()->regenerate();
-            return redirect('/admin');
+        if($status == "aktif") {
+            $users = DB::table('users')
+            ->where('status', 2)
+            ->orderBy('id')
+            ->cursorPaginate(10);
+        } elseif ($status == "non-aktif") {
+            $users = DB::table('users')
+            ->where('status', 3)
+            ->orderBy('id')
+            ->cursorPaginate(10);
+        } elseif ($status == "not-verified") {
+            $users = DB::table('users')
+            ->where('status', 0)
+            ->orderBy('id')
+            ->cursorPaginate(10);
+        } elseif ($status == "not-acc") {
+            $users = DB::table('users')
+            ->where('status', 1)
+            ->orderBy('id')
+            ->cursorPaginate(10);
         }
 
-        return redirect()->back()->withErrors([
-            'loginError' => 'Email atau password salah, silahkan coba lagi'
-        ]);
+        if ($request->ajax()) {
+            return view('admin.partials.filtered-data-anggota', compact('users'))->render();
+        }
+
+        return view('admin.anggota-edit', compact('users', 'request'));
     }
 
-    public function resetPassword(Request $request) {
-        $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
-        ]);
-     
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function (User $user, string $password) {
-                //secure new password with salt
-                $memberId = $user->memberId;
-                $id = substr($memberId, -1);
-                $salt = substr($memberId, 18, 1);
-                $carbonDate = Carbon::parse($user->registDate);
-                $hour = $carbonDate->format('H');
-                $minute = $carbonDate->format('i');
-                $second = $carbonDate->format('s');
+    public function edit(User $user)
+    {
+        $usersDetail = User::where('memberId', $user->memberId)->get();
 
-                $char1 = ($minute + $hour + ($salt * 7)) % 16;
-                $char2 = ($minute + $second + ($salt * 7)) % 16;
-                $char3 = ($minute + ord($id[0]) + ($salt * 7)) % 16;
-                $res = strtoupper(dechex($char1)) . strtoupper(dechex($char2)) . $salt . strtoupper(dechex($char3));
-
-                $user->forceFill([
-                    'password' => Hash::make($res.$password)
-                ])->setRememberToken(Str::random(60));
-     
-                $user->save();
-     
-                event(new PasswordReset($user));
-            }
-        );
-     
-        return $status === Password::PASSWORD_RESET
-            ? redirect()->route('login')->with('status', __($status))
-            : back()->withErrors(['email' => [__($status)]]);
+        return view('admin.anggota-edit-detail', compact('user'));
     }
 
-    public function logoutAdmin() {
-        Auth::guard('admin')->logout();
-        return redirect('/admin/login');
+    public function update(Request $request, User $user)
+    {
+        //
+        dd("sss");
     }
 
-    public function logout() {
-        Auth::guard('user')->logout();
-        return redirect('/login');
+    public function destroy(User $user)
+    {
+        //
     }
-
 }

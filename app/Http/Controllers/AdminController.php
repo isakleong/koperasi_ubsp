@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class AdminController extends Controller
 {
@@ -29,15 +30,48 @@ class AdminController extends Controller
         return view('admin.anggota-add');
     }
 
-    public function editAnggota() {
-        $users = DB::table('users')
-            ->where('status', 1)   
-            ->orderBy('id') 
-            ->paginate(10);
+    // public function editAnggota() {
+    //     $users = DB::table('users')
+    //         ->where('status', 1)   
+    //         ->orderBy('id') 
+    //         ->paginate(10);
         
-        // $users = DB::table('users')->orderBy('id')->cursorPaginate(15);
+    //     // $users = DB::table('users')->orderBy('id')->cursorPaginate(15);
 
-        return view('admin.anggota-edit', compact('users'));
+    //     return view('admin.anggota-edit', compact('users'));
+    // }
+
+    public function editAnggota(Request $request) {
+
+        $status = $request->has('status') ? $request->input('status') : "aktif";
+
+        if($status == "aktif") {
+            $users = DB::table('users')
+            ->where('status', 2)
+            ->orderBy('id')
+            ->cursorPaginate(10);
+        } elseif ($status == "non-aktif") {
+            $users = DB::table('users')
+            ->where('status', 3)
+            ->orderBy('id')
+            ->cursorPaginate(10);
+        } elseif ($status == "not-verified") {
+            $users = DB::table('users')
+            ->where('status', 0)
+            ->orderBy('id')
+            ->cursorPaginate(10);
+        } elseif ($status == "not-acc") {
+            $users = DB::table('users')
+            ->where('status', 1)
+            ->orderBy('id')
+            ->cursorPaginate(10);
+        }
+
+        if ($request->ajax()) {
+            return view('admin.partials.filtered-data-anggota', compact('users'))->render();
+        }
+
+        return view('admin.anggota-edit', compact('users', 'request'));
     }
 
     public function getAnggotaDetail(Request $request, User $users) {
@@ -178,6 +212,76 @@ class AdminController extends Controller
 
             return redirect('/email/verify');
         } catch (\Exception $e) {
+            DB::rollback();
+            $errorMsg = $e->getMessage();
+            return view('layout.admin.error', compact(['errorMsg']));
+        }
+    }
+
+    public function updateAnggota(Request $request, User $user) {
+        $request->validate([
+            'fname' => 'required',
+            'lname' => 'required',
+            'birthplace' => 'required',
+            'birthdate' => 'required',
+            'address' => 'required',
+            'workAddress' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'mothername' => 'required',
+            'method' => 'required',
+        ]);
+
+        try {
+            $input = $request->all();
+
+            dd($input['fname']);
+
+            //image handler
+            $ktpDelete = "";
+            if($imageKTP = $request->file('ktp')) {
+                $ktpDelete = public_path()."/".$user->ktp;
+
+                $destinationPath = 'image/upload/'.$user->memberId.'/'.'profile/';
+                File::makeDirectory($destinationPath, 0777, true, true);
+
+                $imageName = "ktp_".$user->memberId.time().Str::random(5).$imageKTP->getClientOriginalExtension();
+                $input['ktp'] = $destinationPath.$imageName;
+            }
+
+            $kkDelete = "";
+            if($imageKK = $request->file('kk')) {
+                $kkDelete = public_path()."/".$user->kk;
+
+                $destinationPath = 'image/upload/'.$user->memberId.'/'.'profile/';
+                File::makeDirectory($destinationPath, 0777, true, true);
+                
+                $imageName = "kk_".$user->memberId.time().Str::random(5).$imageKK->getClientOriginalExtension();
+                $input['kk'] = $destinationPath.$imageName;
+            }
+
+            $buktiSimpanan = "";
+            $simpananDelete = "";
+            if($imageSimpanan = $request->file('simpanan')) {
+                $simpananDelete = public_path()."/".$user->kk;
+
+                $destinationPath = 'image/upload/'.$user->memberId.'/'.'simpanan/pokok/';
+                File::makeDirectory($destinationPath, 0777, true, true);
+
+                $imageName = $user->memberId."_".time().Str::random(5).$imageSimpanan->getClientOriginalExtension();
+                $buktiSimpanan = $destinationPath.$imageName;
+            }
+            //end of image handler
+
+            DB::beginTransaction();
+
+            $user->update($input);
+
+            DB::commit();
+
+            return redirect('/admin/anggota/edit');
+        } catch (\Exception $e) {
+            dd("hhhe");
             DB::rollback();
             $errorMsg = $e->getMessage();
             return view('layout.admin.error', compact(['errorMsg']));
