@@ -1,5 +1,11 @@
 @extends('layout.admin.main')
 
+@section('vendorCSS')
+<link rel="stylesheet" href="/main/assets/extensions/filepond/filepond.css">
+<link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
+<link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
+@endsection
+
 @section('navbar')
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
@@ -83,26 +89,66 @@
 @section('content')
 <!-- Content -->
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="py-3 mb-4">
-        <span class="text-muted fw-light">Beranda Anggota /</span> Edit Anggota
-    </h4>
-    <div class="row">
-        <div class="col-xl">
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Data Anggota UBSP</h5>
-                </div>
-                <div class="card-body">
-                    
-                </div>
-            </div>
+  <h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">Beranda Anggota /</span> Edit Anggota
+  </h4>
+  <div class="row">
+    <div class="col-xl">
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Data Anggota UBSP</h5>
+
+          <div class="input-group">
+            <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+              <option selected>Pilih Status...</option>
+              <option value="1">Aktif</option>
+              <option value="2">Non Aktif</option>
+              <option value="3">Belum Verifikasi</option>
+              <option value="3">Belum Disetujui</option>
+            </select>
+            <button class="btn btn-outline-primary" type="button">Button</button>
+          </div>
+
+          {{-- <div class="btn-group float-end">
+            <button type="button" class="btn btn-outline-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Filter</button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="javascript:void(0);">Aktif</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0);">Non Aktif</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="javascript:void(0);">Belum Verifikasi</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0);">Belum Disetujui</a></li>
+            </ul>
+          </div> --}}
+
         </div>
+        
+        <div class="card-body">
+          <div class="scrolling-pagination">
+            @foreach ($users as $item)
+            <div class="card shadow bg-transparent border border-success mb-3">
+              <div class="card-body">
+                <h5 class="card-title">{{ $item->fname.' '.$item->lname }}</h5>
+                <input type="hidden" id="memberId" value="{{ $item->memberId }}">
+                <div class="mt-3">
+                  <a href="/admin/anggota/edit/{{ $item->memberId }}" type="button" class="btn btn-primary">Edit Data</a>
+                </div>
+              </div>
+            </div>
+            @endforeach
+            {{ $users->links() }}          
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+</div>
 <!-- / Content -->    
 @endsection
 
 @section('vendorJS')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>
+
 <script src="/main/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js"></script>
 <script src="/main/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js"></script>
 <script src="/main/assets/extensions/filepond-plugin-image-crop/filepond-plugin-image-crop.min.js"></script>
@@ -127,37 +173,70 @@
     //end of capitalize input
 
     $(document).ready(function () {
-        $('.show_confirm').click(function(event) {
-            event.preventDefault();
+      $('ul.pagination').hide();
+      $(function() {
+          $('.scrolling-pagination').jscroll({
+              autoTrigger: true,
+              loadingHtml: '<img class="center-block" src="/administrator/assets/img/icons/loading.gif" alt="Loading..." />',
+              padding: 0,
+              nextSelector: '.pagination li.active + li a',
+              contentSelector: 'div.scrolling-pagination',
+              callback: function() {
+                  $('ul.pagination').remove();
+              }
+          });
+      });
 
-            var form =  $(this).closest("form");
-
-            Swal.fire({
-                title: 'Simpan Data?',
-                text: '',
-                icon: 'question',
-                showDenyButton: true,
-                confirmButtonText: 'Ya, simpan',
-                denyButtonText: 'Batal',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                } else if (result.isDenied) {
-                    // Swal.fire('Changes are not saved', '', 'info');
-                }
-            });
+      $('#openModalButton').on('click', function() {
+        // Perform AJAX request before opening the modal
+        var memberId = $('#memberId').val();
+        var urlPath = '/admin/anggota/edit/' + memberId;
+        alert(memberId);
+        $.ajax({
+          url: urlPath,
+          type: 'GET',
+          success: function(response) {
+            // Assuming the response is successful, you can open the modal here
+            $('#modalData').modal('show');
+          },
+          error: function(xhr, status, error) {
+            // Handle error if the AJAX request fails
+            console.error(xhr.responseText);
+          }
         });
+      });
 
-        $('input[type="radio"]').on('change', function () {
-            // Get the selected value
-            var selectedValue = $('input[name="method"]:checked').val();
-            
-            if(selectedValue == 'transfer') {
-                $('#bukti-trf').show();
-            } else {
-                $('#bukti-trf').hide();
-            }
-        });
+      $('.show_confirm').click(function(event) {
+          event.preventDefault();
+
+          var form =  $(this).closest("form");
+
+          Swal.fire({
+              title: 'Simpan Data?',
+              text: '',
+              icon: 'question',
+              showDenyButton: true,
+              confirmButtonText: 'Ya, simpan',
+              denyButtonText: 'Batal',
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  form.submit();
+              } else if (result.isDenied) {
+                  // Swal.fire('Changes are not saved', '', 'info');
+              }
+          });
+      });
+
+      $('input[type="radio"]').on('change', function () {
+          // Get the selected value
+          var selectedValue = $('input[name="method"]:checked').val();
+          
+          if(selectedValue == 'transfer') {
+              $('#bukti-trf').show();
+          } else {
+              $('#bukti-trf').hide();
+          }
+      });
     });
 </script>
 @endsection

@@ -112,6 +112,7 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('/anggota', [AdminController::class, 'anggota'])->name('anggota');
     Route::get('/anggota/add', [AdminController::class, 'addAnggota'])->name('add.anggota');
     Route::get('/anggota/edit', [AdminController::class, 'editAnggota'])->name('edit.anggota');
+    Route::get('/anggota/edit/{users:memberId}', [AdminController::class, 'getAnggotaDetail'])->name('show.edit.detail');
 
     //POST REQUEST
     Route::post('/anggota/add', [AdminController::class, 'storeAnggota'])->name('store.anggota');

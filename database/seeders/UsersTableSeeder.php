@@ -31,7 +31,7 @@ class UsersTableSeeder extends Seeder
                 'phone' => $faker->phoneNumber,
                 'ktp' => $faker->sentence,
                 'kk' => $faker->sentence,
-                'status' => 1,
+                'status' => 2,
                 // Add other columns as needed
                 'created_at' => now(),
                 'updated_at' => now(),

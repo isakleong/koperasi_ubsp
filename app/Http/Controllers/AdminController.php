@@ -30,9 +30,21 @@ class AdminController extends Controller
     }
 
     public function editAnggota() {
-        $anggota = DB::table('users')->paginate(10);
+        $users = DB::table('users')
+            ->where('status', 1)   
+            ->orderBy('id') 
+            ->paginate(10);
         
-        return view('admin.anggota-edit', compact('anggota'));
+        // $users = DB::table('users')->orderBy('id')->cursorPaginate(15);
+
+        return view('admin.anggota-edit', compact('users'));
+    }
+
+    public function getAnggotaDetail(Request $request, User $users) {
+        // Perform the search
+        $usersDetail = User::where('memberId', $users->memberId)->get();
+
+        return view('admin.anggota-edit-detail', compact('usersDetail'));
     }
 
     public function storeAnggota(Request $request) {
