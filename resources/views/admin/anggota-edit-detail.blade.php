@@ -100,110 +100,109 @@
                 </div>
 
                 <div class="card-body">
-                    @foreach ($user as $item)
-                        <div class="mt-3">
-                            <form action="{{ route('admin.anggota.update', ['anggotum' => $item]) }}" method="post" enctype="multipart/form-data">
-                                @csrf
-                                <div class="mb-3">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="fname" name="fname" placeholder="" oninput=capitalizeName(this) required value="{{ $item->fname }}"/>
-                                        <label for="fname">Nama Depan</label>
-                                    </div>
+                    <div class="mt-3">
+                        <form action="{{ route('admin.anggota.update', $user->memberId) }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="fname" name="fname" placeholder="" oninput=capitalizeName(this) required value="{{ $user->fname }}"/>
+                                    <label for="fname">Nama Depan</label>
                                 </div>
-                                <div class="mb-3">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="lname" name="lname" placeholder="" oninput=capitalizeName(this) required value="{{ $item->lname }}"/>
-                                        <label for="lname">Nama Belakang</label>
-                                    </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="lname" name="lname" placeholder="" oninput=capitalizeName(this) required value="{{ $user->lname }}"/>
+                                    <label for="lname">Nama Belakang</label>
                                 </div>
-                                <div class="mb-3">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="birthplace" name="birthplace" placeholder="" oninput=capitalizeName(this) required value="{{ $item->birthplace }}"/>
-                                        <label for="birthplace">Tempat Lahir</label>
-                                    </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="birthplace" name="birthplace" placeholder="" oninput=capitalizeName(this) required value="{{ $user->birthplace }}"/>
+                                    <label for="birthplace">Tempat Lahir</label>
                                 </div>
-                                <div class="mb-3">
-                                    <div class="form-floating">
-                                        <input type="date" class="form-control mb-3" id="birthdate" name="birthdate" value="{{ $item->birthdate }}">
-                                        <label for="birthdate">Tanggal Lahir</label>
-                                    </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control mb-3" id="birthdate" name="birthdate" value="{{ $user->birthdate }}">
+                                    <label for="birthdate">Tanggal Lahir</label>
                                 </div>
-                                <div class="mb-3">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="address" name="address" placeholder="" oninput=capitalizeName(this) required value="{{ $item->address }}"/>
-                                        <label for="address">Alamat Tinggal</label>
-                                    </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="address" name="address" placeholder="" oninput=capitalizeName(this) required value="{{ $user->address }}"/>
+                                    <label for="address">Alamat Tinggal</label>
                                 </div>
-                                <div class="mb-3">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="email" name="email" placeholder="" required value="{{ $item->email }}"/>
-                                        <label for="email">Email</label>
-                                    </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="email" name="email" placeholder="" required value="{{ $user->email }}"/>
+                                    <label for="email">Email</label>
                                 </div>
-                                <div class="mb-3">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="workAddress" name="workAddress" placeholder="" oninput=capitalizeName(this) required value="{{ $item->workAddress }}"/>
-                                        <label for="workAddress">Alamat Kerja</label>
-                                    </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="workAddress" name="workAddress" placeholder="" oninput=capitalizeName(this) required value="{{ $user->workAddress }}"/>
+                                    <label for="workAddress">Alamat Kerja</label>
                                 </div>
-                                <div class="mb-3">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="phone" name="phone" placeholder="" oninput=capitalizeName(this) required value="{{ $item->phone }}"/>
-                                        <label for="phone">No Hp</label>
-                                    </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="phone" name="phone" placeholder="" oninput=capitalizeName(this) required value="{{ $user->phone }}"/>
+                                    <label for="phone">No Hp</label>
                                 </div>
-                                <div class="mb-3">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="mothername" name="mothername" placeholder="" oninput=capitalizeName(this) required value="{{ $item->mothername }}"/>
-                                        <label for="mothername">Nama Ibu Kandung</label>
-                                    </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="mothername" name="mothername" placeholder="" oninput=capitalizeName(this) required value="{{ $user->mothername }}"/>
+                                    <label for="mothername">Nama Ibu Kandung</label>
                                 </div>
-                                <div class="mb-3">
-                                    <div class="form-group">
-                                        <label for="ktp">Foto KTP</label>
-                                        @if ($item->ktp != "")
-                                            <img style="width: 220px;" src="/{{$item->ktp}}" alt="" class="img-fluid mb-3 mt-3 col-4 d-block"> 
-                                        @else
-                                            <img class="img-preview img-fluid mb-3 mt-3 col-4">
-                                        @endif
-                                    </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-group">
+                                    <label for="ktp">Foto KTP</label>
+                                    @if ($user->ktp != "")
+                                        <img style="width: 220px;" src="/{{$user->ktp}}" alt="" class="img-fluid mb-3 mt-3 col-4 d-block"> 
+                                    @else
+                                        <img class="img-preview img-fluid mb-3 mt-3 col-4">
+                                    @endif
                                 </div>
-                                <div class="mb-3">
-                                    <div class="form-group">
-                                        <input type="file" class="image-resize-filepond" name="ktp" accept="image/*">
-                                    </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-group">
+                                    <input type="file" class="image-resize-filepond" name="ktp" accept="image/*">
                                 </div>
-                                <div class="mb-3">
-                                    <div class="form-group">
-                                        <label for="ktp">Foto KK</label>
-                                        @if ($item->kk != "")
-                                            <img style="width: 220px;" src="/{{$item->kk}}" alt="" class="img-fluid mb-3 mt-3 col-4 d-block"> 
-                                        @else
-                                            <img class="img-preview img-fluid mb-3 mt-3 col-4">
-                                        @endif
-                                    </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-group">
+                                    <label for="ktp">Foto KK</label>
+                                    @if ($user->kk != "")
+                                        <img style="width: 220px;" src="/{{$user->kk}}" alt="" class="img-fluid mb-3 mt-3 col-4 d-block"> 
+                                    @else
+                                        <img class="img-preview img-fluid mb-3 mt-3 col-4">
+                                    @endif
                                 </div>
-                                <div class="mb-3">
-                                    <div class="form-group">
-                                        <input type="file" class="image-preview-filepond" name="kk" accept="image/*">
-                                    </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-group">
+                                    <input type="file" class="image-preview-filepond" name="kk" accept="image/*">
                                 </div>
-                                <div class="divider divider-warning">
-                                    <div class="divider-text">Data Simpanan</div>
-                                </div>
-                                <div class="mb-3">
-                                    <label>Simpanan Pokok</label>
-                                    <input type="text" readonly class="form-control-plaintext" id="nominal" name="nominal" value="Rp 100,000" />
-                                </div>
-                                <div class="divider divider-warning">
-                                    <div class="divider-text"></div>
-                                </div>
-                                <div class="text-end">
-                                    <button type="submit" class="btn btn-primary show_confirm">Update Data</button>
-                                </div>
-                            </form>
-                        </div>
-                    @endforeach
+                            </div>
+                            <div class="divider divider-warning">
+                                <div class="divider-text">Data Simpanan</div>
+                            </div>
+                            <div class="mb-3">
+                                <label>Simpanan Pokok</label>
+                                <input type="text" readonly class="form-control-plaintext" id="nominal" name="nominal" value="Rp 100,000" />
+                            </div>
+                            <div class="divider divider-warning">
+                                <div class="divider-text"></div>
+                            </div>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary show_confirm">Update Data</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

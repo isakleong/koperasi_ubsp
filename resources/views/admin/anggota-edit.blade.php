@@ -159,7 +159,7 @@
                             <h5 class="card-title">{{ $item->fname.' '.$item->lname }}</h5>
                             <input type="hidden" id="memberId" value="{{ $item->memberId }}">
                             <div class="mt-3">
-                            <a href="{{ route('admin.anggota.edit', $item->id) }}" type="button" class="btn btn-primary">Edit Data</a>
+                            <a href="{{ route('admin.anggota.edit', $item->memberId) }}" type="button" class="btn btn-primary">Edit Data</a>
                             </div>
                         </div>
                     </div>

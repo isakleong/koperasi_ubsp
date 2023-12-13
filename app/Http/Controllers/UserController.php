@@ -170,12 +170,12 @@ class UserController extends Controller
         if($status == "aktif") {
             $users = DB::table('users')
             ->where('status', 2)
-            ->orderBy('id')
+            ->orderBy('id', 'desc')
             ->cursorPaginate(10);
         } elseif ($status == "non-aktif") {
             $users = DB::table('users')
             ->where('status', 3)
-            ->orderBy('id')
+            ->orderBy('id', 'desc')
             ->cursorPaginate(10);
         } elseif ($status == "not-verified") {
             $users = DB::table('users')
@@ -185,7 +185,7 @@ class UserController extends Controller
         } elseif ($status == "not-acc") {
             $users = DB::table('users')
             ->where('status', 1)
-            ->orderBy('id')
+            ->orderBy('id', 'desc')
             ->cursorPaginate(10);
         }
 
@@ -196,17 +196,97 @@ class UserController extends Controller
         return view('admin.anggota-edit', compact('users', 'request'));
     }
 
-    public function edit(User $user)
+    public function edit($memberId)
     {
-        $usersDetail = User::where('memberId', $user->memberId)->get();
+        $user = User::where('memberId', $memberId)->firstOrFail();
 
         return view('admin.anggota-edit-detail', compact('user'));
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, $memberId)
     {
-        //
-        dd("sss");
+        $request->validate([
+            'fname' => 'required',
+            'lname' => 'required',
+            'birthplace' => 'required',
+            'birthdate' => 'required',
+            'address' => 'required',
+            'workAddress' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'mothername' => 'required',
+            'method' => 'required',
+        ]);
+
+        try {
+            $input = $request->all();
+
+            $user = User::where('memberId', $memberId)->firstOrFail();
+
+            //image handler
+            $ktpDelete = "";
+            if($imageKTP = $request->file('ktp')) {
+                $ktpDelete = public_path()."/".$user->ktp;
+
+                $destinationPath = 'image/upload/'.$user->memberId.'/'.'profile/';
+                File::makeDirectory($destinationPath, 0777, true, true);
+
+                $imageName = "ktp_".$user->memberId.time().Str::random(5).$imageKTP->getClientOriginalExtension();
+                $input['ktp'] = $destinationPath.$imageName;
+            }
+
+            $kkDelete = "";
+            if($imageKK = $request->file('kk')) {
+                $kkDelete = public_path()."/".$user->kk;
+
+                $destinationPath = 'image/upload/'.$user->memberId.'/'.'profile/';
+                File::makeDirectory($destinationPath, 0777, true, true);
+                
+                $imageName = "kk_".$user->memberId.time().Str::random(5).$imageKK->getClientOriginalExtension();
+                $input['kk'] = $destinationPath.$imageName;
+            }
+
+            $buktiSimpanan = "";
+            $simpananDelete = "";
+            if($imageSimpanan = $request->file('simpanan')) {
+                $simpananDelete = public_path()."/".$user->kk;
+
+                $destinationPath = 'image/upload/'.$user->memberId.'/'.'simpanan/pokok/';
+                File::makeDirectory($destinationPath, 0777, true, true);
+
+                $imageName = $user->memberId."_".time().Str::random(5).$imageSimpanan->getClientOriginalExtension();
+                $buktiSimpanan = $destinationPath.$imageName;
+            }
+            //end of image handler
+
+            DB::beginTransaction();
+
+            // $user->update($input);
+            $affectedRows = DB::table('users')
+                ->where('memberId', $memberId)
+                ->update([
+                    'fname' => $input['fname'],
+                    'lname' => $input['lname'],
+                    'birthplace' => $input['birthplace'],
+                    'birthdate' => $input['birthdate'],
+                    'address' => $input['address'],
+                    'workAddress' => $input['workAddress'],
+                    'email' => $input['email'],
+                    'phone' => $input['phone'],
+                    'mothername' => $input['mothername'],
+                    'method' => $input['method'],
+            ]);
+
+            DB::commit();
+
+            return redirect('/admin/anggota/edit');
+        } catch (\Exception $e) {
+            dd("hhhe");
+            DB::rollback();
+            $errorMsg = $e->getMessage();
+            return view('layout.admin.error', compact(['errorMsg']));
+        }
+        
     }
 
     public function destroy(User $user)
