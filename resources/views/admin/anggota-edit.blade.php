@@ -42,7 +42,7 @@
       <li class="menu-header small text-uppercase"><span class="menu-header-text">master data</span></li>
       <!-- Cards -->
       <li class="menu-item active">
-        <a href="/admin/anggota" class="menu-link">
+        <a href="/admin/user" class="menu-link">
           <i class="menu-icon tf-icons bx bx-group"></i>
           <div data-i18n="Basic">Anggota</div>
         </a>
@@ -94,6 +94,7 @@
 @endsection
 
 @section('content')
+@include('sweetalert::alert')
 <!-- Content -->
 <div class="container-xxl flex-grow-1 container-p-y">
   <h4 class="py-3 mb-4">
@@ -105,7 +106,7 @@
         <div class="card-header d-flex justify-content-between align-items-center">
           <h5 class="mb-0">Data Anggota UBSP</h5>
 
-          <div class="mb-3">
+          {{-- <div class="mb-3">
             <form id="filterForm" action="/admin/anggota/edit" method="get">
                 {{ csrf_field() }}
                 <div class="row">
@@ -118,7 +119,7 @@
                     </select>
                 </div>
             </form>
-          </div>
+          </div> --}}
 
           {{-- <div class="btn-group float-end">
             <button type="button" class="btn btn-outline-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Filter</button>
@@ -134,37 +135,67 @@
         </div>
         
         <div class="card-body">
-            <div id="loadingFilter" style="display: none;">
-                    <img class="mb-5" src="/administrator/assets/img/icons/loading.gif" alt="Loading..." />
-            </div>
-            <div class="scrolling-pagination" id="mainData">
-                @foreach ($users as $item)
-                    @php
-                        $borderClass = '';
+            <div class="row">
+              <div class="col-12 col-sm-8 col-md-6" float-start">Cari Data</label>
+                <form action="" method="get">
+                  <div class="input-group input-group-merge mb-4">
+                    <span class="input-group-text" id="basic-addon-search31"><i class="bx bx-search"></i></span>
+                    <input type="text" class="form-control" name="keyword" placeholder="Cari anggota..." aria-label="Search..." aria-describedby="basic-addon-search31" />
+                    <button class="input-group-text btn btn-primary" id="btnCari">Cari</button>
+                  </div>
+                </form>
+              </div>
 
-                        // Check the status and set the border class accordingly
-                        if ($item->status == 3) {
-                            $borderClass = 'border-danger';
-                        } elseif ($item->status == 2) {
-                            $borderClass = 'border-success';
-                        } elseif ($item->status == 1) {
-                            $borderClass = 'border-warning';
-                        }
-                        elseif ($item->status == 0) {
-                            $borderClass = 'border-info';
-                        }
-                    @endphp
-                    <div class="card shadow-lg bg-transparent border {{ $borderClass }} mb-3">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $item->fname.' '.$item->lname }}</h5>
-                            <input type="hidden" id="memberId" value="{{ $item->memberId }}">
-                            <div class="mt-3">
-                            <a href="{{ route('admin.anggota.edit', $item->memberId) }}" type="button" class="btn btn-primary">Edit Data</a>
-                            </div>
-                        </div>
+              <div class="col-12 col-sm-8 col-md-6">
+                <div class="input-group input-group-merge mb-4">
+                  <form id="filterForm" action="/admin/anggota/edit" method="get">
+                    {{ csrf_field() }}
+                    <div class="row">
+                        <label for="filterStatus" class="form-label float-end">Filter Status</label>
+                        <select id="filterStatus" class="form-select form-select" name="status" value="{{ $request->status }}">
+                            <option value="aktif" {{ $request->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                            <option value="non-aktif" {{ $request->status == 'non-aktif' ? 'selected' : '' }}>Non Aktif</option>
+                            <option value="not-verified" {{ $request->status == 'not-verified' ? 'selected' : '' }}>Belum Verifikasi</option>
+                            <option value="not-acc" {{ $request->status == 'not-acc' ? 'selected' : '' }}>Belum Disetujui</option>
+                        </select>
                     </div>
-                @endforeach
-                {{ $users->links() }}          
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div id="loadingFilter" style="display: none;">
+              <img class="mb-5" src="/administrator/assets/img/icons/loading.gif" alt="Loading..." />
+            </div>
+            
+            <div class="scrolling-pagination" id="mainData">
+              @foreach ($users as $item)
+                  @php
+                      $borderClass = '';
+
+                      // Check the status and set the border class accordingly
+                      if ($item->status == 3) {
+                          $borderClass = 'border-danger';
+                      } elseif ($item->status == 2) {
+                          $borderClass = 'border-success';
+                      } elseif ($item->status == 1) {
+                          $borderClass = 'border-warning';
+                      }
+                      elseif ($item->status == 0) {
+                          $borderClass = 'border-info';
+                      }
+                  @endphp
+                  <div class="card shadow-lg bg-transparent border {{ $borderClass }} mb-3">
+                      <div class="card-body">
+                          <h5 class="card-title">{{ $item->fname.' '.$item->lname }}</h5>
+                          <input type="hidden" id="memberId" value="{{ $item->memberId }}">
+                          <div class="mt-3">
+                          <a href="{{ route('admin.user.edit', $item->id) }}" type="button" class="btn btn-primary">Edit Data</a>
+                          </div>
+                      </div>
+                  </div>
+              @endforeach
+              {{ $users->withQueryString()->links() }}          
           </div>
         </div>
       </div>
@@ -202,27 +233,28 @@
     //end of capitalize input
 
     $(document).ready(function () {
-      $('ul.pagination').hide();
-      $(function() {
-          $('.scrolling-pagination').jscroll({
-              autoTrigger: true,
-              loadingHtml: '<img class="center-block" src="/administrator/assets/img/icons/loading.gif" alt="Loading..." />',
-              padding: 0,
-              nextSelector: '.pagination li.active + li a',
-              contentSelector: 'div.scrolling-pagination',
-              callback: function() {
-                  $('ul.pagination').remove();
-              }
-          });
-      });
+      // $('ul.pagination').hide();
+      // $(function() {
+      //     $('.scrolling-pagination').jscroll({
+      //         autoTrigger: true,
+      //         loadingHtml: '<img class="center-block" src="/administrator/assets/img/icons/loading.gif" alt="Loading..." />',
+      //         padding: 0,
+      //         nextSelector: '.pagination li.active + li a',
+      //         contentSelector: 'div.scrolling-pagination',
+      //         callback: function() {
+      //             $('ul.pagination').remove();
+      //         }
+      //     });
+      // });
 
       $('select').on('change', function(e) {
         e.preventDefault();
 
         var selectedStatus = $(this).val();
 
-        // Disable the select while loading
+        // Disable the select and filter while loading
         $(this).prop('disabled', true);
+        $("#btnCari").prop('disabled', true);
 
         $('#mainData').html("");
 
@@ -230,19 +262,21 @@
         
         setTimeout(function() {
             $.ajax({
-                url: '/admin/anggota/edit',
+                url: '/admin/user',
                 type: 'GET',
                 data: { status: selectedStatus },
                 success: function(response) {
                     $('#loadingFilter').hide();
                     $('#mainData').html(response); //update the data with filtered result
                     $("#filterStatus").prop('disabled', false);
-                    history.pushState({}, '', '/admin/anggota/edit?status=' + selectedStatus);
+                    $("#btnCari").prop('disabled', false);
+                    // history.pushState({}, '', '/admin/user?status=' + selectedStatus);
                 },
                 error: function(xhr) {
                     console.log('AJAX error:', xhr.responseText);
                     $('#loadingFilter').hide();
                     $("#filterStatus").prop('disabled', false);
+                    $("#btnCari").prop('disabled', false);
                 }
             });
         }, 800);

@@ -56,7 +56,7 @@
       <li class="menu-header small text-uppercase"><span class="menu-header-text">master data</span></li>
       <!-- Cards -->
       <li class="menu-item active">
-        <a href="/admin/anggota" class="menu-link">
+        <a href="/admin/menu/user" class="menu-link">
           <i class="menu-icon tf-icons bx bx-group"></i>
           <div data-i18n="Basic">Anggota</div>
         </a>
@@ -120,7 +120,7 @@
         <div class="col-lg-12 col-md-12">
             <div class="row">
                 <div class="col-lg-6 mb-4 bgCard">
-                    <a href="/admin/anggota/create">
+                    <a href="/admin/user/create">
                         <div class="container-fluid">
                             <div class="p-3" id="customCard">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -144,7 +144,7 @@
                 </div>
 
                 <div class="col-lg-6 mb-4 bgCard">
-                    <a href="/admin/anggota/edit">
+                    <a href="/admin/user">
                         <div class="container-fluid">
                             <div class="p-3" id="customCard">
                                 <div class="d-flex justify-content-between align-items-center">

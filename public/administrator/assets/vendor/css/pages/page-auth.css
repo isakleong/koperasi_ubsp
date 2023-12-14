@@ -1,4 +1,15 @@
 @charset "UTF-8";
+
+body {
+  /* background-image: url('/main/assets/compiled/png/bg_admin_login.jpg'); */
+  background: url('/main/assets/compiled/png/bg_7.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  color: black;
+}
+
 .authentication-wrapper {
   display: flex;
   flex-basis: 100%;

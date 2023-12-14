@@ -119,6 +119,7 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     // Route::post('/anggota/add', [AdminController::class, 'storeAnggota'])->name('store.anggota');
     // Route::post('/anggota/edit', [AdminController::class, 'updateAnggota'])->name('update.anggota');
 
-    Route::resource('/anggota', UserController::class);
+    Route::get('/menu/user', [AdminController::class, 'showUserMenu']);
+    Route::resource('/user', UserController::class);
 });
 //END OF ADMIN

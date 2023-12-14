@@ -22,7 +22,7 @@ class AdminController extends Controller
         return view('admin.index');
     }
 
-    public function anggota() {
+    public function showUserMenu() {
         return view('admin.anggota');
     }
 

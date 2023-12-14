@@ -60,7 +60,7 @@
       <li class="menu-header small text-uppercase"><span class="menu-header-text">master data</span></li>
       <!-- Cards -->
       <li class="menu-item active">
-        <a href="/admin/anggota" class="menu-link">
+        <a href="/admin/menu/user" class="menu-link">
           <i class="menu-icon tf-icons bx bx-group"></i>
           <div data-i18n="Basic">Anggota</div>
         </a>
@@ -112,6 +112,7 @@
 @endsection
 
 @section('content')
+{{-- @include('sweetalert::alert') --}}
 <!-- Content -->
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="py-3 mb-4">
@@ -125,69 +126,96 @@
                     {{-- <small class="text-muted float-end">Sistem Akuntansi UBSP</small> --}}
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.anggota.store') }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ route('admin.user.store') }}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="fname" name="fname" placeholder="" oninput=capitalizeName(this) required/>
+                                <input type="text" class="form-control" id="fname" name="fname" placeholder="" oninput=capitalizeName(this) required value="{{old('fname')}}"/>
                                 <label for="fname">Nama Depan</label>
                             </div>
+                            @error('fname')
+                                <p class="mt-1" style="color: red">{{$message}}</p>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="lname" name="lname" placeholder="" oninput=capitalizeName(this) required/>
+                                <input type="text" class="form-control" id="lname" name="lname" placeholder="" oninput=capitalizeName(this) required value="{{old('lname')}}"/>
                                 <label for="lname">Nama Belakang</label>
                             </div>
+                            @error('lname')
+                                <p class="mt-1" style="color: red">{{$message}}</p>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="birthplace" name="birthplace" placeholder="" oninput=capitalizeName(this) required/>
+                                <input type="text" class="form-control" id="birthplace" name="birthplace" placeholder="" oninput=capitalizeName(this) required value="{{old('birthplace')}}"/>
                                 <label for="birthplace">Tempat Lahir</label>
                             </div>
+                            @error('birthplace')
+                                <p class="mt-1" style="color: red">{{$message}}</p>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <div class="form-floating">
-                                <input type="date" class="form-control mb-3" id="birthdate" name="birthdate" value="{{old('birthdate')}}">
+                                <input type="date" class="form-control mb-3" id="birthdate" name="birthdate" required value="{{old('birthdate')}}">
                                 <label for="birthdate">Tanggal Lahir</label>
                             </div>
+                            @error('birthdate')
+                                <p class="mt-1" style="color: red">{{$message}}</p>
+                            @enderror
                         </div>
                         
                         <div class="mb-3">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="address" name="address" placeholder="" oninput=capitalizeName(this) required/>
+                                <input type="text" class="form-control" id="address" name="address" placeholder="" oninput=capitalizeName(this) required value="{{old('address')}}"/>
                                 <label for="address">Alamat Tinggal</label>
                             </div>
+                            @error('address')
+                                <p class="mt-1" style="color: red">{{$message}}</p>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="workAddress" name="workAddress" placeholder="" oninput=capitalizeName(this) required/>
+                                <input type="text" class="form-control" id="workAddress" name="workAddress" placeholder="" oninput=capitalizeName(this) required value="{{old('workAddress')}}"/>
                                 <label for="workAddress">Alamat Kerja</label>
                             </div>
+                            @error('workAddress')
+                                <p class="mt-1" style="color: red">{{$message}}</p>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <div class="form-floating">
-                                <input type="email" class="form-control" id="email" name="email" placeholder="" required/>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="" required value="{{old('email')}}"/>
                                 <label for="email">Email</label>
                             </div>
+                            @error('email')
+                                <p class="mt-1" style="color: red">{{$message}}</p>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="phone" name="phone" placeholder="" oninput=capitalizeName(this) required/>
+                                <input type="text" class="form-control" id="phone" name="phone" placeholder="" oninput=capitalizeName(this) required value="{{old('phone')}}"/>
                                 <label for="phone">No Hp</label>
                             </div>
+                            @error('phone')
+                                <p class="mt-1" style="color: red">{{$message}}</p>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="mothername" name="mothername" placeholder="" oninput=capitalizeName(this) required/>
+                                <input type="text" class="form-control" id="mothername" name="mothername" placeholder="" oninput=capitalizeName(this) required value="{{old('mothername')}}"/>
                                 <label for="mothername">Nama Ibu Kandung</label>
                             </div>
+                            @error('mothername')
+                                <p class="mt-1" style="color: red">{{$message}}</p>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
@@ -195,12 +223,18 @@
                                 <label for="ktp">Foto KTP</label>
                                 <input type="file" class="image-resize-filepond" name="ktp" accept="image/*">
                             </div>
+                            @error('ktp')
+                                <p class="mt-1" style="color: red">{{$message}}</p>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <div class="form-group">
                                 <label for="kk">Foto Kartu Keluarga</label>
                                 <input type="file" class="image-preview-filepond" name="kk" accept="image/*">
                             </div>
+                            @error('kk')
+                                <p class="mt-1" style="color: red">{{$message}}</p>
+                            @enderror
                         </div>
 
                         <div class="divider divider-warning">
@@ -231,6 +265,9 @@
                               <input name="method" class="form-check-input" type="radio" value="transfer" id="transfer" />
                               <label class="form-check-label" for="transfer"> Transfer </label>
                             </div>
+                            @error('method')
+                                <p class="mt-1" style="color: red">{{$message}}</p>
+                            @enderror
                         </div>
 
                         <div class="mb-3" id="bukti-trf" style="display: none;">
@@ -240,9 +277,14 @@
                                     <input type="file" class="image-exif-filepond" name="simpanan" accept="image/*"/>
                                 </div>
                             </div>
+                            @error('simpanan')
+                                <p class="mt-1" style="color: red">{{$message}}</p>
+                            @enderror
                         </div>
 
-                        <button type="submit" class="btn btn-primary show_confirm">Simpan</button>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-lg btn-primary show_confirm">Simpan</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -309,5 +351,16 @@
             }
         });
     });
+</script>
+
+<script>
+    @if($message = session('errors'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Formulir anggota baru belum diisi secara lengkap',
+            // text: '{{Session::get("errors")}}',
+        })
+    @endif
 </script>
 @endsection

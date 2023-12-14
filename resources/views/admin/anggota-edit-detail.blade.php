@@ -35,7 +35,7 @@
       <li class="menu-header small text-uppercase"><span class="menu-header-text">master data</span></li>
       <!-- Cards -->
       <li class="menu-item active">
-        <a href="/admin/anggota" class="menu-link">
+        <a href="/admin/user" class="menu-link">
           <i class="menu-icon tf-icons bx bx-group"></i>
           <div data-i18n="Basic">Anggota</div>
         </a>
@@ -101,24 +101,24 @@
 
                 <div class="card-body">
                     <div class="mt-3">
-                        <form action="{{ route('admin.anggota.update', $user->memberId) }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('admin.user.update', $user->id) }}" method="post" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="fname" name="fname" placeholder="" oninput=capitalizeName(this) required value="{{ $user->fname }}"/>
+                                    <input type="text" class="form-control" id="fname" name="fname" placeholder="" value="{{ $user->fname }}"/>
                                     <label for="fname">Nama Depan</label>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="lname" name="lname" placeholder="" oninput=capitalizeName(this) required value="{{ $user->lname }}"/>
+                                    <input type="text" class="form-control" id="lname" name="lname" placeholder="" value="{{ $user->lname }}"/>
                                     <label for="lname">Nama Belakang</label>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="birthplace" name="birthplace" placeholder="" oninput=capitalizeName(this) required value="{{ $user->birthplace }}"/>
+                                    <input type="text" class="form-control" id="birthplace" name="birthplace" placeholder="" value="{{ $user->birthplace }}"/>
                                     <label for="birthplace">Tempat Lahir</label>
                                 </div>
                             </div>
@@ -130,31 +130,31 @@
                             </div>
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="address" name="address" placeholder="" oninput=capitalizeName(this) required value="{{ $user->address }}"/>
+                                    <input type="text" class="form-control" id="address" name="address" placeholder="" value="{{ $user->address }}"/>
                                     <label for="address">Alamat Tinggal</label>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="email" name="email" placeholder="" required value="{{ $user->email }}"/>
+                                    <input type="text" class="form-control" id="email" name="email" placeholder="" value="{{ $user->email }}"/>
                                     <label for="email">Email</label>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="workAddress" name="workAddress" placeholder="" oninput=capitalizeName(this) required value="{{ $user->workAddress }}"/>
+                                    <input type="text" class="form-control" id="workAddress" name="workAddress" placeholder="" value="{{ $user->workAddress }}"/>
                                     <label for="workAddress">Alamat Kerja</label>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="phone" name="phone" placeholder="" oninput=capitalizeName(this) required value="{{ $user->phone }}"/>
+                                    <input type="text" class="form-control" id="phone" name="phone" placeholder="" value="{{ $user->phone }}"/>
                                     <label for="phone">No Hp</label>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="mothername" name="mothername" placeholder="" oninput=capitalizeName(this) required value="{{ $user->mothername }}"/>
+                                    <input type="text" class="form-control" id="mothername" name="mothername" placeholder="" value="{{ $user->mothername }}"/>
                                     <label for="mothername">Nama Ibu Kandung</label>
                                 </div>
                             </div>
