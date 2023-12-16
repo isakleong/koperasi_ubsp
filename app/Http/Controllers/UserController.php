@@ -85,6 +85,8 @@ class UserController extends Controller
                 'mothername' => $request->input('mothername'),
                 'method' => $request->input('method'),
                 'simpanan' => $request->file('simpanan'),
+                'ktp' => $request->file('ktp'),
+                'kk' => $request->file('kk'),
             ],
             [
                 'fname' => 'required',
@@ -98,6 +100,8 @@ class UserController extends Controller
                 'mothername' => 'required',
                 'method' => 'required|in:cash,transfer',
                 'simpanan' => 'required_if:method,transfer',
+                'ktp' => 'required|image',
+                'kk' => 'required|image',
             ],
             [
                 'fname.required' => 'Nama depan belum diisi',
@@ -117,6 +121,10 @@ class UserController extends Controller
                 'method.required' => 'Jenis pembayaran belum diisi',
                 'method.in' => 'Jenis pembayaran tidak valid',
                 'simpanan.required_if' => 'Bukti pembayaran belum diisi',
+                'ktp.required' => 'Foto KTP belum diisi',
+                'ktp.image' => 'Foto KTP tidak valid',
+                'kk.required' => 'Foto KK belum diisi',
+                'kk.image' => 'Foto KK tidak valid',
             ],
             );
             

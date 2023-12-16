@@ -258,11 +258,11 @@
                         <div class="col-md mb-3">
                             <label class="">Jenis Pembayaran</small>
                             <div class="form-check mt-3 mb-2">
-                              <input name="method" class="form-check-input" type="radio" value="cash" id="cash" />
+                              <input name="method" class="form-check-input" type="radio" value="cash" id="cash" {{ old('method') == 'cash' ? 'checked' : '' }} />
                               <label class="form-check-label" for="cash"> Cash </label>
                             </div>
                             <div class="form-check">
-                              <input name="method" class="form-check-input" type="radio" value="transfer" id="transfer" />
+                              <input name="method" class="form-check-input" type="radio" value="transfer" id="transfer" {{ old('method') == 'transfer' ? 'checked' : '' }} />
                               <label class="form-check-label" for="transfer"> Transfer </label>
                             </div>
                             @error('method')
@@ -319,6 +319,14 @@
     //end of capitalize input
 
     $(document).ready(function () {
+        var selectedValue = $('input[name="method"]:checked').val();
+            
+        if(selectedValue == 'transfer') {
+            $('#bukti-trf').show();
+        } else {
+            $('#bukti-trf').hide();
+        }
+
         $('.show_confirm').click(function(event) {
             event.preventDefault();
 
