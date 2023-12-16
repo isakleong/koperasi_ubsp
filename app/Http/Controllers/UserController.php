@@ -64,13 +64,13 @@ class UserController extends Controller
 
     private function fetchDataFromDatabase($keyword, $status)
     {
-        if($status == 'aktif') {
+        if($status == 'active') {
             $status = 2;
-        } elseif($status == 'nonaktif') {
+        } elseif($status == 'non-active') {
             $status = 3;
-        } elseif($status == 'notverified') {
+        } elseif($status == 'not-verified') {
             $status = 0;
-        } elseif($status == 'notacc') {
+        } elseif($status == 'not-acc') {
             $status = 1;
         }
         

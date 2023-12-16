@@ -147,10 +147,10 @@
 
               <div class="col-12 col-sm-4 col-md-4">
                 <select id="filterStatus" class="form-select form-select" name="status">
-                  <option value="aktif" {{ Request::get('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                  <option value="nonaktif" {{ Request::get('status') == 'nonaktif' ? 'selected' : '' }}>Non Aktif</option>
-                  <option value="notverified" {{ Request::get('status') == 'notverified' ? 'selected' : '' }}>Belum Verifikasi</option>
-                  <option value="notacc" {{ Request::get('status') == 'notacc' ? 'selected' : '' }}>Belum Disetujui</option>
+                  <option value="active" {{ Request::get('status') == 'active' ? 'selected' : '' }}>Aktif</option>
+                  <option value="non-active" {{ Request::get('status') == 'non-active' ? 'selected' : '' }}>Non Aktif</option>
+                  <option value="not-verified" {{ Request::get('status') == 'not-verified' ? 'selected' : '' }}>Belum Verifikasi</option>
+                  <option value="not-acc" {{ Request::get('status') == 'not-acc' ? 'selected' : '' }}>Belum Disetujui</option>
                 </select>
               </div>
 
