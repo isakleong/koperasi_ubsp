@@ -19,50 +19,71 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $keyword = $request->input('keyword');
 
-        $status = $request->has('status') ? $request->input('status') : "aktif";
+        // Retrieve form data
+        $keyword = $request->input('keyword', '');
+        $status = $request->input('status', 'active');
 
-        if($status == "aktif") {
-            // $users = DB::table('users')
-            // ->where('status', 2)
-            // ->orderBy('id', 'desc')
-            // ->cursorPaginate(10);
+        // Perform data filtering based on the provided parameters
+        $users = $this->fetchDataFromDatabase($keyword, $status);
 
-            $users = DB::table('users')
-            ->where('status', 2)
-            ->where('fname', 'LIKE', '%'.$keyword.'%')
-            ->orWhere('lname', 'LIKE', '%'.$keyword.'%')
-            ->orWhere('email', 'LIKE', '%'.$keyword.'%')
-            ->orWhere('address', 'LIKE', '%'.$keyword.'%')
-            ->orWhere('workAddress', 'LIKE', '%'.$keyword.'%')
-            ->orWhere('phone', 'LIKE', '%'.$keyword.'%')
-            ->orWhere('mothername', 'LIKE', '%'.$keyword.'%')
-            ->orWhere('birthplace', 'LIKE', '%'.$keyword.'%')
+        // Render the view with the filtered data
+        return view('admin.anggota-edit', compact('users'));
+
+        // $users = User::when($request->keyword!=null, function ($q) use ($request) {
+        //     return $q->where('fname', 'LIKE', '%'.$request->keyword.'%')
+        //     ->orWhere('lname', 'LIKE', '%'.$request->keyword.'%')
+        //     ->orWhere('address', 'LIKE', '%'.$request->keyword.'%')
+        //     ->orWhere('workAddress', 'LIKE', '%'.$request->keyword.'%');
+        // }, function ($q) use ($keyword) {
+        //     return $q->where('fname', 'LIKE', '%'.$keyword.'%')
+        //     ->orWhere('lname', 'LIKE', '%'.$keyword.'%')
+        //     ->orWhere('address', 'LIKE', '%'.$keyword.'%')
+        //     ->orWhere('workAddress', 'LIKE', '%'.$keyword.'%');
+        // }) ->when($request->status!=null, function ($q) use($request){
+        //     return $q->where('status', $request->status);
+        // }, function ($q) use ($status) {
+        //     return $q->where('status', $status);
+        // })->paginate(10);
+
+        // //filter by keyword
+        // $users->when($request->keyword, function ($query) use ($request) {
+        //     return $query->where('fname', 'LIKE', '%'.$request->keyword.'%')
+        //     ->orWhere('lname', 'LIKE', '%'.$request->keyword.'%')
+        //     ->orWhere('address', 'LIKE', '%'.$request->keyword.'%')
+        //     ->orWhere('workAddress', 'LIKE', '%'.$request->keyword.'%');
+        // });
+
+        // //filter by status
+        // $users->when($request->status, function ($query) use ($request) {
+        //     return $query->whereStatus($request->status);
+        // });
+
+        // return view('admin.anggota-edit', compact('users', 'request'));
+    }
+
+    private function fetchDataFromDatabase($keyword, $status)
+    {
+        if($status == 'aktif') {
+            $status = 2;
+        } elseif($status == 'nonaktif') {
+            $status = 3;
+        } elseif($status == 'notverified') {
+            $status = 0;
+        } elseif($status == 'notacc') {
+            $status = 1;
+        }
+        
+        // Query the database using Eloquent (Laravel's ORM)
+        $query = User::where('status', $status)
+            ->where(function ($q) use ($keyword) {
+                $q->where('fname', 'LIKE', "%$keyword%")
+                    ->orWhere('lname', 'LIKE', "%$keyword%");
+            })
             ->orderBy('id', 'desc')
             ->paginate(10);
-        } elseif ($status == "non-aktif") {
-            $users = DB::table('users')
-            ->where('status', 3)
-            ->orderBy('id', 'desc')
-            ->cursorPaginate(10);
-        } elseif ($status == "not-verified") {
-            $users = DB::table('users')
-            ->where('status', 0)
-            ->orderBy('id')
-            ->cursorPaginate(10);
-        } elseif ($status == "not-acc") {
-            $users = DB::table('users')
-            ->where('status', 1)
-            ->orderBy('id', 'desc')
-            ->cursorPaginate(10);
-        }
 
-        if ($request->ajax()) {
-            return view('admin.partials.filtered-data-anggota', compact('users'))->render();
-        }
-
-        return view('admin.anggota-edit', compact('users', 'request'));
+        return $query;
     }
 
     public function create()

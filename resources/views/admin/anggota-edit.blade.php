@@ -135,15 +135,38 @@
         </div>
         
         <div class="card-body">
+          <form action="" method="get">
+            @csrf
             <div class="row">
+              <div class="col-12 col-sm-4 col-md-4">
+                <div class="input-group input-group-merge mb-4">
+                  <span class="input-group-text" id="basic-addon-search31"><i class="bx bx-search"></i></span>
+                  <input type="text" class="form-control" name="keyword" placeholder="Kata kunci..." aria-label="Kata kunci..." aria-describedby="basic-addon-search31" value="{{isset($_GET['keyword']) ? $_GET['keyword'] : ''}}" />
+                </div>
+              </div>
+
+              <div class="col-12 col-sm-4 col-md-4">
+                <select id="filterStatus" class="form-select form-select" name="status">
+                  <option value="aktif" {{ Request::get('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                  <option value="nonaktif" {{ Request::get('status') == 'nonaktif' ? 'selected' : '' }}>Non Aktif</option>
+                  <option value="notverified" {{ Request::get('status') == 'notverified' ? 'selected' : '' }}>Belum Verifikasi</option>
+                  <option value="notacc" {{ Request::get('status') == 'notacc' ? 'selected' : '' }}>Belum Disetujui</option>
+                </select>
+              </div>
+
+              <div class="col-12 col-sm-4 col-md-4">
+                <button type="submit" class="btn btn-primary">Cari Data</button>
+              </div>
+            </div>
+          </form>
+
+            {{-- <div class="row">
               <div class="col-12 col-sm-8 col-md-6" float-start">Cari Data</label>
-                <form action="" method="get">
-                  <div class="input-group input-group-merge mb-4">
-                    <span class="input-group-text" id="basic-addon-search31"><i class="bx bx-search"></i></span>
-                    <input type="text" class="form-control" name="keyword" placeholder="Cari anggota..." aria-label="Search..." aria-describedby="basic-addon-search31" />
-                    <button class="input-group-text btn btn-primary" id="btnCari">Cari</button>
-                  </div>
-                </form>
+                <div class="input-group input-group-merge mb-4">
+                  <span class="input-group-text" id="basic-addon-search31"><i class="bx bx-search"></i></span>
+                  <input type="text" class="form-control" name="keyword" placeholder="Cari anggota..." aria-label="Search..." aria-describedby="basic-addon-search31" />
+                  
+                </div>
               </div>
 
               <div class="col-12 col-sm-8 col-md-6">
@@ -162,14 +185,14 @@
                   </form>
                 </div>
               </div>
-            </div>
+            </div> --}}
 
             <div id="loadingFilter" style="display: none;">
               <img class="mb-5" src="/administrator/assets/img/icons/loading.gif" alt="Loading..." />
             </div>
             
             <div class="scrolling-pagination" id="mainData">
-              @foreach ($users as $item)
+              @forelse ($users as $item)
                   @php
                       $borderClass = '';
 
@@ -194,8 +217,12 @@
                           </div>
                       </div>
                   </div>
-              @endforeach
-              {{ $users->withQueryString()->links() }}          
+                  @empty
+                  <tr>
+                      <td colspan="4" class="text-center">No user found</td>
+                  </tr>
+              @endforelse
+              {{ $users->links() }}          
           </div>
         </div>
       </div>
@@ -247,40 +274,40 @@
       //     });
       // });
 
-      $('select').on('change', function(e) {
-        e.preventDefault();
+      // $('select').on('change', function(e) {
+      //   e.preventDefault();
 
-        var selectedStatus = $(this).val();
+      //   var selectedStatus = $(this).val();
 
-        // Disable the select and filter while loading
-        $(this).prop('disabled', true);
-        $("#btnCari").prop('disabled', true);
+      //   // Disable the select and filter while loading
+      //   $(this).prop('disabled', true);
+      //   $("#btnCari").prop('disabled', true);
 
-        $('#mainData').html("");
+      //   $('#mainData').html("");
 
-        $('#loadingFilter').show();
+      //   $('#loadingFilter').show();
         
-        setTimeout(function() {
-            $.ajax({
-                url: '/admin/user',
-                type: 'GET',
-                data: { status: selectedStatus },
-                success: function(response) {
-                    $('#loadingFilter').hide();
-                    $('#mainData').html(response); //update the data with filtered result
-                    $("#filterStatus").prop('disabled', false);
-                    $("#btnCari").prop('disabled', false);
-                    // history.pushState({}, '', '/admin/user?status=' + selectedStatus);
-                },
-                error: function(xhr) {
-                    console.log('AJAX error:', xhr.responseText);
-                    $('#loadingFilter').hide();
-                    $("#filterStatus").prop('disabled', false);
-                    $("#btnCari").prop('disabled', false);
-                }
-            });
-        }, 800);
-      });
+      //   setTimeout(function() {
+      //       $.ajax({
+      //           url: '/admin/user',
+      //           type: 'GET',
+      //           data: { status: selectedStatus },
+      //           success: function(response) {
+      //               $('#loadingFilter').hide();
+      //               $('#mainData').html(response); //update the data with filtered result
+      //               $("#filterStatus").prop('disabled', false);
+      //               $("#btnCari").prop('disabled', false);
+      //               // history.pushState({}, '', '/admin/user?status=' + selectedStatus);
+      //           },
+      //           error: function(xhr) {
+      //               console.log('AJAX error:', xhr.responseText);
+      //               $('#loadingFilter').hide();
+      //               $("#filterStatus").prop('disabled', false);
+      //               $("#btnCari").prop('disabled', false);
+      //           }
+      //       });
+      //   }, 800);
+      // });
 
       $('#openModalButton').on('click', function() {
         // Perform AJAX request before opening the modal
