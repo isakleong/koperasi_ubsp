@@ -83,7 +83,8 @@ class UserController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(10);
 
-        return $query;
+        // return $query;
+        return $query->appends(['keyword' => $keyword, 'status' => $status]);
     }
 
     public function create()
@@ -328,19 +329,65 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        // dd($user);
-        $request->validate([
-            'fname' => 'required',
-            'lname' => 'required',
-            'birthplace' => 'required',
-            'birthdate' => 'required',
-            'address' => 'required',
-            'workAddress' => 'required',
-            'email' => 'required',
-            'phone' => 'required',
-            'mothername' => 'required',
-            // 'method' => 'required',
-        ]);
+        $validator = Validator::make(
+            [
+                'fname' => $request->input('fname'),
+                'lname' => $request->input('lname'),
+                'birthdate' => $request->input('birthdate'),
+                'birthplace' => $request->input('birthplace'),
+                'address' => $request->input('address'),
+                'workAddress' => $request->input('workAddress'),
+                'email' => $request->input('email'),
+                'phone' => $request->input('phone'),
+                'mothername' => $request->input('mothername'),
+                'method' => $request->input('method'),
+                'simpanan' => $request->file('simpanan'),
+                'ktp' => $request->file('ktp'),
+                'kk' => $request->file('kk'),
+            ],
+            [
+                'fname' => 'required',
+                'lname' => 'required',
+                'birthdate' => 'required|date',
+                'birthplace' => 'required',
+                'address' => 'required',
+                'workAddress' => 'required',
+                'email' => 'required|email|unique:users,email',
+                'phone' => 'required|min:10|regex:/^([0-9\s\-\+\(\)]*)$/',
+                'mothername' => 'required',
+                'method' => 'required|in:cash,transfer',
+                'simpanan' => 'required_if:method,transfer',
+                'ktp' => 'required|image',
+                'kk' => 'required|image',
+            ],
+            [
+                'fname.required' => 'Nama depan belum diisi',
+                'lname.required' => 'Nama belakang belum diisi',
+                'birthdate.required' => 'Tanggal lahir belum diisi',
+                'birthdate.date' => 'Tanggal lahir tidak valid',
+                'birthplace.required' => 'Tempat lahir belum diisi',
+                'address.required' => 'Alamat tinggal belum diisi',
+                'workAddress.required' => 'Alamat kerja belum diisi',
+                'email.required' => 'Email belum diisi',
+                'email.unique' => 'Email sudah ada',
+                'email.email' => 'Email tidak valid',
+                'phone.required' => 'No Hp belum diisi',
+                'phone.min' => 'No Hp tidak valid',
+                'phone.regex' => 'No Hp tidak valid',
+                'mothername.required' => 'Nama ibu kandung belum diisi',
+                'method.required' => 'Jenis pembayaran belum diisi',
+                'method.in' => 'Jenis pembayaran tidak valid',
+                'simpanan.required_if' => 'Bukti pembayaran belum diisi',
+                'ktp.required' => 'Foto KTP belum diisi',
+                'ktp.image' => 'Foto KTP tidak valid',
+                'kk.required' => 'Foto KK belum diisi',
+                'kk.image' => 'Foto KK tidak valid',
+            ],
+            );
+            
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors())->withInput();
+        }
 
         try {
             $input = $request->all();

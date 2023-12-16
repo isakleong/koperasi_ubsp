@@ -35,7 +35,7 @@
       <li class="menu-header small text-uppercase"><span class="menu-header-text">master data</span></li>
       <!-- Cards -->
       <li class="menu-item active">
-        <a href="/admin/user" class="menu-link">
+        <a href="/admin/menu/user" class="menu-link">
           <i class="menu-icon tf-icons bx bx-group"></i>
           <div data-i18n="Basic">Anggota</div>
         </a>
@@ -106,57 +106,84 @@
                             @method('PUT')
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="fname" name="fname" placeholder="" value="{{ $user->fname }}"/>
+                                    <input type="text" class="form-control" id="fname" name="fname" placeholder="" value="{{ old('fname', $user->fname) }}"/>
                                     <label for="fname">Nama Depan</label>
                                 </div>
+                                @error('fname')
+                                    <p class="mt-1" style="color: red">{{$message}}</p>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="lname" name="lname" placeholder="" value="{{ $user->lname }}"/>
+                                    <input type="text" class="form-control" id="lname" name="lname" placeholder="" value="{{ old('lname', $user->lname) }}"/>
                                     <label for="lname">Nama Belakang</label>
                                 </div>
+                                @error('lname')
+                                    <p class="mt-1" style="color: red">{{$message}}</p>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="birthplace" name="birthplace" placeholder="" value="{{ $user->birthplace }}"/>
+                                    <input type="text" class="form-control" id="birthplace" name="birthplace" placeholder="" value="{{ old('birthplace', $user->birthplace) }}"/>
                                     <label for="birthplace">Tempat Lahir</label>
                                 </div>
+                                @error('birthplace')
+                                    <p class="mt-1" style="color: red">{{$message}}</p>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="date" class="form-control mb-3" id="birthdate" name="birthdate" value="{{ $user->birthdate }}">
+                                    <input type="date" class="form-control mb-3" id="birthdate" name="birthdate" value="{{ old('birthdate', $user->birthdate) }}">
                                     <label for="birthdate">Tanggal Lahir</label>
                                 </div>
+                                @error('birthdate')
+                                    <p class="mt-1" style="color: red">{{$message}}</p>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="address" name="address" placeholder="" value="{{ $user->address }}"/>
+                                    <input type="text" class="form-control" id="address" name="address" placeholder="" value="{{ old('address', $user->address) }}"/>
                                     <label for="address">Alamat Tinggal</label>
                                 </div>
+                                @error('address')
+                                    <p class="mt-1" style="color: red">{{$message}}</p>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="email" name="email" placeholder="" value="{{ $user->email }}"/>
+                                    <input type="text" class="form-control" id="email" name="email" placeholder="" value="{{ old('email', $user->email) }}"/>
                                     <label for="email">Email</label>
                                 </div>
+                                @error('email')
+                                    <p class="mt-1" style="color: red">{{$message}}</p>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="workAddress" name="workAddress" placeholder="" value="{{ $user->workAddress }}"/>
+                                    <input type="text" class="form-control" id="workAddress" name="workAddress" placeholder="" value="{{ old('workAddress', $user->workAddress) }}"/>
                                     <label for="workAddress">Alamat Kerja</label>
                                 </div>
+                                @error('workAddress')
+                                    <p class="mt-1" style="color: red">{{$message}}</p>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="phone" name="phone" placeholder="" value="{{ $user->phone }}"/>
+                                    <input type="text" class="form-control" id="phone" name="phone" placeholder="" value="{{ old('phone', $user->phone) }}"/>
                                     <label for="phone">No Hp</label>
                                 </div>
+                                @error('phone')
+                                    <p class="mt-1" style="color: red">{{$message}}</p>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="mothername" name="mothername" placeholder="" value="{{ $user->mothername }}"/>
+                                    <input type="text" class="form-control" id="mothername" name="mothername" placeholder="" value="{{ old('mothername', $user->mothername) }}"/>
                                     <label for="mothername">Nama Ibu Kandung</label>
                                 </div>
+                                @error('mothername')
+                                    <p class="mt-1" style="color: red">{{$message}}</p>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <div class="form-group">
@@ -167,6 +194,9 @@
                                         <img class="img-preview img-fluid mb-3 mt-3 col-4">
                                     @endif
                                 </div>
+                                @error('ktp')
+                                    <p class="mt-1" style="color: red">{{$message}}</p>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <div class="form-group">
@@ -182,6 +212,9 @@
                                         <img class="img-preview img-fluid mb-3 mt-3 col-4">
                                     @endif
                                 </div>
+                                @error('kk')
+                                    <p class="mt-1" style="color: red">{{$message}}</p>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <div class="form-group">
@@ -197,6 +230,41 @@
                             </div>
                             <div class="divider divider-warning">
                                 <div class="divider-text"></div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-group">
+                                    <label for="ktp">Bukti Pembayaran</label>
+                                    @if ($user->ktp != "")
+                                        <img style="width: 220px;" src="/{{$user->ktp}}" alt="" class="img-fluid mb-3 mt-3 col-4 d-block"> 
+                                    @else
+                                        <img class="img-preview img-fluid mb-3 mt-3 col-4">
+                                    @endif
+                                </div>
+                                @error('simpanan')
+                                    <p class="mt-1" style="color: red">{{$message}}</p>
+                                @enderror
+                            </div>
+                            <div class="col-md mb-3">
+                                <label class="">Jenis Pembayaran</small>
+                                <div class="form-check mt-3 mb-2">
+                                  <input name="method" class="form-check-input" type="radio" value="cash" id="cash" {{ old('method') == 'cash' ? 'checked' : '' }} />
+                                  <label class="form-check-label" for="cash"> Cash </label>
+                                </div>
+                                <div class="form-check">
+                                  <input name="method" class="form-check-input" type="radio" value="transfer" id="transfer" {{ old('method') == 'transfer' ? 'checked' : '' }} />
+                                  <label class="form-check-label" for="transfer"> Transfer </label>
+                                </div>
+                                @error('method')
+                                    <p class="mt-1" style="color: red">{{$message}}</p>
+                                @enderror
+                            </div>
+                            <div class="mb-3" id="bukti-trf" style="display: none;">
+                                <div class="form-group has-icon-left">
+                                    <label for="image">Bukti Pembayaran</label>
+                                    <div class="position-relative">
+                                        <input type="file" class="image-exif-filepond" name="simpanan" accept="image/*"/>
+                                    </div>
+                                </div>
                             </div>
                             <div class="text-end">
                                 <button type="submit" class="btn btn-primary show_confirm">Update Data</button>
@@ -301,5 +369,16 @@
           }
       });
     });
+</script>
+
+<script>
+    @if($message = session('errors'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Perubahan data anggota belum diisi secara lengkap',
+            // text: '{{Session::get("errors")}}',
+        })
+    @endif
 </script>
 @endsection
