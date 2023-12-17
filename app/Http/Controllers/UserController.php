@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -321,14 +322,45 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        // dd("axax");
-        // $user = User::where('memberId', $memberId)->firstOrFail();
+        // Retrieve transactions with a specific user_account type
+        
+        $userAccount = $user->userAccount()
+            ->where('kind', 'pokok')
+            ->where('memberId', $user->memberId)
+            ->first();
+        $userAccount->balance = 'Rp ' . number_format($userAccount->balance, 0, ',', ',');
 
-        return view('admin.anggota-edit-detail', compact('user'));
+        $transaction = collect();
+        foreach ($user->userAccount as $account) {
+            $transaction = $transaction->merge($account->transaction()
+            ->where('kind', 'pokok')
+            ->where('accountId', $account->accountId)
+            ->first());
+        }
+        $transaction['transactionDate'] = Carbon::parse($transaction['transactionDate'])->format('d-m-Y');
+
+        return view('admin.anggota-edit-detail', compact('user', 'userAccount', 'transaction'));
     }
 
     public function update(Request $request, User $user)
     {
+        $userId = $user->id;
+        $currentMethod = $request->currentMethod;
+
+        // Retrieve transactions with a specific user_account type
+        $userAccount = $user->userAccount()
+            ->where('kind', 'pokok')
+            ->where('memberId', $user->memberId)
+            ->first();
+
+        $transaction = collect();
+        foreach ($user->userAccount as $account) {
+            $transaction = $transaction->merge($account->transaction()
+            ->where('kind', 'pokok')
+            ->where('accountId', $account->accountId)
+            ->first());
+        }
+
         $validator = Validator::make(
             [
                 'fname' => $request->input('fname'),
@@ -348,23 +380,32 @@ class UserController extends Controller
             [
                 'fname' => 'required',
                 'lname' => 'required',
-                'birthdate' => 'required|date',
+                'birthdate' => 'required|date|before:' . now()->subYears(17)->format('Y-m-d'),
                 'birthplace' => 'required',
                 'address' => 'required',
                 'workAddress' => 'required',
-                'email' => 'required|email|unique:users,email',
+                'email' => [
+                    'required',
+                    'email',
+                    Rule::unique('users', 'email')->ignore($userId),
+                ],
                 'phone' => 'required|min:10|regex:/^([0-9\s\-\+\(\)]*)$/',
                 'mothername' => 'required',
-                'method' => 'required|in:cash,transfer',
+                // 'method' => 'required|in:cash,transfer',
+                'method' => [
+                    'nullable',
+                    Rule::in(['cash', 'transfer']),
+                ],
                 'simpanan' => 'required_if:method,transfer',
-                'ktp' => 'required|image',
-                'kk' => 'required|image',
+                'ktp' => 'nullable|image',
+                'kk' => 'nullable|image',
             ],
             [
                 'fname.required' => 'Nama depan belum diisi',
                 'lname.required' => 'Nama belakang belum diisi',
                 'birthdate.required' => 'Tanggal lahir belum diisi',
                 'birthdate.date' => 'Tanggal lahir tidak valid',
+                'birthdate.before' => 'Anggota UBSP harus berusia minimal 17 tahun',
                 'birthplace.required' => 'Tempat lahir belum diisi',
                 'address.required' => 'Alamat tinggal belum diisi',
                 'workAddress.required' => 'Alamat kerja belum diisi',
@@ -375,12 +416,9 @@ class UserController extends Controller
                 'phone.min' => 'No Hp tidak valid',
                 'phone.regex' => 'No Hp tidak valid',
                 'mothername.required' => 'Nama ibu kandung belum diisi',
-                'method.required' => 'Jenis pembayaran belum diisi',
                 'method.in' => 'Jenis pembayaran tidak valid',
                 'simpanan.required_if' => 'Bukti pembayaran belum diisi',
-                'ktp.required' => 'Foto KTP belum diisi',
                 'ktp.image' => 'Foto KTP tidak valid',
-                'kk.required' => 'Foto KK belum diisi',
                 'kk.image' => 'Foto KK tidak valid',
             ],
             );
@@ -426,12 +464,45 @@ class UserController extends Controller
                 $imageName = $user->memberId."_".time().Str::random(5).$imageSimpanan->getClientOriginalExtension();
                 $buktiSimpanan = $destinationPath.$imageName;
             }
+            if($input['method'] == 'cash') {
+                $simpananDelete = public_path()."/".$user->kk;
+            }
             //end of image handler
 
             DB::beginTransaction();
 
             // dd($input);
             $user->update($input);
+
+            //update image
+            if (isset($input['ktp'])) {
+                Image::make($imageKTP)->resize(1200, 630, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($input['ktp']);
+            }
+
+            if (isset($input['kk'])) {
+                Image::make($imageKK)->resize(1200, 630, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($input['kk']);
+            }
+
+            if (isset($input['simpanan'])) {
+                Image::make($imageSimpanan)->resize(1200, 630, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($buktiSimpanan);
+            }
+
+            //image delete
+            if($ktpDelete != "") {
+                File::delete($ktpDelete);
+            }
+            if($kkDelete != "") {
+                File::delete($kkDelete);
+            }
+            if($simpananDelete != "") {
+                File::delete($simpananDelete);
+            }
 
             DB::commit();
 

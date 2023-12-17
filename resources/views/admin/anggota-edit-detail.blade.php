@@ -222,49 +222,74 @@
                                 </div>
                             </div>
                             <div class="divider divider-warning">
-                                <div class="divider-text">Data Simpanan</div>
+                                <div class="divider-text">Data Simpanan Pokok</div>
                             </div>
                             <div class="mb-3">
                                 <label>Simpanan Pokok</label>
-                                <input type="text" readonly class="form-control-plaintext" id="nominal" name="nominal" value="Rp 100,000" />
+                                <p>{{ $userAccount->balance }}</p>
                             </div>
-                            <div class="divider divider-warning">
-                                <div class="divider-text"></div>
+                            <div class="mb-3">
+                                <label>Tanggal Bayar</label>
+                                <p>{{ $transaction['transactionDate'] }}</p>
+                            </div>
+                            <div class="mb-3">
+                                <label>Jenis Pembsayaran</label>
+                                @if ($transaction['method'] == 1)
+                                    <p>Transfer</p>
+                                @else
+                                    <p>Cash</p>
+                                @endif
                             </div>
                             <div class="mb-3">
                                 <div class="form-group">
                                     <label for="ktp">Bukti Pembayaran</label>
-                                    @if ($user->ktp != "")
-                                        <img style="width: 220px;" src="/{{$user->ktp}}" alt="" class="img-fluid mb-3 mt-3 col-4 d-block"> 
+                                    @if ($transaction['image'] != "")
+                                        <img style="width: 220px;" src="/{{$transaction['image']}}" alt="" class="img-fluid mb-3 mt-3 col-4 d-block"> 
                                     @else
-                                        <img class="img-preview img-fluid mb-3 mt-3 col-4">
+                                        <p>-</p>
                                     @endif
                                 </div>
-                                @error('simpanan')
-                                    <p class="mt-1" style="color: red">{{$message}}</p>
-                                @enderror
                             </div>
-                            <div class="col-md mb-3">
-                                <label class="">Jenis Pembayaran</small>
-                                <div class="form-check mt-3 mb-2">
-                                  <input name="method" class="form-check-input" type="radio" value="cash" id="cash" {{ old('method') == 'cash' ? 'checked' : '' }} />
-                                  <label class="form-check-label" for="cash"> Cash </label>
-                                </div>
-                                <div class="form-check">
-                                  <input name="method" class="form-check-input" type="radio" value="transfer" id="transfer" {{ old('method') == 'transfer' ? 'checked' : '' }} />
-                                  <label class="form-check-label" for="transfer"> Transfer </label>
-                                </div>
-                                @error('method')
-                                    <p class="mt-1" style="color: red">{{$message}}</p>
-                                @enderror
+                            <div class="divider divider-warning">
+                                <div class="divider-text"></div>
                             </div>
-                            <div class="mb-3" id="bukti-trf" style="display: none;">
-                                <div class="form-group has-icon-left">
-                                    <label for="image">Bukti Pembayaran</label>
-                                    <div class="position-relative">
-                                        <input type="file" class="image-exif-filepond" name="simpanan" accept="image/*"/>
+
+                            {{-- ubah pembayaran --}}
+                            <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Ubah Data Pembayaran</button>
+                            <div class="collapse mb-3" id="collapseExample">
+                                <div class="p-3 border">
+                                    <label class="">Jenis Pembayaran</label>
+                                    @if ($transaction['method'] == 1)
+                                        <input type="hidden" name="currentMethod" value="1">
+                                    @else
+                                        <input type="hidden" name="currentMethod" value="2">
+                                    @endif
+
+                                    <div class="form-check mt-3 mb-2">
+                                        <input name="method" class="form-check-input" type="radio" value="cash" id="cash" {{ old('method') == 'cash' ? 'checked' : '' }} />
+                                        <label class="form-check-label" for="cash"> Cash </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="method" class="form-check-input" type="radio" value="transfer" id="transfer" {{ old('method') == 'transfer' ? 'checked' : '' }} />
+                                        <label class="form-check-label" for="transfer"> Transfer </label>
+                                    </div>
+                                    @error('method')
+                                        <p class="mt-1" style="color: red">{{$message}}</p>
+                                    @enderror
+
+                                    <div id="bukti-trf" style="display: none;">
+                                        <div class="form-group has-icon-left">
+                                            <label for="image">Bukti Pembayaran</label>
+                                            <div class="position-relative">
+                                                <input type="file" class="image-exif-filepond" name="simpanan" accept="image/*"/>
+                                            </div>
+                                        </div>
+                                        @error('simpanan')
+                                            <p class="mt-1" style="color: red">{{$message}}</p>
+                                        @enderror
                                     </div>
                                 </div>
+                                
                             </div>
                             <div class="text-end">
                                 <button type="submit" class="btn btn-primary show_confirm">Update Data</button>
@@ -304,6 +329,14 @@
     //end of capitalize input
 
     $(document).ready(function () {
+        var selectedValue = $('input[name="method"]:checked').val();
+          
+        if(selectedValue == 'transfer') {
+            $('#bukti-trf').show();
+        } else {
+            $('#bukti-trf').hide();
+        }
+
       $('ul.pagination').hide();
       $(function() {
           $('.scrolling-pagination').jscroll({
