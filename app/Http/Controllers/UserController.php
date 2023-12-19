@@ -114,7 +114,7 @@ class UserController extends Controller
             [
                 'fname' => 'required',
                 'lname' => 'required',
-                'birthdate' => 'required|date',
+                'birthdate' => 'required|date|before:' . now()->subYears(17)->format('Y-m-d'),
                 'birthplace' => 'required',
                 'address' => 'required',
                 'workAddress' => 'required',

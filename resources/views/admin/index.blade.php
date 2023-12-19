@@ -24,17 +24,22 @@
           <div data-i18n="Dashboards">Dashboard</div>
         </a>
       </li>
+      <!-- End of Dashboards -->
 
-      <!-- Components -->
+      <!-- Master Data -->
       <li class="menu-header small text-uppercase"><span class="menu-header-text">master data</span></li>
-      <!-- Cards -->
       <li class="menu-item">
         <a href="/admin/menu/user" class="menu-link">
           <i class="menu-icon tf-icons bx bx-group"></i>
           <div data-i18n="Basic">Anggota</div>
         </a>
       </li>
-      
+      <li class="menu-item">
+        <a href="/admin/menu/user" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-group"></i>
+          <div data-i18n="Basic">Akun</div>
+        </a>
+      </li>
       <li class="menu-item">
         <a href="javascript:void(0)" class="menu-link menu-toggle">
           <i class="menu-icon tf-icons bx bx-copy"></i>
@@ -53,27 +58,94 @@
           </li>
         </ul>
       </li>
-      
+      <!-- End of Master Data -->
 
-      <!-- Extended components -->
+      <!-- Transaction Data -->
+      <li class="menu-header small text-uppercase"><span class="menu-header-text">transaksi</span></li>
       <li class="menu-item">
-        <a href="javascript:void(0)" class="menu-link menu-toggle">
-          <i class="menu-icon tf-icons bx bx-copy"></i>
-          <div data-i18n="Extended UI">Extended UI</div>
+        <a href="/admin/menu/user" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-group"></i>
+          <div data-i18n="Basic">Simpanan</div>
         </a>
-        <ul class="menu-sub">
-          <li class="menu-item">
-            <a href="extended-ui-perfect-scrollbar.html" class="menu-link">
-              <div data-i18n="Perfect Scrollbar">Perfect scrollbar</div>
-            </a>
-          </li>
-          <li class="menu-item">
-            <a href="extended-ui-text-divider.html" class="menu-link">
-              <div data-i18n="Text Divider">Text Divider</div>
-            </a>
-          </li>
-        </ul>
       </li>
+      <li class="menu-item">
+        <a href="/admin/menu/user" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-group"></i>
+          <div data-i18n="Basic">Tabungan</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/admin/menu/user" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-group"></i>
+          <div data-i18n="Basic">Kredit</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/admin/menu/user" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-group"></i>
+          <div data-i18n="Basic">Angsuran</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/admin/menu/user" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-group"></i>
+          <div data-i18n="Basic">Pemasukan</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/admin/menu/user" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-group"></i>
+          <div data-i18n="Basic">Pengeluaran</div>
+        </a>
+      </li>
+      <!-- End of Transaction Data -->
+
+      <!-- Report Data -->
+      <li class="menu-header small text-uppercase"><span class="menu-header-text">laporan</span></li>
+      <li class="menu-item">
+        <a href="/admin/menu/user" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-group"></i>
+          <div data-i18n="Basic">Jurnal Harian</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/admin/menu/user" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-group"></i>
+          <div data-i18n="Basic">Buku Besar</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/admin/menu/user" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-group"></i>
+          <div data-i18n="Basic">Neraca Saldo</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/admin/menu/user" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-group"></i>
+          <div data-i18n="Basic">Laba Rugi</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/admin/menu/user" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-group"></i>
+          <div data-i18n="Basic">Neraca</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/admin/menu/user" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-group"></i>
+          <div data-i18n="Basic">Hutang</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/admin/menu/user" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-group"></i>
+          <div data-i18n="Basic">Piutang</div>
+        </a>
+      </li>
+      <!-- End of Transaction Data -->
+
     </ul>
   </aside>
   <!-- / Menu -->

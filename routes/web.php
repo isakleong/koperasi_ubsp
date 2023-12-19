@@ -101,7 +101,7 @@ Route::middleware(['auth.user', 'verified'])->group(function() {
 
 //ADMIN
 
-Route::get('/admin/login', [AuthController::class, 'loginAdmin'])->name('login');
+Route::get('/admin/login', [AuthController::class, 'loginAdmin'])->name('admin.login');
 Route::post('/admin/login', [AuthController::class, 'authenticateAdmin']);
 Route::get('/admin/logout', [AuthController::class, 'logoutAdmin']);
 
