@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AccountCategoryController;
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MainController;
@@ -121,5 +123,8 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
 
     Route::get('/menu/user', [AdminController::class, 'showUserMenu']);
     Route::resource('/user', UserController::class);
+
+    Route::resource('/account_category', AccountCategoryController::class);
+    Route::resource('/account', AccountController::class);
 });
 //END OF ADMIN

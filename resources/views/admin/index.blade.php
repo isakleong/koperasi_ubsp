@@ -35,9 +35,15 @@
         </a>
       </li>
       <li class="menu-item">
-        <a href="/admin/menu/user" class="menu-link">
+        <a href="/admin/account_category" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-category"></i>
+          <div data-i18n="Basic">Kategori Akun</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/admin/account" class="menu-link">
           <i class="menu-icon tf-icons bx bx-archive"></i>
-          <div data-i18n="Basic">Chart of Account</div>
+          <div data-i18n="Basic">Daftar Akun</div>
         </a>
       </li>
       <li class="menu-item">
