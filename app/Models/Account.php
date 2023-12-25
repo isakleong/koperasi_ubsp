@@ -4,17 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Kalnoy\Nestedset\NodeTrait;
 
 class Account extends Model
 {
-    use HasFactory;
+    use HasFactory, NodeTrait;
 
     protected $table = 'account';
 
     protected $fillable = [
         'id',
         'name',
-        'noAccount',
+        'accountNo',
+        'categoryID',
         'description',
         'rates',
         'monthlyRates',
@@ -22,6 +24,7 @@ class Account extends Model
         'monthlyCicilan',
         'notes',
         'status',
+        'active',
         'requestDate',
         'approvedOn',
     ];

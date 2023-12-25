@@ -222,25 +222,6 @@
 
 <script>
     $(document).ready(function () {
-      $('#openModalButton').on('click', function() {
-        // Perform AJAX request before opening the modal
-        var memberId = $('#memberId').val();
-        var urlPath = '/admin/anggota/edit/' + memberId;
-        alert(memberId);
-        $.ajax({
-          url: urlPath,
-          type: 'GET',
-          success: function(response) {
-            // Assuming the response is successful, you can open the modal here
-            $('#modalData').modal('show');
-          },
-          error: function(xhr, status, error) {
-            // Handle error if the AJAX request fails
-            console.error(xhr.responseText);
-          }
-        });
-      });
-
       $('.show_confirm').click(function(event) {
           event.preventDefault();
 
@@ -260,17 +241,6 @@
                   // Swal.fire('Changes are not saved', '', 'info');
               }
           });
-      });
-
-      $('input[type="radio"]').on('change', function () {
-          // Get the selected value
-          var selectedValue = $('input[name="method"]:checked').val();
-          
-          if(selectedValue == 'transfer') {
-              $('#bukti-trf').show();
-          } else {
-              $('#bukti-trf').hide();
-          }
       });
     });
 </script>

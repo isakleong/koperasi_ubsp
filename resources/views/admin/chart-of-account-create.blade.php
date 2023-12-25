@@ -163,34 +163,80 @@
 <!-- Content -->
 <div class="container-xxl flex-grow-1 container-p-y">
   <h4 class="py-3 mb-4">
-    <span class="text-muted fw-light">Kategori Akun / </span> Edit Kategori
+    <span class="text-muted fw-light">Daftar Akun / </span> Tambah Akun
   </h4>
   <div class="row">
     <div class="col-xl">
       <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Edit Kategori Akun</h5>
+          <h5 class="mb-0">Tambah Akun</h5>
         </div>
         
         <div class="card-body">
-            <form action="{{ route('admin.account_category.update', $accountCategory->id) }}" method="post">
+            <form action="{{ route('admin.account.store') }}" method="post">
                 @csrf
-                @method('PUT')
                 <div class="mb-3">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="name" name="name" placeholder="" oninput=capitalizeName(this) required value="{{$accountCategory->name}}"/>
-                        <label for="name">Nama Kategori</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="" oninput=capitalizeName(this) required value="{{old('name')}}"/>
+                        <label for="name">Nama Akun</label>
                     </div>
                     @error('name')
                         <p class="mt-1" style="color: red">{{$message}}</p>
                     @enderror
                 </div>
+
+                <div class="mb-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="accountNo" name="accountNo" placeholder="" oninput=capitalizeName(this) required value="{{old('accountNo')}}"/>
+                        <label for="accountNo">Nomor Akun</label>
+                    </div>
+                    @error('accountNo')
+                        <p class="mt-1" style="color: red">{{$message}}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-group">
+                        <label for="categoryID">Category</label>
+                        <select class="choices form-select" id="categoryID"  name="categoryID">
+                            @foreach($category as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @error('categoryID')
+                        <p style="color: red">{{$message}}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-group">
+                        <label for="parentID">Parent Account:</label>
+                        <select id="parentID" name="parentID" class="form-control">
+                            <option value="">Select Parent Account</option>
+                            @foreach($account as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-group">
+                        <label for="description">Deskripsi</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description" placeholder="" oninput=capitalizeName(this) required value="{{old('description')}}"></textarea>
+                    </div>
+                    @error('description')
+                        <p class="mt-1" style="color: red">{{$message}}</p>
+                    @enderror
+                </div>
+
                 <div class="form-check form-switch mb-3">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" name="active" {{ $accountCategory->active=='1' ? 'checked' : '' }} />
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" name="active" checked />
                     <label class="form-check-label" for="flexSwitchCheckChecked">Active</label>
                 </div>
                 <div class="text-end">
-                    <button type="submit" class="btn btn-lg btn-primary show_confirm">Update Kategori</button>
+                    <button type="submit" class="btn btn-lg btn-primary show_confirm">Tambah Kategori</button>
                 </div>
             </form>
         </div>
@@ -216,6 +262,24 @@
     //end of capitalize input
 
     $(document).ready(function () {
+        $('#categoryID').change(function () {
+            alert('jje');
+            var categoryId = $(this).val();
+            $.ajax({
+                url: '/admin/xxx',
+                type: 'GET',
+                data: {categoryID: categoryId},
+                success: function (data) {
+                    console.log(data);
+                    var select = $('#parentID');
+                    select.empty();
+                    $.each(data, function (key, value) {
+                        select.append('<option value="' + value.id + '">' + value.name + '</option>');
+                    });
+                }
+            });
+        });
+
       $('.show_confirm').click(function(event) {
           event.preventDefault();
 

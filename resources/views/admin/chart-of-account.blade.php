@@ -1,5 +1,18 @@
 @extends('layout.admin.main')
 
+@section('vendorCSS')
+<style>
+  .account-table td {
+      border: 1px solid #ddd; /* Add your desired border style */
+  }
+
+  .account-table td:first-child {
+      width: 200px; /* Adjust the width of the first column as needed */
+  }
+</style>
+    
+@endsection
+
 @section('navbar')
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
@@ -34,13 +47,13 @@
           <div data-i18n="Basic">Anggota</div>
         </a>
       </li>
-      <li class="menu-item active">
+      <li class="menu-item">
         <a href="/admin/account_category" class="menu-link">
           <i class="menu-icon tf-icons bx bx-category"></i>
           <div data-i18n="Basic">Kategori Akun</div>
         </a>
       </li>
-      <li class="menu-item">
+      <li class="menu-item active">
         <a href="/admin/account" class="menu-link">
           <i class="menu-icon tf-icons bx bx-archive"></i>
           <div data-i18n="Basic">Daftar Akun</div>
@@ -163,36 +176,60 @@
 <!-- Content -->
 <div class="container-xxl flex-grow-1 container-p-y">
   <h4 class="py-3 mb-4">
-    <span class="text-muted fw-light">Kategori Akun / </span> Edit Kategori
+    <span class="fw-light">Daftar Akun</span>
   </h4>
   <div class="row">
     <div class="col-xl">
       <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Edit Kategori Akun</h5>
+          <h5 class="mb-0">Daftar Akun</h5>
+          <a href="/admin/account/create" class="btn btn-primary">Tambah Data</a>
         </div>
         
         <div class="card-body">
-            <form action="{{ route('admin.account_category.update', $accountCategory->id) }}" method="post">
-                @csrf
-                @method('PUT')
-                <div class="mb-3">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="name" name="name" placeholder="" oninput=capitalizeName(this) required value="{{$accountCategory->name}}"/>
-                        <label for="name">Nama Kategori</label>
-                    </div>
-                    @error('name')
-                        <p class="mt-1" style="color: red">{{$message}}</p>
-                    @enderror
-                </div>
-                <div class="form-check form-switch mb-3">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" name="active" {{ $accountCategory->active=='1' ? 'checked' : '' }} />
-                    <label class="form-check-label" for="flexSwitchCheckChecked">Active</label>
-                </div>
-                <div class="text-end">
-                    <button type="submit" class="btn btn-lg btn-primary show_confirm">Update Kategori</button>
-                </div>
-            </form>
+
+          <table class="account-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                @include('admin.partials.account-tree', ['nodes' => $account, 'indent' => 0])
+            </tbody>
+        </table>
+
+          {{-- @include('admin.partials.account-tree', ['nodes' => $account]) --}}
+            {{-- <table class="table table-striped" id="table1" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>Kode Akun</th>
+                        <th>Nama Akun</th>
+                        <th>Kategori Akun</th>
+                        <th>Saldo</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($account as $item)
+                        <tr>
+                            <td>{{$item->name}}</td>
+                            <td>{{$item->name}}</td>
+                            <td>{{$item->name}}</td>
+                            <td>{{$item->name}}</td>
+                            <td>
+                                <a href="{{ route('admin.account.edit', $item->id) }}" class="btn icon btn-sm btn-primary d-inline-block m-1" data-bs-toggle="tooltip" title="Edit"><i class="bx bxs-pencil"></i></a>
+                                <form action="{{ route('admin.account.destroy', $item->id) }}" method="POST" class="d-inline-block m-1" data-bs-toggle="tooltip" title="Hapus">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn icon btn-sm btn-danger show_confirm"><i class="bx bxs-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table> --}}
         </div>
       </div>
     </div>
@@ -206,15 +243,6 @@
 <script src="/vendor/sweetalert/sweetalert.all.js"></script>
 
 <script>
-    //capitalize input
-    function capitalizeName(input) {
-        const name = input.value.toLowerCase();
-        const words = name.split(' ');
-        const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
-        input.value = capitalizedWords.join(' ');
-    }
-    //end of capitalize input
-
     $(document).ready(function () {
       $('.show_confirm').click(function(event) {
           event.preventDefault();
@@ -222,11 +250,11 @@
           var form =  $(this).closest("form");
 
           Swal.fire({
-              title: 'Simpan Data?',
+              title: 'Hapus Data?',
               text: '',
               icon: 'question',
               showDenyButton: true,
-              confirmButtonText: 'Ya, simpan',
+              confirmButtonText: 'Ya, hapus',
               denyButtonText: 'Batal',
           }).then((result) => {
               if (result.isConfirmed) {
@@ -237,5 +265,16 @@
           });
       });
     });
+</script>
+
+<script>
+    @if($message = session('errorData'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            // text: '',
+            text: '{{Session::get("errorData")}}',
+        })
+    @endif
 </script>
 @endsection

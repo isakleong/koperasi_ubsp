@@ -2,61 +2,124 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
+use App\Models\AccountCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class AccountController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        dd("hshsh");
+        // $account = Account::all();
+        // return view('admin.chart-of-account', compact('account'));
+
+        // $account = Account::with('category')->get();
+        // return view('admin.chart-of-account', compact('account'));
+
+        // $nodes = Account::get()->toTree();
+
+        $account = Account::with('category')->get();
+        // dd($account);
+        return view('admin.chart-of-account', compact('account'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $category = AccountCategory::where('active', 1)->get();
+        $account = Account::whereNull('parent_id')->get(); // Get only root accounts initially
+        return view('admin.chart-of-account-create', compact('category','account'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    public function getAccountsByCategory(Request $request)
+    {
+        $categoryId = $request->input('categoryID');
+        $account = Account::where('categoryID', $categoryId)->get();
+
+        return response()->json($account);
+    }
+
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make(
+            [
+                'name' => $request->input('name'),
+                'accountNo' => $request->input('accountNo'),
+                'categoryID' => $request->input('categoryID'),
+                'parentID' => $request->input('parentID'),
+            ],
+            [
+                'name' => [
+                    'required',
+                    Rule::unique('account')->where(function ($query) use ($request) {}),
+                ],
+                'accountNo' => [
+                    'required',
+                    Rule::unique('account')->where(function ($query) use ($request) {}),
+                ],
+                'categoryID' => 'required',
+                'parentID' => 'nullable|exists:account,id',
+            ],
+            [
+                'name.required' => 'Nama akun belum diisi',
+                'name.unique' => 'Nama akun sudah dipakai, mohon untuk pilih nama akun yang lain',
+                'accountNo.required' => 'Nomor akun sudah dipakai, mohon untuk pilih nomor akun yang lain',
+                'categoryID.required' => 'Nomor akun sudah dipakai, mohon untuk pilih nomor akun yang lain',
+                'parentID.exists' => 'XXXX',
+            ],
+        );
+            
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors())->withInput();
+        }
+
+        if(!$request->has('active')) {
+            $request->merge(['active'=>'0']);
+        } else {
+            $request->merge(['active'=>'1']);
+        }
+
+        try {
+            $input = $request->all();
+
+            // Create a new account
+            $newAccount = new Account([
+                'name' => $input['name'],
+                'accountNo' => $input['accountNo'],
+                'categoryID' => $input['categoryID'],
+                'active' => $input['active'],
+            ]);
+
+            // Check if a parent account is selected
+            if (isset($input['parentID'])) {
+                $parentAccount = Account::find($input['parentID']);
+                $newAccount->appendToNode($parentAccount)->save();
+            } else {
+                $newAccount->saveAsRoot();
+            }
+
+            return redirect('/admin/account')->withSuccess('Data akun berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            return redirect('/admin/account')->with('errorData', $e->getMessage());
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         //

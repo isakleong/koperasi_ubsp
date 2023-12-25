@@ -235,17 +235,6 @@
               }
           });
       });
-
-      $('input[type="radio"]').on('change', function () {
-          // Get the selected value
-          var selectedValue = $('input[name="method"]:checked').val();
-          
-          if(selectedValue == 'transfer') {
-              $('#bukti-trf').show();
-          } else {
-              $('#bukti-trf').hide();
-          }
-      });
     });
 </script>
 @endsection

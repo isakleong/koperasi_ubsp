@@ -126,5 +126,7 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
 
     Route::resource('/account_category', AccountCategoryController::class);
     Route::resource('/account', AccountController::class);
+
+    Route::get('/xxx', [AccountController::class, 'getAccountsByCategory']);
 });
 //END OF ADMIN
