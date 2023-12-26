@@ -187,49 +187,25 @@
         </div>
         
         <div class="card-body">
+          <!-- Display the hierarchy in a table -->
+          <table class="table table-striped" id="table1" style="width: 100%">
+              <thead>
+                  <tr>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Category ID</th>
+                      <!-- Add other columns as needed -->
+                      <th>Edit</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  @foreach ($account as $rootNode)
+                      @include('admin.partials.account-tree', ['account' => $rootNode])
+                  @endforeach
+              </tbody>
+          </table>
 
-          <table class="account-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Category</th>
-                </tr>
-            </thead>
-            <tbody>
-                @include('admin.partials.account-tree', ['nodes' => $account, 'indent' => 0])
-            </tbody>
-        </table>
-
-          {{-- @include('admin.partials.account-tree', ['nodes' => $account]) --}}
-            {{-- <table class="table table-striped" id="table1" style="width: 100%">
-                <thead>
-                    <tr>
-                        <th>Kode Akun</th>
-                        <th>Nama Akun</th>
-                        <th>Kategori Akun</th>
-                        <th>Saldo</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($account as $item)
-                        <tr>
-                            <td>{{$item->name}}</td>
-                            <td>{{$item->name}}</td>
-                            <td>{{$item->name}}</td>
-                            <td>{{$item->name}}</td>
-                            <td>
-                                <a href="{{ route('admin.account.edit', $item->id) }}" class="btn icon btn-sm btn-primary d-inline-block m-1" data-bs-toggle="tooltip" title="Edit"><i class="bx bxs-pencil"></i></a>
-                                <form action="{{ route('admin.account.destroy', $item->id) }}" method="POST" class="d-inline-block m-1" data-bs-toggle="tooltip" title="Hapus">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn icon btn-sm btn-danger show_confirm"><i class="bx bxs-trash"></i></button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table> --}}
+        
         </div>
       </div>
     </div>

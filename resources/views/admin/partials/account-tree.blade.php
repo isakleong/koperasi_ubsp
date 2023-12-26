@@ -1,16 +1,15 @@
-<!-- resources/views/partials/account-table.blade.php -->
+<!-- resources/views/_account_row.blade.php -->
 
-@foreach($nodes as $node)
-    <tr>
-        <td style="padding-left: {{ $indent * 20 }}px;">
-            {{ $node->name }}
-        </td>
-        <td>
-            {{ $node->category->name }}
-        </td>
-    </tr>
+<tr>
+    <td>{{ $account->id }}</td>
+    <td style="padding-left: {{ $account->depth * 20 }}px">{{ $account->depth }}</td>
+    <td>{{ $account->categoryID }}</td>
+    <!-- Add other columns as needed -->
+    <td><a href="/edit/{{ $account->id }}">Edit</a></td>
+</tr>
 
-    @if(count($node->children) > 0)
-        @include('admin.partials.account-tree', ['nodes' => $node->children, 'indent' => $indent + 1])
-    @endif
-@endforeach
+@if ($account->children->isNotEmpty())
+    @foreach ($account->children as $child)
+        @include('admin.partials.account-tree', ['account' => $child])
+    @endforeach
+@endif

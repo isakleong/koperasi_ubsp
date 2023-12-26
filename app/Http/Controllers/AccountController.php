@@ -20,8 +20,7 @@ class AccountController extends Controller
 
         // $nodes = Account::get()->toTree();
 
-        $account = Account::with('category')->get();
-        // dd($account);
+        $account = Account::where('parent_id', null)->withDepth()->get();
         return view('admin.chart-of-account', compact('account'));
     }
 
