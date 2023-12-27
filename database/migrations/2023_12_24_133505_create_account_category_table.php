@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('account_category', function (Blueprint $table) {
             $table->id();
             $table->string("name")->unique();
+            $table->string('normalBalance', 1)->required();
             $table->string('active', 1)->required();
             $table->timestamps();
         });

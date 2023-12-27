@@ -27,6 +27,7 @@ class AccountCategoryController extends Controller
         $validator = Validator::make(
             [
                 'name' => $request->input('name'),
+                'normalBalance' => $request->input('normalBalance'),
             ],
             [
                 'name' => [
@@ -37,10 +38,13 @@ class AccountCategoryController extends Controller
                         // $query->where('user_id', $request->user()->id);
                     }),
                 ],
+                'normalBalance' =>'required|in:D,K',
             ],
             [
                 'name.required' => 'Nama kategori belum diisi',
                 'name.unique' => 'Nama kategori sudah dipakai, mohon untuk pilih nama kategori yang lain',
+                'normalBalance.required' => 'Saldo normal belum dipilih',
+                'normalBalance.in' => 'Saldo normal belum dipilih',
             ],
         );
             
@@ -80,16 +84,20 @@ class AccountCategoryController extends Controller
         $validator = Validator::make(
             [
                 'name' => $request->input('name'),
+                'normalBalance' => $request->input('normalBalance'),
             ],
             [
                 'name' => [
                     'required',
                     Rule::unique('account_category')->ignore($accountCategory->id),
                 ],
+                'normalBalance' =>'required|in:D,K',
             ],
             [
                 'name.required' => 'Nama kategori belum diisi',
                 'name.unique' => 'Nama kategori sudah dipakai, mohon untuk pilih nama kategori yang lain',
+                'normalBalance.required' => 'Saldo normal belum dipilih',
+                'normalBalance.in' => 'Saldo normal belum dipilih',
             ],
         );
 
