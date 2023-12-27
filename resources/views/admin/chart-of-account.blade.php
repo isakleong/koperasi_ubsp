@@ -1,18 +1,5 @@
 @extends('layout.admin.main')
 
-@section('vendorCSS')
-<style>
-  .account-table td {
-      border: 1px solid #ddd; /* Add your desired border style */
-  }
-
-  .account-table td:first-child {
-      width: 200px; /* Adjust the width of the first column as needed */
-  }
-</style>
-    
-@endsection
-
 @section('navbar')
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
@@ -191,9 +178,9 @@
           <table class="table table-striped" id="table1" style="width: 100%">
               <thead>
                   <tr>
-                      <th>ID</th>
-                      <th>Name</th>
-                      <th>Category ID</th>
+                    <th>Kode Akun</th>
+                      <th>Nama Akun</th>
+                      <th>Kategori</th>
                       <!-- Add other columns as needed -->
                       <th>Edit</th>
                   </tr>

@@ -20,14 +20,16 @@ class AccountController extends Controller
 
         // $nodes = Account::get()->toTree();
 
-        $account = Account::where('parent_id', null)->withDepth()->get();
+        // $account = Account::where('parent_id', null)->withDepth()->reversed()->with('ancestors')->get()->toFlatTree();
+        $account = Account::withDepth()->with('ancestors')->get()->toTree();
+        // dd($account);
         return view('admin.chart-of-account', compact('account'));
     }
 
     public function create()
     {
         $category = AccountCategory::where('active', 1)->get();
-        $account = Account::whereNull('parent_id')->get(); // Get only root accounts initially
+        $account = Account::all(); // Get only root accounts initially
         return view('admin.chart-of-account-create', compact('category','account'));
     }
 
@@ -92,9 +94,11 @@ class AccountController extends Controller
 
             // Check if a parent account is selected
             if (isset($input['parentID'])) {
+                // dd("opsi 1");
                 $parentAccount = Account::find($input['parentID']);
                 $newAccount->appendToNode($parentAccount)->save();
             } else {
+                // dd("opsi 2");
                 $newAccount->saveAsRoot();
             }
 

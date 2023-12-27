@@ -1,8 +1,7 @@
 <!-- resources/views/_account_row.blade.php -->
 
 <tr>
-    <td>{{ $account->id }}</td>
-    <td style="padding-left: {{ $account->depth * 20 }}px">{{ $account->depth }}</td>
+    <td style="padding-left: {{ $account->depth * 20 }}px">{{ $account->name }}</td>
     <td>{{ $account->categoryID }}</td>
     <!-- Add other columns as needed -->
     <td><a href="/edit/{{ $account->id }}">Edit</a></td>
