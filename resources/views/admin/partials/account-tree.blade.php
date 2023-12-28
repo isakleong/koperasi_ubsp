@@ -8,7 +8,7 @@
         <td style="padding-left: {{ $account->depth * 20 }}px">{{ $account->name }}</td>
     @endif --}}
     <td style="padding-left: {{ $account->depth * 20 }}px">{{ $account->name }}</td>
-    <td>{{ $account->categoryID }}</td>
+    <td>{{ $account->category->name }}</td>
     <!-- Add other columns as needed -->
     <td><a href="/edit/{{ $account->id }}">Edit</a></td>
 </tr>

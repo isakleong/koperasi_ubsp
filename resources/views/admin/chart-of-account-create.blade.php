@@ -201,9 +201,9 @@
                             <div class="mb-3">
                                 <div class="form-group">
                                     <label for="categoryID">Kategori Akun</label>
-                                    <select class="choices form-select" id="categoryID" name="categoryID">
-                                        @foreach ($category as $item)
-                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    <select class="choices form-select" id="categoryID" name="categoryID"><option value="" selected disabled>---Pilih Kategori---</option>  
+                                      @foreach ($category as $item)
+                                            <option value="{{ $item->id }}" {{ old('categoryID') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -212,25 +212,23 @@
                                 @enderror
                             </div>
 
-                            <div class="mb-3">
+                            <div class="mb-3" id="relation" style="display: none;">
                                 <div class="form-group">
                                     <label for="accountRelation">Relasi Akun</label>
-                                    <select id="accountRelation" class="form-control">
-                                        <option value="">---Pilih Relasi---</option>
-                                        <option value="">Akun Header</option>
-                                        <option value="">Sub Akun</option>
+                                    <select id="accountRelation" class="choices form-select" name="accountRelation">
+                                        <option value="" selected disabled>---Pilih Relasi---</option>
+                                        <option value="none" {{ old('accountRelation') =='none' ? 'selected' : '' }}>Tidak Ada</option>
+                                        <option value="header" {{ old('accountRelation') =='header' ? 'selected' : '' }}>Akun Header</option>
+                                        <option value="child" {{ old('accountRelation') =='child' ? 'selected' : '' }}>Sub Akun</option>
                                     </select>
                                 </div>
                             </div>
 
-                            <div class="mb-3">
+                            <div class="mb-3" id="relationDetail" style="display: none;">
                                 <div class="form-group">
                                     <label for="parentID">Detail Relasi:</label>
-                                    <select id="parentID" name="parentID" class="form-control">
+                                    <select id="parentID" name="parentID" class="choices form-select">
                                         <option value="">---Pilih Akun---</option>
-                                        @foreach ($account as $item)
-                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -279,25 +277,47 @@
         //end of capitalize input
 
         $(document).ready(function() {
+          var checkSelectedCategory = $("#categoryID").val();
+          if(checkSelectedCategory != null) {
+            alert('haha');
+            $('#accountRelation').val('').trigger('change');
+          } else {
+            alert('hehe');
+          }
+
             $('#categoryID').change(function() {
-                alert('jje');
-                var categoryId = $(this).val();
-                $.ajax({
-                    url: '/admin/xxx',
-                    type: 'GET',
-                    data: {
-                        categoryID: categoryId
-                    },
-                    success: function(data) {
-                        console.log(data);
-                        var select = $('#parentID');
-                        select.empty();
-                        $.each(data, function(key, value) {
-                            select.append('<option value="' + value.id + '">' + value
-                                .name + '</option>');
-                        });
-                    }
-                });
+              $("#relation").show();
+              $("#relationDetail").hide();
+              $('#accountRelation').val('').trigger('change');
+            });
+
+            $('#accountRelation').change(function() {
+                var relation = $(this).val();
+
+                if (relation == 'none' || relation == null) {
+                    $("#relationDetail").hide();
+                } else {
+                    $("#relationDetail").show();
+
+                    var categoryId = $("#categoryID").val();
+                    $.ajax({
+                        url: '/admin/xxx',
+                        type: 'GET',
+                        data: {
+                            categoryID: categoryId
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            var select = $('#parentID');
+                            select.empty();
+                            $.each(data, function(key, value) {
+                                select.append('<option value="' + value.id + '">' + value
+                                    .name + '</option>');
+                            });
+                            
+                        }
+                    });
+                }
             });
 
             $('.show_confirm').click(function(event) {

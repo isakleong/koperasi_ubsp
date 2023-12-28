@@ -21,7 +21,7 @@ class AccountController extends Controller
         // $nodes = Account::get()->toTree();
 
         // $account = Account::where('parent_id', null)->withDepth()->reversed()->with('ancestors')->get()->toFlatTree();
-        $account = Account::withDepth()->with('ancestors')->get()->toTree();
+        $account = Account::with('category')->withDepth()->with('ancestors')->get()->toTree();
         // dd($account);
         return view('admin.chart-of-account', compact('account'));
     }
@@ -49,6 +49,7 @@ class AccountController extends Controller
                 'accountNo' => $request->input('accountNo'),
                 'categoryID' => $request->input('categoryID'),
                 'parentID' => $request->input('parentID'),
+                'accountRelation' => $request->input('accountRelation'),
             ],
             [
                 'name' => [
@@ -61,13 +62,17 @@ class AccountController extends Controller
                 ],
                 'categoryID' => 'required',
                 'parentID' => 'nullable|exists:account,id',
+                'accountRelation' => 'required|in:none,header,child',
             ],
             [
                 'name.required' => 'Nama akun belum diisi',
                 'name.unique' => 'Nama akun sudah dipakai, mohon untuk pilih nama akun yang lain',
-                'accountNo.required' => 'Nomor akun sudah dipakai, mohon untuk pilih nomor akun yang lain',
-                'categoryID.required' => 'Nomor akun sudah dipakai, mohon untuk pilih nomor akun yang lain',
+                'accountNo.required' => 'Nomor akun belum diisi',
+                'accountNo.unique' => 'Nomor akun sudah dipakai, mohon untuk pilih nomor akun yang lain',
+                'categoryID.required' => 'Kategori akun belum dipilih',
                 'parentID.exists' => 'XXXX',
+                'accountRelation.required' => 'Relasi akun belum dipilih',
+                'accountRelation.in' => 'Relasi akun tidak valid',
             ],
         );
             
@@ -94,11 +99,14 @@ class AccountController extends Controller
 
             // Check if a parent account is selected
             if (isset($input['parentID'])) {
-                // dd("opsi 1");
-                $parentAccount = Account::find($input['parentID']);
-                $newAccount->appendToNode($parentAccount)->save();
+                if($input['accountRelation'] == 'child') {
+                    $parentAccount = Account::find($input['parentID']);
+                    $newAccount->appendToNode($parentAccount)->save();
+                } elseif($input['accountRelation'] == 'header') {
+                    $parentAccount = Account::find($input['parentID']);
+                    $newAccount->prependToNode($parentAccount)->save();
+                }
             } else {
-                // dd("opsi 2");
                 $newAccount->saveAsRoot();
             }
 
