@@ -24,7 +24,8 @@
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
                     <div class="auth-logo text-center">
-                        <a href="/"><img src="/main/assets/static/images/logo/UBSP-logos_transparent.png" alt="Logo"></a>
+                        <a href="/"><img src="/main/assets/static/images/logo/UBSP-logos_transparent.png"
+                                alt="Logo"></a>
                     </div>
                     <h1 class="auth-title">Masuk</h1>
                     <p class="auth-subtitle mb-5">Selamat datang di Sistem Akuntansi UBSP!</p>
@@ -32,34 +33,37 @@
                     <form method="post">
                         @csrf
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="text" class="form-control form-control-xl" placeholder="Email" name="email" value="{{old('email')}}">
+                            <input type="text" class="form-control form-control-xl" placeholder="Email"
+                                name="email" value="{{ old('email') }}">
                             <div class="form-control-icon">
                                 <i class="bi bi-person"></i>
                             </div>
                             @error('email')
-                                <p style="color: red">{{$message}}</p>
+                                <p style="color: red">{{ $message }}</p>
                             @enderror
                         </div>
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="password" class="form-control form-control-xl" placeholder="Password" name="password" value="{{old('password')}}">
+                            <input type="password" class="form-control form-control-xl" placeholder="Password"
+                                name="password" value="{{ old('password') }}">
                             <div class="form-control-icon">
                                 <i class="bi bi-shield-lock"></i>
                             </div>
                             @error('password')
-                                <p style="color: red">{{$message}}</p>
+                                <p style="color: red">{{ $message }}</p>
                             @enderror
                         </div>
                         <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Masuk</button>
                     </form>
                     <div class="text-center mt-5 text-lg fs-4">
-                        <p class="text-gray-600">Belum punya akun? <a href="{{route('register')}}" class="font-bold">Daftar</a></p>
-                        <p><a class="font-bold" href="{{route('password.request')}}">Lupa Password?</a></p>
+                        <p class="text-gray-600">Belum punya akun? <a href="{{ route('register') }}"
+                                class="font-bold">Daftar</a></p>
+                        <p><a class="font-bold" href="{{ route('password.request') }}">Lupa Password?</a></p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-7 d-none d-lg-block">
                 <div id="auth-right">
-                    
+
                 </div>
             </div>
         </div>

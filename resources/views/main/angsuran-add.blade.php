@@ -44,13 +44,15 @@
                                                 <div class="form-group">
                                                     <label for="mobile-id-icon">Jenis Pembayaran</label>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="tipe-pembayaran" id="tipe-cash" value="cash" checked>
+                                                        <input class="form-check-input" type="radio"
+                                                            name="tipe-pembayaran" id="tipe-cash" value="cash" checked>
                                                         <label class="form-check-label" for="flexRadioDefault1">
                                                             Cash
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="tipe-pembayaran" id="tipe-transfer" value="transfer">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="tipe-pembayaran" id="tipe-transfer" value="transfer">
                                                         <label class="form-check-label" for="flexRadioDefault2">
                                                             Transfer
                                                         </label>
@@ -103,12 +105,12 @@
     <script src="/main/assets/static/js/pages/filepond.js"></script>
 
     <script>
-        $(document).ready(function () {
-            $('input[type="radio"]').on('change', function () {
+        $(document).ready(function() {
+            $('input[type="radio"]').on('change', function() {
                 // Get the selected value
                 var selectedValue = $('input[name="tipe-pembayaran"]:checked').val();
-                
-                if(selectedValue == 'transfer') {
+
+                if (selectedValue == 'transfer') {
                     $('#bukti-trf').show();
                 } else {
                     $('#bukti-trf').hide();

@@ -187,16 +187,21 @@
                                 @enderror
                             </div>
                             <div class="mb-3">
-                              <label for="normalBalance" class="form-label">Saldo Normal</label>
-                                <select class="form-select" id="normalBalance" aria-label="normalBalance" name="normalBalance">
+                                <label for="normalBalance" class="form-label">Saldo Normal</label>
+                                <select class="form-select" id="normalBalance" aria-label="normalBalance"
+                                    name="normalBalance">
                                     <option selected>--- Pilih Saldo Normal ---</option>
-                                    <option value="D" {{ (old('normalBalance') ?: $accountCategory->normalBalance) == 'D' ? 'selected' : '' }}>Debit</option>
-                                    <option value="K" {{ (old('normalBalance') ?: $accountCategory->normalBalance) == 'K' ? 'selected' : '' }}>Kredit</option>
+                                    <option value="D"
+                                        {{ (old('normalBalance') ?: $accountCategory->normalBalance) == 'D' ? 'selected' : '' }}>
+                                        Debit</option>
+                                    <option value="K"
+                                        {{ (old('normalBalance') ?: $accountCategory->normalBalance) == 'K' ? 'selected' : '' }}>
+                                        Kredit</option>
                                 </select>
                                 @error('normalBalance')
                                     <p class="mt-1" style="color: red">{{ $message }}</p>
                                 @enderror
-                          </div>
+                            </div>
                             <div class="form-check form-switch mb-3">
                                 <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
                                     name="active" {{ $accountCategory->active == '1' ? 'checked' : '' }} />

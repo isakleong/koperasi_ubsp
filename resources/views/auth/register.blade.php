@@ -18,13 +18,15 @@
     <link rel="stylesheet" href="/main/assets/compiled/css/animation.css">
 
     <link rel="stylesheet" href="/main/assets/extensions/filepond/filepond.css">
-    <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
+    <link rel="stylesheet"
+        href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
     <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
 
     <style>
         .hidden {
             display: none;
         }
+
         .circular-btn {
             width: 50px;
             height: 50px;
@@ -36,9 +38,11 @@
             border: none;
             cursor: pointer;
         }
+
         .circular-btn i {
-            line-height: 1; /* Ensures proper vertical alignment */
-            
+            line-height: 1;
+            /* Ensures proper vertical alignment */
+
         }
     </style>
 </head>
@@ -63,31 +67,40 @@
 
                         <div id="register-section5" class="hidden">
                             <div class="card-body">
-                                <button type="button" class="btn btn-primary mb-3 circular-btn" id="btnBack4"><i class="bi bi-arrow-left"></i></button>
+                                <button type="button" class="btn btn-primary mb-3 circular-btn" id="btnBack4"><i
+                                        class="bi bi-arrow-left"></i></button>
                                 <div class="row">
                                     <div class="col-md-12 col-12">
                                         <div class="form-group pulse mb-3 mt-3 text-center">
                                             <p>Setoran Keanggotaan Sistem Akuntansi UBSP</p>
-                                            <p>Untuk menjadi anggota, Anda perlu membayar simpanan pokok sebesar Rp 1,000,000 (hanya sekali) dan simpanan wajib sebesar Rp 100,000 (tiap bulan).</p>
-                                            <p>Simpanan pokok dan wajib tidak dapat ditarik selama menjadi anggota, dan akan dikembalikan apabila keluar dari keanggotaan Sistem Akuntansi UBSP.</p>
+                                            <p>Untuk menjadi anggota, Anda perlu membayar simpanan pokok sebesar Rp
+                                                1,000,000 (hanya sekali) dan simpanan wajib sebesar Rp 100,000 (tiap
+                                                bulan).</p>
+                                            <p>Simpanan pokok dan wajib tidak dapat ditarik selama menjadi anggota, dan
+                                                akan dikembalikan apabila keluar dari keanggotaan Sistem Akuntansi UBSP.
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="nominal">Nominal Simpanan Pokok</label>
-                                            <input type="text" id="nominal" class="form-control" placeholder="Nominal Simpanan Pokok" name="nominal" value="100,000" readonly>
+                                            <input type="text" id="nominal" class="form-control"
+                                                placeholder="Nominal Simpanan Pokok" name="nominal" value="100,000"
+                                                readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="simpanan">Bukti Pembayaran</label>
-                                            <input type="file" class="image-exif-filepond" name="simpanan" accept="image/*">
+                                            <input type="file" class="image-exif-filepond" name="simpanan"
+                                                accept="image/*">
                                         </div>
                                     </div>
-                                    
+
 
                                     <div class="col-12 d-flex justify-content-end">
-                                        <button type="button" class="btn btn-primary me-1 mb-1" id="btnContinue4">Lanjutkan</button>
+                                        <button type="button" class="btn btn-primary me-1 mb-1"
+                                            id="btnContinue4">Lanjutkan</button>
                                     </div>
                                 </div>
                             </div>
@@ -95,19 +108,24 @@
 
                         <div id="register-section3" class="hidden">
                             <div class="card-body">
-                                <button type="button" class="btn btn-primary mb-3 circular-btn" id="btnBack2"><i class="bi bi-arrow-left"></i></button>
+                                <button type="button" class="btn btn-primary mb-3 circular-btn" id="btnBack2"><i
+                                        class="bi bi-arrow-left"></i></button>
                                 <div class="row">
                                     <div class="col-md-12 col-12 text-center">
-                                        <img src="/main/assets/compiled/png/simpanan_pokok.png" width="55%" alt="Logo">
+                                        <img src="/main/assets/compiled/png/simpanan_pokok.png" width="55%"
+                                            alt="Logo">
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <button type="button" class="btn btn-primary btn-block shadow-lg mt-1" id="openSimpanan">Buka Simpanan Pokok</button>
+                                            <button type="button" class="btn btn-primary btn-block shadow-lg mt-1"
+                                                id="openSimpanan">Buka Simpanan Pokok</button>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <button type="button" class="btn btn-outline-primary btn-block shadow-lg mt-1" id="skipSimpanan">Nanti Saja</button>
+                                            <button type="button"
+                                                class="btn btn-outline-primary btn-block shadow-lg mt-1"
+                                                id="skipSimpanan">Nanti Saja</button>
                                         </div>
                                     </div>
                                 </div>
@@ -116,55 +134,75 @@
 
                         <div id="register-section1" class="card-content">
                             <div class="card-body">
-                                <a href="{{route('login')}}" class="btn btn-primary mb-3 circular-btn" role="button"><i class="bi bi-arrow-left"></i></a>
+                                <a href="{{ route('login') }}" class="btn btn-primary mb-3 circular-btn"
+                                    role="button"><i class="bi bi-arrow-left"></i></a>
                                 <div class="row">
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="fname">Nama Depan</label>
-                                            <input type="text" id="fname" class="form-control" placeholder="Nama Depan" name="fname" value="{{old('fname')}}" oninput=capitalizeName(this)>
-                                            <p id="fname-check" style="color: red; display: none;">Nama Depan harus diisi</p>
+                                            <input type="text" id="fname" class="form-control"
+                                                placeholder="Nama Depan" name="fname" value="{{ old('fname') }}"
+                                                oninput=capitalizeName(this)>
+                                            <p id="fname-check" style="color: red; display: none;">Nama Depan harus
+                                                diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="lname">Nama Belakang</label>
-                                            <input type="text" id="lname" class="form-control" placeholder="Nama Belakang" name="lname" value="{{old('lname')}}" oninput=capitalizeName(this)>
-                                            <p id="lname-check" style="color: red; display: none;">Nama Belakang harus diisi</p>
+                                            <input type="text" id="lname" class="form-control"
+                                                placeholder="Nama Belakang" name="lname"
+                                                value="{{ old('lname') }}" oninput=capitalizeName(this)>
+                                            <p id="lname-check" style="color: red; display: none;">Nama Belakang harus
+                                                diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="birthplace">Tempat Lahir</label>
-                                            <input type="text" id="birthplace" class="form-control" placeholder="Tempat Lahir" name="birthplace" value="{{old('birthplace')}}" oninput=capitalizeName(this)>
-                                            <p id="birthplace-check" style="color: red; display: none;">Tempat Lahir harus diisi</p>
+                                            <input type="text" id="birthplace" class="form-control"
+                                                placeholder="Tempat Lahir" name="birthplace"
+                                                value="{{ old('birthplace') }}" oninput=capitalizeName(this)>
+                                            <p id="birthplace-check" style="color: red; display: none;">Tempat Lahir
+                                                harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="birthdate">Tanggal Lahir</label>
-                                            <input type="date" class="form-control mb-3" id="birthdate" name="birthdate" value="{{old('birthdate')}}">
-                                            <p id="birthdate-check" style="color: red; display: none;">Tanggal Lahir harus diisi</p>
+                                            <input type="date" class="form-control mb-3" id="birthdate"
+                                                name="birthdate" value="{{ old('birthdate') }}">
+                                            <p id="birthdate-check" style="color: red; display: none;">Tanggal Lahir
+                                                harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="address">Alamat Tinggal</label>
-                                            <input type="text" id="address" class="form-control" name="address" placeholder="Alamat Tinggal" value="{{old('address')}}" oninput=capitalizeName(this)>
-                                            <p id="address-check" style="color: red; display: none;">Alamat Tinggal harus diisi</p>
+                                            <input type="text" id="address" class="form-control" name="address"
+                                                placeholder="Alamat Tinggal" value="{{ old('address') }}"
+                                                oninput=capitalizeName(this)>
+                                            <p id="address-check" style="color: red; display: none;">Alamat Tinggal
+                                                harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="workAddress">Alamat Kerja</label>
-                                            <input type="text" id="workAddress" class="form-control" name="workAddress" placeholder="Alamat Kerja" value="{{old('workAddress')}}" oninput=capitalizeName(this)>
-                                            <p id="workAddress-check" style="color: red; display: none;">Alamat Kerja harus diisi</p>
+                                            <input type="text" id="workAddress" class="form-control"
+                                                name="workAddress" placeholder="Alamat Kerja"
+                                                value="{{ old('workAddress') }}" oninput=capitalizeName(this)>
+                                            <p id="workAddress-check" style="color: red; display: none;">Alamat Kerja
+                                                harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="email">Email</label>
-                                            <input type="email" id="email" class="form-control" name="email" placeholder="Email" value="{{old('email')}}">
-                                            <p id="email-check" style="color: red; display: none;">Email harus diisi</p>
+                                            <input type="email" id="email" class="form-control" name="email"
+                                                placeholder="Email" value="{{ old('email') }}">
+                                            <p id="email-check" style="color: red; display: none;">Email harus diisi
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
@@ -172,14 +210,18 @@
                                             <label for="phone-number">No Hp</label>
                                             <div class="input-group">
                                                 <span class="input-group-text" id="basic-addon1">+62</span>
-                                                <input type="text" class="form-control" placeholder="No Hp" aria-label="No Hp" aria-describedby="basic-addon1" id="phone" name="phone" value="{{old('phone')}}">
+                                                <input type="text" class="form-control" placeholder="No Hp"
+                                                    aria-label="No Hp" aria-describedby="basic-addon1" id="phone"
+                                                    name="phone" value="{{ old('phone') }}">
                                             </div>
-                                            <p id="phone-check" style="color: red; display: none;">No HP harus diisi</p>
+                                            <p id="phone-check" style="color: red; display: none;">No HP harus diisi
+                                            </p>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-12 d-flex justify-content-end">
-                                        <button type="button" class="btn btn-primary me-1 mb-1" id="btnContinue">Lanjutkan</button>
+                                        <button type="button" class="btn btn-primary me-1 mb-1"
+                                            id="btnContinue">Lanjutkan</button>
                                     </div>
                                 </div>
                             </div>
@@ -187,31 +229,40 @@
 
                         <div id="register-section2" class="hidden">
                             <div class="card-body">
-                                <button type="button" class="btn btn-primary mb-3 circular-btn" id="btnBack"><i class="bi bi-arrow-left"></i></button>
+                                <button type="button" class="btn btn-primary mb-3 circular-btn" id="btnBack"><i
+                                        class="bi bi-arrow-left"></i></button>
                                 <div class="row">
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="kk">Password</label>
-                                            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-                                            <p id="password-check" style="color: red; display: none;">Password harus diisi</p>
+                                            <input type="password" class="form-control" id="password"
+                                                name="password" placeholder="Password">
+                                            <p id="password-check" style="color: red; display: none;">Password harus
+                                                diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="confirmPassword">Konfirmasi Password</label>
-                                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Konfirmasi Password">
-                                            <p id="confirmPassword-check" style="color: red; display: none;">Konfirmasi password harus diisi</p>
+                                            <input type="password" class="form-control" id="confirmPassword"
+                                                name="confirmPassword" placeholder="Konfirmasi Password">
+                                            <p id="confirmPassword-check" style="color: red; display: none;">
+                                                Konfirmasi password harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="mothername">Nama Ibu Kandung</label>
-                                            <input type="text" class="form-control" id="mothername" name="mothername" placeholder="Nama Ibu Kandung" value="{{old('mothername')}}" oninput=capitalizeName(this)>
-                                            <p id="mothername-check" style="color: red; display: none;">Nama Ibu Kandung harus diisi</p>
+                                            <input type="text" class="form-control" id="mothername"
+                                                name="mothername" placeholder="Nama Ibu Kandung"
+                                                value="{{ old('mothername') }}" oninput=capitalizeName(this)>
+                                            <p id="mothername-check" style="color: red; display: none;">Nama Ibu
+                                                Kandung harus diisi</p>
                                         </div>
                                     </div>
                                     <div class="col-12 d-flex justify-content-end">
-                                        <button type="button" class="btn btn-primary me-1 mb-1" id="btnContinue2">Lanjutkan</button>
+                                        <button type="button" class="btn btn-primary me-1 mb-1"
+                                            id="btnContinue2">Lanjutkan</button>
                                     </div>
                                 </div>
                             </div>
@@ -219,28 +270,33 @@
 
                         <div id="register-section4" class="hidden">
                             <div class="card-body">
-                                <button type="button" class="btn btn-primary mb-3 circular-btn" id="btnBack3"><i class="bi bi-arrow-left"></i></button>
+                                <button type="button" class="btn btn-primary mb-3 circular-btn" id="btnBack3"><i
+                                        class="bi bi-arrow-left"></i></button>
                                 <div class="row">
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="ktp">Foto KTP</label>
-                                            <input type="file" class="image-resize-filepond" name="ktp" accept="image/*">
+                                            <input type="file" class="image-resize-filepond" name="ktp"
+                                                accept="image/*">
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="kk">Foto Kartu Keluarga</label>
-                                            <input type="file" class="image-preview-filepond" name="kk" accept="image/*">
+                                            <input type="file" class="image-preview-filepond" name="kk"
+                                                accept="image/*">
                                         </div>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Daftar</button>
+                                <button type="submit"
+                                    class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Daftar</button>
                             </div>
                             <div class="text-center mt-5 text-lg fs-4">
-                                <p class='text-gray-600'>Sudah punya akun? <a href="{{route('login')}}" class="font-bold">Masuk</a></p>
+                                <p class='text-gray-600'>Sudah punya akun? <a href="{{ route('login') }}"
+                                        class="font-bold">Masuk</a></p>
                             </div>
                         </div>
-                        
+
                     </form>
                 </div>
             </div>
@@ -256,10 +312,14 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 
-<script src="/main/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js"></script>
-<script src="/main/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js"></script>
+<script src="/main/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js">
+</script>
+<script src="/main/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js">
+</script>
 <script src="/main/assets/extensions/filepond-plugin-image-crop/filepond-plugin-image-crop.min.js"></script>
-<script src="/main/assets/extensions/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js"></script>
+<script
+    src="/main/assets/extensions/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js">
+</script>
 <script src="/main/assets/extensions/filepond-plugin-image-filter/filepond-plugin-image-filter.min.js"></script>
 <script src="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js"></script>
 <script src="/main/assets/extensions/filepond-plugin-image-resize/filepond-plugin-image-resize.min.js"></script>
@@ -319,13 +379,13 @@
         // });
 
         //prevent enter submit button
-        $("#formRegister").on("keypress", function (event) { 
-            var keyPressed = event.keyCode || event.which; 
-            if (keyPressed === 13) { 
+        $("#formRegister").on("keypress", function(event) {
+            var keyPressed = event.keyCode || event.which;
+            if (keyPressed === 13) {
                 event.preventDefault();
-                return false; 
-            } 
-        }); 
+                return false;
+            }
+        });
 
         function validateData(type) {
             if (type == "fname") {
@@ -335,7 +395,7 @@
                     return 0;
                 } else {
                     $("#fname-check").hide();
-                    return 1;              
+                    return 1;
                 }
             } else if (type == "lname") {
                 let dataValue = $("#lname").val();
@@ -369,11 +429,11 @@
                     if (selectedDate > minBirthdate) {
                         $("#birthdate-check").text("Usia minimal adalah 17 tahun");
                         Swal.fire({
-                        title: 'Oops,',
-                        text: 'Anda harus berusia minimal 17 tahun untuk menjadi anggota Sistem Akuntansi UBSP',
-                        icon: 'warning',
-                        showCancelButton: false,
-                        confirmButtonText: 'OK',
+                            title: 'Oops,',
+                            text: 'Anda harus berusia minimal 17 tahun untuk menjadi anggota Sistem Akuntansi UBSP',
+                            icon: 'warning',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK',
                         }).then((result) => {
 
                         });
@@ -435,7 +495,7 @@
                         return 0;
                     }
                 }
-            } else if(type == "password") {
+            } else if (type == "password") {
                 let dataValue = $("#password").val();
                 if (dataValue.length == "") {
                     $("#password-check").show();
@@ -450,7 +510,7 @@
                     $("#password-check").hide();
                     return 1;
                 }
-            } else if(type == "confirmPassword") {
+            } else if (type == "confirmPassword") {
                 let dataValue = $("#confirmPassword").val();
                 if (dataValue.length == "") {
                     $("#confirmPassword-check").show();
@@ -469,10 +529,10 @@
                         return 1;
                     }
 
-                    
+
                     return 1;
                 }
-            } else if(type == "mothername") {
+            } else if (type == "mothername") {
                 let dataValue = $("#mothername").val();
                 if (dataValue.length == "") {
                     $("#mothername-check").show();
@@ -485,7 +545,7 @@
         }
 
         function validateDataSection(params) {
-            if(params == '1') {
+            if (params == '1') {
                 let isValid = 0;
 
                 isValid += validateData('fname');
@@ -511,7 +571,7 @@
 
         $("#btnContinue").click(function() {
             let validateData = validateDataSection('1');
-            if(validateData == 8){
+            if (validateData == 8) {
                 $("#register-section1").hide();
                 $("#register-section2").show();
             }
@@ -519,7 +579,7 @@
 
         $("#btnContinue2").click(function() {
             let validateData = validateDataSection('2');
-            if(validateData == 3){
+            if (validateData == 3) {
                 $("#register-section2").hide();
                 $("#register-section3").show();
             }
@@ -563,12 +623,12 @@
         $("#skipSimpanan").click(function(event) {
             event.preventDefault();
             Swal.fire({
-            title: 'Lewati Buka Simpanan?',
-            text: 'Simpanan pokok harus dibayarkan saat pertama kali menjadi anggota UBSP. Anda dapat melewati ini, namun ingat bahwa akun Anda belum bisa diaktifkan selama belum membayar simpanan pokok.',
-            icon: 'question',
-            showDenyButton: true,
-            confirmButtonText: 'Ya, lewati',
-            denyButtonText: 'Tidak',
+                title: 'Lewati Buka Simpanan?',
+                text: 'Simpanan pokok harus dibayarkan saat pertama kali menjadi anggota UBSP. Anda dapat melewati ini, namun ingat bahwa akun Anda belum bisa diaktifkan selama belum membayar simpanan pokok.',
+                icon: 'question',
+                showDenyButton: true,
+                confirmButtonText: 'Ya, lewati',
+                denyButtonText: 'Tidak',
             }).then((result) => {
                 if (result.isConfirmed) {
                     $("#register-section3").hide();
@@ -577,30 +637,34 @@
             });
         });
 
-        $(function(){
-            $("#nominal").keyup(function(e){
+        $(function() {
+            $("#nominal").keyup(function(e) {
                 $(this).val(format($(this).val()));
             });
         });
 
         var format = function(num) {
-            var str = num.toString().replace("", ""), parts = false, output = [], i = 1, formatted = null;
-            if(str.indexOf(".") > 0) {
+            var str = num.toString().replace("", ""),
+                parts = false,
+                output = [],
+                i = 1,
+                formatted = null;
+            if (str.indexOf(".") > 0) {
                 parts = str.split(".");
                 str = parts[0];
             }
             str = str.split("").reverse();
-            for(var j = 0, len = str.length; j < len; j++) {
-                if(str[j] != ",") {
-                output.push(str[j]);
-                if(i%3 == 0 && j < (len - 1)) {
-                    output.push(",");
-                }
-                i++;
+            for (var j = 0, len = str.length; j < len; j++) {
+                if (str[j] != ",") {
+                    output.push(str[j]);
+                    if (i % 3 == 0 && j < (len - 1)) {
+                        output.push(",");
+                    }
+                    i++;
                 }
             }
             formatted = output.reverse().join("");
-            return("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
+            return ("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
         };
     });
 </script>
