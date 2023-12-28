@@ -34,13 +34,13 @@
           <div data-i18n="Basic">Anggota</div>
         </a>
       </li>
-      <li class="menu-item active">
+      <li class="menu-item">
         <a href="/admin/account_category" class="menu-link">
           <i class="menu-icon tf-icons bx bx-category"></i>
           <div data-i18n="Basic">Kategori Akun</div>
         </a>
       </li>
-      <li class="menu-item">
+      <li class="menu-item active">
         <a href="/admin/account" class="menu-link">
           <i class="menu-icon tf-icons bx bx-archive"></i>
           <div data-i18n="Basic">Daftar Akun</div>
@@ -197,7 +197,7 @@
 
                 <div class="mb-3">
                     <div class="form-group">
-                        <label for="categoryID">Category</label>
+                        <label for="categoryID">Kategori Akun</label>
                         <select class="choices form-select" id="categoryID"  name="categoryID">
                             @foreach($category as $item)
                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -210,10 +210,21 @@
                 </div>
 
                 <div class="mb-3">
+                  <div class="form-group">
+                      <label for="accountRelation">Relasi Akun</label>
+                      <select id="accountRelation" class="form-control">
+                          <option value="">---Pilih Relasi---</option>
+                          <option value="">Akun Header</option>
+                          <option value="">Sub Akun</option>
+                      </select>
+                  </div>
+              </div>
+
+                <div class="mb-3">
                     <div class="form-group">
-                        <label for="parentID">Parent Account:</label>
+                        <label for="parentID">Detail Relasi:</label>
                         <select id="parentID" name="parentID" class="form-control">
-                            <option value="">Select Parent Account</option>
+                            <option value="">---Pilih Akun---</option>
                             @foreach($account as $item)
                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                             @endforeach

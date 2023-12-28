@@ -1,6 +1,12 @@
 <!-- resources/views/_account_row.blade.php -->
 
 <tr>
+    <td>{{ $account->accountNo }}</td>
+    {{-- @if ($account->depth == 0)
+        <td>{{ $account->name }}</td>
+    @else
+        <td style="padding-left: {{ $account->depth * 20 }}px">{{ $account->name }}</td>
+    @endif --}}
     <td style="padding-left: {{ $account->depth * 20 }}px">{{ $account->name }}</td>
     <td>{{ $account->categoryID }}</td>
     <!-- Add other columns as needed -->
