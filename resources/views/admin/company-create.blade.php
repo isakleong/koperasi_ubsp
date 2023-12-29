@@ -194,7 +194,7 @@
                             <div class="mb-3">
                                 <div class="form-group">
                                     <label for="about">Tentang Koperasi</label>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="about" placeholder=""
+                                    <textarea class="form-control" id="about" rows="3" name="about" placeholder=""
                                         required value="{{ old('about') }}"></textarea>
                                 </div>
                                 @error('about')

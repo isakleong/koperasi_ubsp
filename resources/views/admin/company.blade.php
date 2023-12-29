@@ -162,27 +162,33 @@
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="py-3 mb-4">
-            <span class="fw-light">Kategori Akun</span>
+            <span class="fw-light">Profile UBSP</span>
         </h4>
         <div class="row">
             <div class="col-xl">
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Daftar Kategori Akun</h5>
-                        <a href="/admin/company/create" class="btn btn-primary">Tambah Data</a>
+                        @if (count($company) == 0)
+                            <a href="/admin/company/create" class="btn btn-primary">Tambah Data</a>
+                        @else
+                            <a class="btn btn-primary disabled" onclick="return false;" style="cursor: not-allowed; pointer-events: all !important;">Tambah Data</a>
+                        @endif
+
                     </div>
 
                     <div class="card-body">
                         <table class="table table-striped" id="table1" style="width: 100%">
                             <thead>
                                 <tr>
-                                    <th>Nama Koperasi</th>
+                                    <th>Nama</th>
                                     <th>Tentang</th>
                                     <th>Logo</th>
                                     <th>Alamat</th>
                                     <th>Email</th>
                                     <th>Phone</th>
                                     <th>Whatsapp</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -193,16 +199,20 @@
                                     <tr>
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->about }}</td>
-                                        <td>{{ $item->logo }}</td>
+                                        @if ($item->logo != "")
+                                            <td><img src="/{{ $item->logo }}" alt="" class="img-fluid" width="100"></td>    
+                                        @else
+                                            <td>-</td>
+                                        @endif
                                         <td>{{ $item->address }}</td>
                                         <td>{{ $item->email }}</td>
                                         <td>{{ $item->phone }}</td>
                                         <td>{{ $item->whatsapp }}</td>
                                         <td>
-                                            <a href="{{ route('admin.account_category.edit', $item->id) }}"
+                                            <a href="{{ route('admin.company.edit', $item->id) }}"
                                                 class="btn icon btn-sm btn-primary d-inline-block m-1"
                                                 data-bs-toggle="tooltip" title="Edit"><i class="bx bxs-pencil"></i></a>
-                                            <form action="{{ route('admin.account_category.destroy', $item->id) }}"
+                                            <form action="{{ route('admin.company.destroy', $item->id) }}"
                                                 method="POST" class="d-inline-block m-1" data-bs-toggle="tooltip"
                                                 title="Hapus">
                                                 @csrf

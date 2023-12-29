@@ -59,7 +59,7 @@
                 </a>
                 <ul class="menu-sub">
                     <li class="menu-item">
-                        <a href="extended-ui-perfect-scrollbar.html" class="menu-link">
+                        <a href="/admin/company" class="menu-link">
                             <div data-i18n="Perfect Scrollbar">Profile UBSP</div>
                         </a>
                     </li>
