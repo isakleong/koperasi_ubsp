@@ -127,6 +127,15 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     Route::resource('/account_category', AccountCategoryController::class);
     Route::resource('/account', AccountController::class);
 
+    Route::get('/menu/simpanan', [AdminController::class, 'showSimpananMenu']);
+    Route::get('/simpanan/setoran', [AdminController::class, 'showFormData'])->name('add.simpanan.deposit');
+    Route::get('/simpanan/penarikan', [AdminController::class, 'showFormData'])->name('add.simpanan.withdrawal');
+
+
+    Route::get('/menu/tabungan', [AdminController::class, 'showTabunganMenu']);
+    Route::get('/menu/kredit', [AdminController::class, 'showKreditMenu']);
+    Route::get('/menu/angsuran', [AdminController::class, 'showAngsuranMenu']);
+
     Route::get('/xxx', [AccountController::class, 'getAccountsByCategory']);
 });
 //END OF ADMIN

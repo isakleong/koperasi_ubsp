@@ -1,5 +1,31 @@
 @extends('layout.admin.main')
 
+@section('vendorCSS')
+    <style>
+        #customCard {
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            background-image: linear-gradient(to right top, #0D41E1, #0C63E7, #0A85ED, #09A6F3, #07C8F9);
+        }
+
+        #customCardBorder {
+            border-top-left-radius: 30px !important;
+            border-top-right-radius: 30px !important;
+            border: none;
+            border-radius: 6px;
+            background-color: blue;
+            color: #fff;
+            background-image: linear-gradient(to right top, #0a33b1, #094eb7, #086abc, #0784c2, #05a1c8);
+        }
+
+        .bgCard:hover {
+            /* transform: scale(1.02); */
+            opacity: 0.75;
+        }
+    </style>
+@endsection
+
 @section('navbar')
     <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
         <div class="app-brand demo">
@@ -34,7 +60,7 @@
                     <div data-i18n="Basic">Anggota</div>
                 </a>
             </li>
-            <li class="menu-item active">
+            <li class="menu-item">
                 <a href="/admin/account_category" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-category"></i>
                     <div data-i18n="Basic">Kategori Akun</div>
@@ -68,7 +94,7 @@
 
             <!-- Transaction Data -->
             <li class="menu-header small text-uppercase"><span class="menu-header-text">transaksi</span></li>
-            <li class="menu-item">
+            <li class="menu-item active">
                 <a href="/admin/menu/simpanan" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-donate-heart"></i>
                     <div data-i18n="Basic">Simpanan</div>
@@ -158,103 +184,102 @@
 @endsection
 
 @section('content')
-    @include('sweetalert::alert')
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="py-3 mb-4">
-            <span class="text-muted fw-light">Kategori Akun / </span> Edit Kategori
+            <span class="fw-light">Beranda Simpanan
         </h4>
+
         <div class="row">
-            <div class="col-xl">
-                <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Edit Kategori Akun</h5>
+            <div class="col-lg-12 col-md-12">
+                <div class="row">
+                    <div class="col-lg-6 mb-5 bgCard">
+                        <a href="/admin/simpanan/setoran">
+                            <div class="container-fluid">
+                                <div class="p-3" id="customCard">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span><i class='bx bx-donate-heart' style="font-size: 3em;"></i></span>
+                                        <span><i class='bx bxs-chevrons-right' style="font-size: 3em;"></i></span>
+                                    </div>
+                                    <div class="px-2 number mt-3 d-flex justify-content-between align-items-center">
+                                        <span>Setoran Simpanan</span>
+                                    </div>
+                                    <div class="p-4 mt-4" id="customCardBorder">
+                                        <div class="text-center">
+                                            <span class="cardholder">Tambah Setoran</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
                     </div>
 
-                    <div class="card-body">
-                        <form action="{{ route('admin.account_category.update', $accountCategory->id) }}" method="post">
-                            @csrf
-                            @method('PUT')
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="name" name="name"
-                                        placeholder="" oninput=capitalizeName(this) required
-                                        value="{{ old('name', $accountCategory->name) }}" />
-                                    <label for="name">Nama Kategori</label>
+                    <div class="col-lg-6 mb-5 bgCard">
+                        <a href="/admin/user">
+                            <div class="container-fluid">
+                                <div class="p-3" id="customCard">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span><i class='bx bx-donate-heart' style="font-size: 3em;"></i></span>
+                                        <span><i class='bx bxs-message-square-edit' style="font-size: 3em;"></i></span>
+                                    </div>
+                                    <div class="px-2 number mt-3 d-flex justify-content-between align-items-center">
+                                        <span>Pengajuan Simpanan</span>
+                                    </div>
+                                    <div class="p-4 mt-4" id="customCardBorder">
+                                        <div class="text-center">
+                                            <span class="cardholder">Review Pengajuan</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                @error('name')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
                             </div>
-                            <div class="mb-3">
-                                <label for="normalBalance" class="form-label">Saldo Normal</label>
-                                <select class="form-select" id="normalBalance" aria-label="normalBalance"
-                                    name="normalBalance">
-                                    <option selected>--- Pilih Saldo Normal ---</option>
-                                    <option value="D"
-                                        {{ (old('normalBalance') ?: $accountCategory->normalBalance) == 'D' ? 'selected' : '' }}>
-                                        Debit</option>
-                                    <option value="K"
-                                        {{ (old('normalBalance') ?: $accountCategory->normalBalance) == 'K' ? 'selected' : '' }}>
-                                        Kredit</option>
-                                </select>
-                                @error('normalBalance')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
-                                    name="active" {{ $accountCategory->active == '1' ? 'checked' : '' }} />
-                                <label class="form-check-label" for="flexSwitchCheckChecked">Active</label>
-                            </div>
-                            <div class="text-end">
-                                <button type="submit" class="btn btn-lg btn-primary show_confirm">Update
-                                    Kategori</button>
-                            </div>
-                        </form>
+                        </a>
                     </div>
+
+                    <div class="col-lg-6 mb-5 bgCard">
+                        <a href="/admin/simpanan/create">
+                            <div class="container-fluid">
+                                <div class="p-3" id="customCard">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span><i class='bx bx-donate-heart' style="font-size: 3em;"></i></span>
+                                        <span><i class='bx bxs-chevrons-left' style="font-size: 3em;"></i></span>
+                                    </div>
+                                    <div class="px-2 number mt-3 d-flex justify-content-between align-items-center">
+                                        <span>Penarikan Simpanan</span>
+                                    </div>
+                                    <div class="p-4 mt-4" id="customCardBorder">
+                                        <div class="text-center">
+                                            <span class="cardholder">Tambah Penarikan</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-lg-6 mb-5 bgCard">
+                        <a href="/admin/user">
+                            <div class="container-fluid">
+                                <div class="p-3" id="customCard">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span><i class='bx bx-donate-heart' style="font-size: 3em;"></i></span>
+                                        <span><i class='bx bxs-message-square-edit' style="font-size: 3em;"></i></span>
+                                    </div>
+                                    <div class="px-2 number mt-3 d-flex justify-content-between align-items-center">
+                                        <span>Penarikan Simpanan</span>
+                                    </div>
+                                    <div class="p-4 mt-4" id="customCardBorder">
+                                        <div class="text-center">
+                                            <span class="cardholder">Edit Penarikan</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
     <!-- / Content -->
-@endsection
-
-@section('vendorJS')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="/vendor/sweetalert/sweetalert.all.js"></script>
-
-    <script>
-        //capitalize input
-        function capitalizeName(input) {
-            const name = input.value.toLowerCase();
-            const words = name.split(' ');
-            const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
-            input.value = capitalizedWords.join(' ');
-        }
-        //end of capitalize input
-
-        $(document).ready(function() {
-            $('.show_confirm').click(function(event) {
-                event.preventDefault();
-
-                var form = $(this).closest("form");
-
-                Swal.fire({
-                    title: 'Simpan Data?',
-                    text: '',
-                    icon: 'question',
-                    showDenyButton: true,
-                    confirmButtonText: 'Ya, simpan',
-                    denyButtonText: 'Batal',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    } else if (result.isDenied) {
-                        // Swal.fire('Changes are not saved', '', 'info');
-                    }
-                });
-            });
-        });
-    </script>
 @endsection

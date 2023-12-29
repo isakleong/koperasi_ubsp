@@ -1,5 +1,35 @@
 @extends('layout.admin.main')
 
+@section('vendorCSS')
+    <link rel="stylesheet" href="/main/assets/extensions/filepond/filepond.css">
+    <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
+    <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
+
+    <style>
+        #customCard {
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            background-image: linear-gradient(to right top, #0D41E1, #0C63E7, #0A85ED, #09A6F3, #07C8F9);
+        }
+
+        #customCardBorder {
+            border-top-left-radius: 30px !important;
+            border-top-right-radius: 30px !important;
+            border: none;
+            border-radius: 6px;
+            background-color: blue;
+            color: #fff;
+            background-image: linear-gradient(to right top, #0a33b1, #094eb7, #086abc, #0784c2, #05a1c8);
+        }
+
+        .bgCard:hover {
+            /* transform: scale(1.02); */
+            opacity: 0.75;
+        }
+    </style>
+@endsection
+
 @section('navbar')
     <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
         <div class="app-brand demo">
@@ -40,7 +70,7 @@
                     <div data-i18n="Basic">Kategori Akun</div>
                 </a>
             </li>
-            <li class="menu-item active">
+            <li class="menu-item">
                 <a href="/admin/account" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-archive"></i>
                     <div data-i18n="Basic">Daftar Akun</div>
@@ -68,7 +98,7 @@
 
             <!-- Transaction Data -->
             <li class="menu-header small text-uppercase"><span class="menu-header-text">transaksi</span></li>
-            <li class="menu-item">
+            <li class="menu-item active">
                 <a href="/admin/menu/simpanan" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-donate-heart"></i>
                     <div data-i18n="Basic">Simpanan</div>
@@ -158,53 +188,43 @@
 @endsection
 
 @section('content')
-    @include('sweetalert::alert')
+    {{-- @include('sweetalert::alert') --}}
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="py-3 mb-4">
-            <span class="text-muted fw-light">Daftar Akun / </span> Tambah Akun
+            <span class="text-muted fw-light">Beranda Simpanan /</span> Tambah Setoran
         </h4>
         <div class="row">
             <div class="col-xl">
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Tambah Akun</h5>
+                        <h5 class="mb-0">Formulir Setoran Simpanan</h5>
+                        {{-- <small class="text-muted float-end">Sistem Akuntansi UBSP</small> --}}
                     </div>
-
                     <div class="card-body">
-                        <form action="{{ route('admin.account.store') }}" method="post">
+                        <form action="{{ route('admin.user.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="name" name="name"
-                                        placeholder="" oninput=capitalizeName(this) required
-                                        value="{{ old('name') }}" />
-                                    <label for="name">Nama Akun</label>
+                                <div class="form-group">
+                                    <label for="kind">Jenis Simpanan</label>
+                                    <select class="choices form-select" id="kind" name="kind">
+                                        <option value="" selected disabled>---Pilih Jenis Simpanan---</option>
+                                        <option>Simpanan Wajib</option>
+                                        <option>Simpanan Sukarela</option>
+                                    </select>
                                 </div>
-                                @error('name')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="accountNo" name="accountNo"
-                                        placeholder="" oninput=capitalizeName(this) required
-                                        value="{{ old('accountNo') }}" />
-                                    <label for="accountNo">Nomor Akun</label>
-                                </div>
-                                @error('accountNo')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
+                                @error('kind')
+                                    <p style="color: red">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div class="mb-3">
                                 <div class="form-group">
-                                    <label for="categoryID">Kategori Akun</label>
-                                    <select class="choices form-select" id="categoryID" name="categoryID"><option value="" selected disabled>---Pilih Kategori---</option>  
-                                      @foreach ($category as $item)
-                                            <option value="{{ $item->id }}" {{ old('categoryID') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
-                                        @endforeach
+                                    <label for="kind">Jenis Simpanan</label>
+                                    <select class="choices form-select" id="kind" name="kind">
+                                        <option value="" selected disabled>---Pilih Jenis Simpanan---</option>
+                                        <option>Simpanan Wajib</option>
+                                        <option>Simpanan Sukarela</option>
                                     </select>
                                 </div>
                                 @error('categoryID')
@@ -212,46 +232,49 @@
                                 @enderror
                             </div>
 
-                            <div class="mb-3" id="relation" style="display: none;">
-                                <div class="form-group">
-                                    <label for="accountRelation">Relasi Akun</label>
-                                    <select id="accountRelation" class="choices form-select" name="accountRelation">
-                                        <option value="" selected disabled>---Pilih Relasi---</option>
-                                        <option value="none" {{ old('accountRelation') =='none' ? 'selected' : '' }}>Tidak Ada</option>
-                                        <option value="header" {{ old('accountRelation') =='header' ? 'selected' : '' }}>Akun Header</option>
-                                        <option value="child" {{ old('accountRelation') =='child' ? 'selected' : '' }}>Sub Akun</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="mb-3" id="relationDetail" style="display: none;">
-                                <div class="form-group">
-                                    <label for="parentID">Detail Relasi:</label>
-                                    <select id="parentID" name="parentID" class="choices form-select">
-                                        <option value="">---Pilih Akun---</option>
-                                    </select>
-                                </div>
-                            </div>
-
                             <div class="mb-3">
-                                <div class="form-group">
-                                    <label for="description">Deskripsi</label>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description" placeholder=""
-                                        oninput=capitalizeName(this) required value="{{ old('description') }}"></textarea>
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="nominal" name="nominal" placeholder=""
+                                        oninput=capitalizeName(this) required value="{{ old('nominal') }}" />
+                                    <label for="nominal">Nominal</label>
                                 </div>
-                                @error('description')
+                                @error('nominal')
                                     <p class="mt-1" style="color: red">{{ $message }}</p>
                                 @enderror
                             </div>
 
-                            <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
-                                    name="active" checked />
-                                <label class="form-check-label" for="flexSwitchCheckChecked">Active</label>
+                            <div class="col-md mb-3">
+                                <label class="">Jenis Pembayaran</small>
+                                    <div class="form-check mt-3 mb-2">
+                                        <input name="method" class="form-check-input" type="radio" value="cash"
+                                            id="cash" {{ old('method') == 'cash' ? 'checked' : '' }} />
+                                        <label class="form-check-label" for="cash"> Cash </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="method" class="form-check-input" type="radio" value="transfer"
+                                            id="transfer" {{ old('method') == 'transfer' ? 'checked' : '' }} />
+                                        <label class="form-check-label" for="transfer"> Transfer </label>
+                                    </div>
+                                    @error('method')
+                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                    @enderror
                             </div>
+
+                            <div class="mb-3" id="bukti-trf" style="display: none;">
+                                <div class="form-group has-icon-left">
+                                    <label for="image">Bukti Pembayaran</label>
+                                    <div class="position-relative">
+                                        <input type="file" class="image-exif-filepond" name="simpanan"
+                                            accept="image/*" />
+                                    </div>
+                                </div>
+                                @error('simpanan')
+                                    <p class="mt-1" style="color: red">{{ $message }}</p>
+                                @enderror
+                            </div>
+
                             <div class="text-end">
-                                <button type="submit" class="btn btn-lg btn-primary show_confirm">Tambah
-                                    Kategori</button>
+                                <button type="submit" class="btn btn-lg btn-primary show_confirm">Simpan</button>
                             </div>
                         </form>
                     </div>
@@ -263,7 +286,21 @@
 @endsection
 
 @section('vendorJS')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/main/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js">
+    </script>
+    <script src="/main/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js">
+    </script>
+    <script src="/main/assets/extensions/filepond-plugin-image-crop/filepond-plugin-image-crop.min.js"></script>
+    <script
+        src="/main/assets/extensions/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js">
+    </script>
+    <script src="/main/assets/extensions/filepond-plugin-image-filter/filepond-plugin-image-filter.min.js"></script>
+    <script src="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js"></script>
+    <script src="/main/assets/extensions/filepond-plugin-image-resize/filepond-plugin-image-resize.min.js"></script>
+    <script src="/main/assets/extensions/filepond/filepond.js"></script>
+    <script src="/main/assets/extensions/toastify-js/src/toastify.js"></script>
+    <script src="/main/assets/static/js/pages/filepond.js"></script>
+
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
 
     <script>
@@ -277,48 +314,13 @@
         //end of capitalize input
 
         $(document).ready(function() {
-          var checkSelectedCategory = $("#categoryID").val();
-          if(checkSelectedCategory != null) {
-            alert('haha');
-            $('#accountRelation').val('').trigger('change');
-          } else {
-            alert('hehe');
-          }
+            var selectedValue = $('input[name="method"]:checked').val();
 
-            $('#categoryID').change(function() {
-              $("#relation").show();
-              $("#relationDetail").hide();
-              $('#accountRelation').val('').trigger('change');
-            });
-
-            $('#accountRelation').change(function() {
-                var relation = $(this).val();
-
-                if (relation == 'none' || relation == null) {
-                    $("#relationDetail").hide();
-                } else {
-                    $("#relationDetail").show();
-
-                    var categoryId = $("#categoryID").val();
-                    $.ajax({
-                        url: '/admin/xxx',
-                        type: 'GET',
-                        data: {
-                            categoryID: categoryId
-                        },
-                        success: function(data) {
-                            console.log(data);
-                            var select = $('#parentID');
-                            select.empty();
-                            $.each(data, function(key, value) {
-                                select.append('<option value="' + value.id + '">' + value
-                                    .name + '</option>');
-                            });
-                            
-                        }
-                    });
-                }
-            });
+            if (selectedValue == 'transfer') {
+                $('#bukti-trf').show();
+            } else {
+                $('#bukti-trf').hide();
+            }
 
             $('.show_confirm').click(function(event) {
                 event.preventDefault();
@@ -340,6 +342,28 @@
                     }
                 });
             });
+
+            $('input[type="radio"]').on('change', function() {
+                // Get the selected value
+                var selectedValue = $('input[name="method"]:checked').val();
+
+                if (selectedValue == 'transfer') {
+                    $('#bukti-trf').show();
+                } else {
+                    $('#bukti-trf').hide();
+                }
+            });
         });
+    </script>
+
+    <script>
+        @if ($message = session('errors'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Formulir anggota baru belum diisi secara lengkap',
+                // text: '{{ Session::get('errors') }}',
+            })
+        @endif
     </script>
 @endsection
