@@ -1,4 +1,4 @@
-let choices = document.querySelectorAll(".choices")
+let choices = document.querySelectorAll(".search")
 let initChoice
 for (let i = 0; i < choices.length; i++) {
   if (choices[i].classList.contains("multiple-remove")) {

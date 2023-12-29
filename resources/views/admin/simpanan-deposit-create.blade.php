@@ -5,29 +5,8 @@
     <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
     <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
 
-    <style>
-        #customCard {
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            background-image: linear-gradient(to right top, #0D41E1, #0C63E7, #0A85ED, #09A6F3, #07C8F9);
-        }
-
-        #customCardBorder {
-            border-top-left-radius: 30px !important;
-            border-top-right-radius: 30px !important;
-            border: none;
-            border-radius: 6px;
-            background-color: blue;
-            color: #fff;
-            background-image: linear-gradient(to right top, #0a33b1, #094eb7, #086abc, #0784c2, #05a1c8);
-        }
-
-        .bgCard:hover {
-            /* transform: scale(1.02); */
-            opacity: 0.75;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 @endsection
 
 @section('navbar')
@@ -202,15 +181,15 @@
                         {{-- <small class="text-muted float-end">Sistem Akuntansi UBSP</small> --}}
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('admin.user.store') }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('admin.store.simpanan.deposit') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
                                 <div class="form-group">
                                     <label for="kind">Jenis Simpanan</label>
                                     <select class="choices form-select" id="kind" name="kind">
-                                        <option value="" selected disabled>---Pilih Jenis Simpanan---</option>
-                                        <option>Simpanan Wajib</option>
-                                        <option>Simpanan Sukarela</option>
+                                        <option></option>
+                                        <option value="wajib" {{ old('kind') == 'wajib' ? 'selected' : '' }}>Simpanan Wajib</option>
+                                        <option value="sukarela" {{ old('kind') == 'sukarela' ? 'selected' : '' }}>Simpanan Sukarela</option>
                                     </select>
                                 </div>
                                 @error('kind')
@@ -220,25 +199,36 @@
 
                             <div class="mb-3">
                                 <div class="form-group">
-                                    <label for="userID">Anggota</label>
-                                    <select class="choices form-select" id="userID" name="userID"><option value="" selected disabled>---Pilih Anggota---</option>  
-                                      @foreach ($user as $item)
-                                            <option value="{{ $item->memberId }}" {{ old('userID') == $item->memberId ? 'selected' : '' }}>{{ $item->fname }} {{ $item->lname }}</option>
+                                    <label for="memberId">Anggota</label>
+                                    <select class="choices form-select" id="memberId" name="memberId">
+                                        <option></option>
+                                      @foreach ($member as $item)
+                                            <option value="{{ $item->memberId }}" {{ old('memberId') == $item->memberId ? 'selected' : '' }}>{{ $item->fname }} {{ $item->lname }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                @error('userID')
+                                @error('memberId')
                                     <p style="color: red">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="nominal" name="nominal" placeholder=""
-                                        oninput=capitalizeName(this) required value="{{ old('nominal') }}" />
+                                    <input type="text" class="form-control" id="nominal" name="nominal" placeholder="" required value="{{ old('nominal') }}" />
                                     <label for="nominal">Nominal</label>
                                 </div>
                                 @error('nominal')
+                                    <p class="mt-1" style="color: red">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-group">
+                                    <label for="notes">Keterangan (Opsional)</label>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="notes" placeholder=""
+                                        oninput=capitalizeName(this) required>{{ old('notes') }}</textarea>
+                                </div>
+                                @error('notes')
                                     <p class="mt-1" style="color: red">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -303,6 +293,9 @@
     <script src="/main/assets/extensions/toastify-js/src/toastify.js"></script>
     <script src="/main/assets/static/js/pages/filepond.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
 
     <script>
@@ -316,6 +309,44 @@
         //end of capitalize input
 
         $(document).ready(function() {
+            $("#kind").select2({
+                placeholder: 'Pilih Jenis Simpanan',
+                allowClear: true,
+                theme: 'bootstrap-5',
+                width: '100%',
+            });
+            
+            $("#memberId").select2({
+                placeholder: 'Pilih Anggota',
+                allowClear: true,
+                theme: 'bootstrap-5',
+                width: '100%',
+            });
+
+            $('#memberId').on('change', function() {
+                var selectedMemberId = $(this).val();
+                var selectedKind = $("#kind").val();
+
+                if(selectedKind === 'wajib') {
+                    $.ajax({
+                        url: '/admin/simpanan/check',
+                        method: 'GET',
+                        data: {
+                            memberId: selectedMemberId
+                        },
+                        success: function(response) {
+                            // Handle the successful response from the server
+                            console.log(response);
+                            // You can update your UI or perform other actions here
+                        },
+                        error: function(error) {
+                            // Handle errors
+                            console.error('Error:', error);
+                        }
+                    });
+                }
+            });
+
             var selectedValue = $('input[name="method"]:checked').val();
 
             if (selectedValue == 'transfer') {
@@ -356,12 +387,12 @@
                 }
             });
 
-            $('select').on('change', function() {
+            $('#kind').on('change', function() {
                 var data = $(this).val();
-                if (data.toLowerCase() == "simpanan wajib") {
+                if (data.toLowerCase() == "wajib") {
                     $("#nominal").val("50,000");
                     $("#nominal").prop("readonly", true);
-                } else if (data.toLowerCase() == "simpanan sukarela") {
+                } else if (data.toLowerCase() == "sukarela") {
                     $("#nominal").val("");
                     $("#nominal").prop("readonly", false);
                 } else {
@@ -407,8 +438,16 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Formulir anggota baru belum diisi secara lengkap',
+                text: 'Formulir setoran simpanan belum diisi secara lengkap',
                 // text: '{{ Session::get('errors') }}',
+            })
+        @endif
+
+        @if ($message = session('warning'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ Session::get('warning') }}',
             })
         @endif
     </script>

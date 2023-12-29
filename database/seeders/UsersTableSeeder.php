@@ -13,7 +13,7 @@ class UsersTableSeeder extends Seeder
     {
         $faker = Faker::create('id_ID');
 
-        foreach (range(1, 3000) as $index) {
+        foreach (range(1, 500) as $index) {
             $memberId = $faker->unique()->randomNumber($nbDigits = 8, $strict = true);
             $email = $faker->unique()->randomNumber($nbDigits = 8, $strict = true);
 

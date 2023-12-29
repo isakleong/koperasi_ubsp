@@ -135,6 +135,9 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('/simpanan/setoran', [AdminController::class, 'showFormData'])->name('add.simpanan.deposit');
     Route::get('/simpanan/penarikan', [AdminController::class, 'showFormData'])->name('add.simpanan.withdrawal');
 
+    //checker
+    Route::get('/simpanan/check', [AdminController::class, 'checkSimpananWajib'])->name('checkSimpanan');
+
     Route::post('/simpanan/setoran', [AdminController::class, 'storeSimpananDeposit'])->name('store.simpanan.deposit');
     Route::post('/simpanan/penarikan', [AdminController::class, 'storeSimpananWithdrawal'])->name('store.simpanan.withdrawal');
 
