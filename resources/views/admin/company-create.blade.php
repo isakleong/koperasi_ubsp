@@ -4,30 +4,6 @@
     <link rel="stylesheet" href="/main/assets/extensions/filepond/filepond.css">
     <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
     <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
-
-    <style>
-        #customCard {
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            background-image: linear-gradient(to right top, #0D41E1, #0C63E7, #0A85ED, #09A6F3, #07C8F9);
-        }
-
-        #customCardBorder {
-            border-top-left-radius: 30px !important;
-            border-top-right-radius: 30px !important;
-            border: none;
-            border-radius: 6px;
-            background-color: blue;
-            color: #fff;
-            background-image: linear-gradient(to right top, #0a33b1, #094eb7, #086abc, #0784c2, #05a1c8);
-        }
-
-        .bgCard:hover {
-            /* transform: scale(1.02); */
-            opacity: 0.75;
-        }
-    </style>
 @endsection
 
 @section('navbar')
@@ -76,14 +52,14 @@
                     <div data-i18n="Basic">Daftar Akun</div>
                 </a>
             </li>
-            <li class="menu-item">
+            <li class="menu-item active open">
                 <a href="javascript:void(0)" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-cog"></i>
                     <div data-i18n="Extended UI">Pengaturan</div>
                 </a>
                 <ul class="menu-sub">
-                    <li class="menu-item">
-                        <a href="extended-ui-perfect-scrollbar.html" class="menu-link">
+                    <li class="menu-item active">
+                        <a href="/admin/company" class="menu-link">
                             <div data-i18n="Perfect Scrollbar">Profile UBSP</div>
                         </a>
                     </li>
@@ -98,7 +74,7 @@
 
             <!-- Transaction Data -->
             <li class="menu-header small text-uppercase"><span class="menu-header-text">transaksi</span></li>
-            <li class="menu-item active">
+            <li class="menu-item">
                 <a href="/admin/menu/simpanan" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-donate-heart"></i>
                     <div data-i18n="Basic">Simpanan</div>
@@ -192,89 +168,97 @@
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="py-3 mb-4">
-            <span class="text-muted fw-light">Beranda Simpanan /</span> Tambah Setoran
+            <span class="text-muted fw-light">Profile UBSP / </span> Tambah Data
         </h4>
         <div class="row">
             <div class="col-xl">
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Formulir Setoran Simpanan</h5>
-                        {{-- <small class="text-muted float-end">Sistem Akuntansi UBSP</small> --}}
+                        <h5 class="mb-0">Tambah Data Profile</h5>
                     </div>
+
                     <div class="card-body">
-                        <form action="{{ route('admin.user.store') }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('admin.company.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
-                                <div class="form-group">
-                                    <label for="kind">Jenis Simpanan</label>
-                                    <select class="choices form-select" id="kind" name="kind">
-                                        <option value="" selected disabled>---Pilih Jenis Simpanan---</option>
-                                        <option>Simpanan Wajib</option>
-                                        <option>Simpanan Sukarela</option>
-                                    </select>
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="name"
+                                        name="name"placeholder="" required value="{{ old('name') }}" />
+                                    <label for="name">Nama Koperasi</label>
                                 </div>
-                                @error('kind')
-                                    <p style="color: red">{{ $message }}</p>
+                                @error('name')
+                                    <p class="mt-1" style="color: red">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div class="mb-3">
                                 <div class="form-group">
-                                    <label for="userID">Anggota</label>
-                                    <select class="choices form-select" id="userID" name="userID"><option value="" selected disabled>---Pilih Anggota---</option>  
-                                      @foreach ($user as $item)
-                                            <option value="{{ $item->memberId }}" {{ old('userID') == $item->memberId ? 'selected' : '' }}>{{ $item->fname }} {{ $item->lname }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label for="about">Tentang Koperasi</label>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="about" placeholder=""
+                                        required value="{{ old('about') }}"></textarea>
                                 </div>
-                                @error('userID')
-                                    <p style="color: red">{{ $message }}</p>
+                                @error('about')
+                                    <p class="mt-1" style="color: red">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-group">
+                                    <label for="logo">Logo</label>
+                                    <input type="file" class="image-resize-filepond" name="logo" accept="image/*">
+                                </div>
+                                @error('logo')
+                                    <p class="mt-1" style="color: red">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="nominal" name="nominal" placeholder=""
-                                        oninput=capitalizeName(this) required value="{{ old('nominal') }}" />
-                                    <label for="nominal">Nominal</label>
+                                    <input type="text" class="form-control" id="address"
+                                        name="address"placeholder="" required value="{{ old('address') }}" />
+                                    <label for="address">Alamat</label>
                                 </div>
-                                @error('nominal')
+                                @error('address')
                                     <p class="mt-1" style="color: red">{{ $message }}</p>
                                 @enderror
                             </div>
 
-                            <div class="col-md mb-3">
-                                <label class="">Jenis Pembayaran</small>
-                                    <div class="form-check mt-3 mb-2">
-                                        <input name="method" class="form-check-input" type="radio" value="cash"
-                                            id="cash" {{ old('method') == 'cash' ? 'checked' : '' }} />
-                                        <label class="form-check-label" for="cash"> Cash </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input name="method" class="form-check-input" type="radio" value="transfer"
-                                            id="transfer" {{ old('method') == 'transfer' ? 'checked' : '' }} />
-                                        <label class="form-check-label" for="transfer"> Transfer </label>
-                                    </div>
-                                    @error('method')
-                                        <p class="mt-1" style="color: red">{{ $message }}</p>
-                                    @enderror
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" id="email"
+                                        name="email"placeholder="" required value="{{ old('email') }}" />
+                                    <label for="email">Email</label>
+                                </div>
+                                @error('email')
+                                    <p class="mt-1" style="color: red">{{ $message }}</p>
+                                @enderror
                             </div>
 
-                            <div class="mb-3" id="bukti-trf" style="display: none;">
-                                <div class="form-group has-icon-left">
-                                    <label for="image">Bukti Pembayaran</label>
-                                    <div class="position-relative">
-                                        <input type="file" class="image-exif-filepond" name="simpanan"
-                                            accept="image/*" />
-                                    </div>
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="phone" class="form-control" id="phone"
+                                        name="phone"placeholder="" required value="{{ old('phone') }}" />
+                                    <label for="phone">Phone</label>
                                 </div>
-                                @error('simpanan')
+                                @error('phone')
+                                    <p class="mt-1" style="color: red">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="whatsapp" class="form-control" id="whatsapp"
+                                        name="whatsapp"placeholder="" required value="{{ old('whatsapp') }}" />
+                                    <label for="whatsapp">Whatsapp</label>
+                                </div>
+                                @error('whatsapp')
                                     <p class="mt-1" style="color: red">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div class="text-end">
-                                <button type="submit" class="btn btn-lg btn-primary show_confirm">Simpan</button>
+                                <button type="submit" class="btn btn-lg btn-primary show_confirm">Tambah
+                                    Data</button>
                             </div>
                         </form>
                     </div>
@@ -286,8 +270,6 @@
 @endsection
 
 @section('vendorJS')
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <script src="/main/assets/masking/dist/jquery.mask.js"></script>
     <script src="/main/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js">
     </script>
     <script src="/main/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js">
@@ -303,6 +285,7 @@
     <script src="/main/assets/extensions/toastify-js/src/toastify.js"></script>
     <script src="/main/assets/static/js/pages/filepond.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
 
     <script>
@@ -316,14 +299,6 @@
         //end of capitalize input
 
         $(document).ready(function() {
-            var selectedValue = $('input[name="method"]:checked').val();
-
-            if (selectedValue == 'transfer') {
-                $('#bukti-trf').show();
-            } else {
-                $('#bukti-trf').hide();
-            }
-
             $('.show_confirm').click(function(event) {
                 event.preventDefault();
 
@@ -344,70 +319,14 @@
                     }
                 });
             });
-
-            $('input[type="radio"]').on('change', function() {
-                // Get the selected value
-                var selectedValue = $('input[name="method"]:checked').val();
-
-                if (selectedValue == 'transfer') {
-                    $('#bukti-trf').show();
-                } else {
-                    $('#bukti-trf').hide();
-                }
-            });
-
-            $('select').on('change', function() {
-                var data = $(this).val();
-                if (data.toLowerCase() == "simpanan wajib") {
-                    $("#nominal").val("50,000");
-                    $("#nominal").prop("readonly", true);
-                } else if (data.toLowerCase() == "simpanan sukarela") {
-                    $("#nominal").val("");
-                    $("#nominal").prop("readonly", false);
-                } else {
-                    $("#nominal").val("");
-                    $("#nominal").prop("readonly", false);
-                }
-            });
-
-            $(function() {
-                $("#nominal").keyup(function(e) {
-                    $(this).val(format($(this).val()));
-                });
-            });
-
-            var format = function(num) {
-                var str = num.toString().replace("", ""),
-                    parts = false,
-                    output = [],
-                    i = 1,
-                    formatted = null;
-                if (str.indexOf(".") > 0) {
-                    parts = str.split(".");
-                    str = parts[0];
-                }
-                str = str.split("").reverse();
-                for (var j = 0, len = str.length; j < len; j++) {
-                    if (str[j] != ",") {
-                        output.push(str[j]);
-                        if (i % 3 == 0 && j < (len - 1)) {
-                            output.push(",");
-                        }
-                        i++;
-                    }
-                }
-                formatted = output.reverse().join("");
-                return ("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
-            };
         });
     </script>
-
     <script>
         @if ($message = session('errors'))
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Formulir anggota baru belum diisi secara lengkap',
+                text: 'Data profile UBSP belum diisi secara lengkap',
                 // text: '{{ Session::get('errors') }}',
             })
         @endif
