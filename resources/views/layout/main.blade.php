@@ -127,39 +127,6 @@
                                 </div>
                             </li>
 
-                            <li class="menu-item has-sub">
-                                <a href="#" class="menu-link">
-                                    <span><i class="bi bi-file-bar-graph-fill"></i> Laporan</span>
-                                </a>
-                                <div class="submenu">
-                                    <!-- Wrap to submenu-group-wrapper if you want 3-level submenu. Otherwise remove it. -->
-                                    <div class="submenu-group-wrapper">
-                                        <ul class="submenu-group">
-                                            <li class="submenu-item">
-                                                <a href="table.html" class="submenu-link">Jurnal Harian</a>
-                                            </li>
-                                            <li class="submenu-item">
-                                                <a href="table-datatable.html" class="submenu-link">Buku Besar</a>
-                                            </li>
-                                            <li class="submenu-item">
-                                                <a href="table-datatable.html" class="submenu-link">Neraca Saldo</a>
-                                            </li>
-                                            <li class="submenu-item">
-                                                <a href="table-datatable.html" class="submenu-link">Laba Rugi</a>
-                                            </li>
-                                            <li class="submenu-item">
-                                                <a href="table-datatable.html" class="submenu-link">Neraca</a>
-                                            </li>
-                                            <li class="submenu-item">
-                                                <a href="table-datatable.html" class="submenu-link">Hutang</a>
-                                            </li>
-                                            <li class="submenu-item">
-                                                <a href="table-datatable.html" class="submenu-link">Piutang</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
                             <li class="menu-item active has-sub">
                                 <a href="#" class="menu-link">
                                     <span><i class="bi bi-file-person-fill"></i> Pengaturan</span>
