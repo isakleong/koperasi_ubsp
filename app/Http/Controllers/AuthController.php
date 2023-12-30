@@ -269,7 +269,7 @@ class AuthController extends Controller {
     }
 
     public function logout() {
-        Auth::guard('user')->logout();
+        Auth::guard('web')->logout();
         return redirect('/login');
     }
 
