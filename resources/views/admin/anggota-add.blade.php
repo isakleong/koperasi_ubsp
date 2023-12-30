@@ -122,18 +122,7 @@
                     <div data-i18n="Basic">Angsuran</div>
                 </a>
             </li>
-            <li class="menu-item">
-                <a href="/admin/menu/user" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-chevrons-right"></i>
-                    <div data-i18n="Basic">Pemasukan</div>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="/admin/menu/user" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-chevrons-left"></i>
-                    <div data-i18n="Basic">Pengeluaran</div>
-                </a>
-            </li>
+            
             <!-- End of Transaction Data -->
 
             <!-- Report Data -->
