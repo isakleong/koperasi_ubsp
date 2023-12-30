@@ -195,7 +195,7 @@
                                             <td><span class="badge bg-danger">Tidak Aktif</span></td>
                                         @endif
                                         <td>
-                                            <a href="{{ route('admin.company.edit', $item->id) }}"
+                                            <a href="{{ route('admin.config.edit', $item->id) }}"
                                                 class="btn icon btn-sm btn-primary d-inline-block m-1"
                                                 data-bs-toggle="tooltip" title="Edit"><i class="bx bxs-pencil"></i></a>
                                             {{-- <form action="{{ route('admin.company.destroy', $item->id) }}"

@@ -202,6 +202,7 @@
                         {{-- <small class="text-muted float-end">Sistem Akuntansi UBSP</small> --}}
                     </div>
                     <div class="card-body">
+                        @if (isset($configSaldoPokok))
                         <form action="{{ route('admin.user.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
@@ -382,6 +383,9 @@
                                 <button type="submit" class="btn btn-lg btn-primary show_confirm">Simpan</button>
                             </div>
                         </form>
+                        @else
+                         <h5>Konfigurasi simpanan pokok tidak ditemukan, silahkan melakukan setting terlebih dahulu.</h5>
+                        @endif
                     </div>
                 </div>
             </div>
