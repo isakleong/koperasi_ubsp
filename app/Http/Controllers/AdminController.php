@@ -18,6 +18,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\DataTables;
 
 class AdminController extends Controller
 {
@@ -45,16 +46,41 @@ class AdminController extends Controller
         return view('admin.angsuran');
     }
 
-    public function showFormData() {
+    public function showFormData(Transaction $transaction) {
         $parameter = Route::currentRouteName();
 
         if ($parameter == "admin.add.simpanan.deposit") {
             $member = User::where('status', 2)->get();
             return view('admin.simpanan-deposit-create', compact('member'));
-        } elseif ($parameter == "add.simpanan.withdrawal") {
+
+        } elseif ($parameter == "admin.review.simpanan.deposit") {
+            $transaction = Transaction::join('user_account', 'transaction.accountId', '=', 'user_account.accountId')
+                ->join('users', 'user_account.memberId', '=', 'users.memberId')
+                ->select('transaction.docId as transactionDocId', 'transaction.kind', 'transaction.total', 'transaction.method', 'transaction.transactionDate', 'transaction.image', 'transaction.notes', 'transaction.status', 'transaction.approvedOn', 'users.fname', 'users.lname', 'users.memberId')
+                ->get();
+
+            return view('admin.simpanan-deposit-edit', compact('transaction'));
+
+        } elseif ($parameter == "admin.detail.review.simpanan.deposit") {
+            $member = User::where('status', 2)->get();
+            return view('admin.simpanan-deposit-edit-detail', compact('transaction', 'member'));
+
+        } elseif ($parameter == "admin.add.simpanan.withdrawal") {
+            
+            return view('admin.kredit');
+        } elseif ($parameter == "admin.review.simpanan.withdrawal") {
+            
             return view('admin.kredit');
         }
     }
+
+    // public function getReviewSimpananDeposit(Request $request) {
+    //     $transaction = Transaction::join('user_account', 'transaction.accountId', '=', 'user_account.accountId')
+    //             ->join('users', 'user_account.memberId', '=', 'users.memberId')
+    //             ->select('transaction.docId as transactionDocId', 'transaction.kind', 'transaction.total', 'transaction.method', 'transaction.transactionDate', 'transaction.image', 'transaction.notes', 'transaction.status', 'transaction.approvedOn', 'users.fname', 'users.lname', 'users.memberId')
+    //             ->paginate($request->input('length'));
+    //     return DataTables::of($transaction)->make(true);
+    // }
 
     public function checkSimpananWajib(Request $request) {
         $memberId = $request->input('memberId');
@@ -130,30 +156,75 @@ class AdminController extends Controller
             //     ->where('kind', $input['kind'])
             //     ->get()->first();
 
-            $user = User::with(['userAccount' => function ($query) {
-                $query->where('kind', 'wajib');
+            $user = User::with(['userAccount' => function ($query) use ($input) {
+                $query->where('kind', $input['kind']);
             }])->where('memberId', $input['memberId'])->first();
             
             $checkUAC = $user->userAccount;
-            if($checkUAC) {
-                //check transaction (prevent duplicate transaction for simpanan wajib in a month)
-                $month = date('m');
-                $year = date('Y');
+            if(count($checkUAC) > 0) {
+                if($input['kind'] == 'wajib') {
+                    //check transaction (prevent duplicate transaction for simpanan wajib in a month)
+                    $month = date('m');
+                    $year = date('Y');
 
-                $recordTransaction = Transaction::where('accountId', $checkUAC->first()->accountId)
-                    ->whereYear('transactionDate', $year)
-                    ->whereMonth('transactionDate', $month)
-                    ->get();
-                
-                if(count($recordTransaction) > 0) {
-                    return redirect('/admin/simpanan/setoran')->with('warning', 'Simpanan wajib untuk '.$checkUAC->first()->user->fname.' '.$checkUAC->first()->user->lname.' untuk bulan ini sudah dibayar, data gagal disimpan!');
+                    $recordTransaction = Transaction::where('accountId', $checkUAC->first()->accountId)
+                        ->where('kind', 'wajib')
+                        ->whereYear('transactionDate', $year)
+                        ->whereMonth('transactionDate', $month)
+                        ->get();
+                    
+                    if(count($recordTransaction) > 0) {
+                        return redirect('/admin/simpanan/setoran')->with('warning', 'Simpanan wajib untuk '.$checkUAC->first()->user->fname.' '.$checkUAC->first()->user->lname.' untuk bulan ini sudah dibayar, data gagal disimpan!');
+                    } else {
+                        $buktiSimpanan = "";
+                        if($imageSimpanan = $request->file('image')) {
+                            $destinationPath = 'image/upload/'.$input['memberId'].'/'.'simpanan/'.$input['kind'].'/';
+                            File::makeDirectory($destinationPath, 0777, true, true);
+
+                            $imageName = $input['memberId']."_".time().Str::random(5).'.'.$imageSimpanan->getClientOriginalExtension();
+                            $buktiSimpanan = $destinationPath.$imageName;
+                        }
+
+                        //insert into transaction
+                        DB::beginTransaction();
+                        $arrTransaction = [];
+                        $arrTransaction["accountId"] = $checkUAC->accountId;
+                        $arrTransaction["kind"] = $input['kind'];
+                        $arrTransaction["total"] = $input['nominal'];
+                        $arrTransaction["method"] = $input['method'];
+                        $arrTransaction["transactionDate"] = date('Y-m-d H:i:s');
+                        $arrTransaction["image"] = $buktiSimpanan;
+                        $arrTransaction["notes"] = $input['notes'];
+                        $arrTransaction["status"] = 2;
+                        Transaction::create($arrTransaction);
+
+                        if($buktiSimpanan != "") {
+                            Image::make($imageSimpanan)->resize(1024, 768, function ($constraint) {
+                                $constraint->aspectRatio();
+                            })->save($buktiSimpanan);
+                        }
+
+                        //update user account balance
+                        $recordUAC = UserAccount::find($checkUAC->accountId);
+                        if($recordUAC) {
+                            $currentSaldo = $recordUAC->balance + $input['nominal'];
+                            $recordUAC->update([
+                                'balance' => $currentSaldo,
+                            ]);
+                        }
+
+                        DB::commit();
+
+                        return redirect()->back()->withSuccess('Data setoran simpanan berhasil disimpan!');
+                    }
                 } else {
+                    dd($checkUAC);
                     $buktiSimpanan = "";
                     if($imageSimpanan = $request->file('image')) {
                         $destinationPath = 'image/upload/'.$input['memberId'].'/'.'simpanan/'.$input['kind'].'/';
                         File::makeDirectory($destinationPath, 0777, true, true);
 
-                        $imageName = $input['memberId']."_".time().Str::random(5).$imageSimpanan->getClientOriginalExtension();
+                        $imageName = $input['memberId']."_".time().Str::random(5).'.'.$imageSimpanan->getClientOriginalExtension();
                         $buktiSimpanan = $destinationPath.$imageName;
                     }
 
@@ -187,7 +258,7 @@ class AdminController extends Controller
 
                     DB::commit();
 
-                    return redirect('/admin/simpanan/setoran')->withSuccess('Data setoran simpanan berhasil disimpan!');
+                    return redirect()->back()->withSuccess('Data setoran simpanan berhasil disimpan!');
                 }
             } else {
                 //insert into user_account
@@ -209,7 +280,7 @@ class AdminController extends Controller
                     $destinationPath = 'image/upload/'.$input['memberId'].'/'.'simpanan/'.$input['kind'].'/';
                     File::makeDirectory($destinationPath, 0777, true, true);
 
-                    $imageName = $input['memberId']."_".time().Str::random(5).$imageSimpanan->getClientOriginalExtension();
+                    $imageName = $input['memberId']."_".time().Str::random(5).'.'.$imageSimpanan->getClientOriginalExtension();
                     $buktiSimpanan = $destinationPath.$imageName;
                 }
 
@@ -233,7 +304,7 @@ class AdminController extends Controller
                         $constraint->aspectRatio();
                     })->save($buktiSimpanan);
                 }
-                return redirect('/admin/simpanan/setoran')->withSuccess('Data setoran simpanan berhasil disimpan!');
+                return redirect()->back()->withSuccess('Data setoran simpanan berhasil disimpan!');
             }
         } catch (\Exception $e) {
             throw $e;

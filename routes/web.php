@@ -5,7 +5,9 @@ use App\Http\Controllers\AccountCategoryController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -123,7 +125,7 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     // Route::post('/anggota/edit', [AdminController::class, 'updateAnggota'])->name('update.anggota');
 
     Route::resource('/company', CompanyController::class);
-    
+    Route::resource('/config', ConfigController::class);
 
     Route::get('/menu/user', [AdminController::class, 'showUserMenu']);
     Route::resource('/user', UserController::class);
@@ -131,21 +133,29 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     Route::resource('/account_category', AccountCategoryController::class);
     Route::resource('/account', AccountController::class);
 
+    //SIMPANAN
     Route::get('/menu/simpanan', [AdminController::class, 'showSimpananMenu']);
     Route::get('/simpanan/setoran', [AdminController::class, 'showFormData'])->name('add.simpanan.deposit');
+    Route::get('/simpanan/setoran/review', [AdminController::class, 'showFormData'])->name('review.simpanan.deposit');
+    Route::get('/simpanan/setoran/review/{transaction:docId}', [AdminController::class, 'showFormData'])->name('detail.review.simpanan.deposit');
     Route::get('/simpanan/penarikan', [AdminController::class, 'showFormData'])->name('add.simpanan.withdrawal');
-
-    //checker
-    Route::get('/simpanan/check', [AdminController::class, 'checkSimpananWajib'])->name('checkSimpanan');
-
     Route::post('/simpanan/setoran', [AdminController::class, 'storeSimpananDeposit'])->name('store.simpanan.deposit');
     Route::post('/simpanan/penarikan', [AdminController::class, 'storeSimpananWithdrawal'])->name('store.simpanan.withdrawal');
 
-
+    //TABUNGAN
     Route::get('/menu/tabungan', [AdminController::class, 'showTabunganMenu']);
+    
+
+    //KREDIT
     Route::get('/menu/kredit', [AdminController::class, 'showKreditMenu']);
+
+    //ANGSURAN
     Route::get('/menu/angsuran', [AdminController::class, 'showAngsuranMenu']);
 
+    
+    //checker
+    Route::get('/simpanan/check', [AdminController::class, 'checkSimpananWajib'])->name('checkSimpanan');
+    // Route::get('/coba', [AdminController::class, 'getReviewSimpananDeposit']);
     Route::get('/xxx', [AccountController::class, 'getAccountsByCategory']);
 });
 //END OF ADMIN

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Config;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,7 +21,6 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-
         // Retrieve form data
         $keyword = $request->input('keyword', '');
         $status = $request->input('status', 'active');
@@ -90,7 +90,8 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('admin.anggota-add');
+        $configSaldoPokok = Config::where('name','SIMPANAN_POKOK')->first();
+        return view('admin.anggota-add', compact('configSaldoPokok'));
     }
 
     public function store(Request $request)

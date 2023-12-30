@@ -1,31 +1,5 @@
 @extends('layout.admin.main')
 
-@section('vendorCSS')
-    <style>
-        #customCard {
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            background-image: linear-gradient(to right top, #0D41E1, #0C63E7, #0A85ED, #09A6F3, #07C8F9);
-        }
-
-        #customCardBorder {
-            border-top-left-radius: 30px !important;
-            border-top-right-radius: 30px !important;
-            border: none;
-            border-radius: 6px;
-            background-color: blue;
-            color: #fff;
-            background-image: linear-gradient(to right top, #0a33b1, #094eb7, #086abc, #0784c2, #05a1c8);
-        }
-
-        .bgCard:hover {
-            /* transform: scale(1.02); */
-            opacity: 0.75;
-        }
-    </style>
-@endsection
-
 @section('navbar')
     <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
         <div class="app-brand demo">
@@ -72,7 +46,7 @@
                     <div data-i18n="Basic">Daftar Akun</div>
                 </a>
             </li>
-            <li class="menu-item">
+            <li class="menu-item active open">
                 <a href="javascript:void(0)" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-cog"></i>
                     <div data-i18n="Extended UI">Pengaturan</div>
@@ -83,7 +57,7 @@
                             <div data-i18n="Perfect Scrollbar">Profile UBSP</div>
                         </a>
                     </li>
-                    <li class="menu-item">
+                    <li class="menu-item active">
                         <a href="/admin/config" class="menu-link">
                             <div data-i18n="Text Divider">Konfigurasi Data</div>
                         </a>
@@ -94,7 +68,7 @@
 
             <!-- Transaction Data -->
             <li class="menu-header small text-uppercase"><span class="menu-header-text">transaksi</span></li>
-            <li class="menu-item active">
+            <li class="menu-item">
                 <a href="/admin/menu/simpanan" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-donate-heart"></i>
                     <div data-i18n="Basic">Simpanan</div>
@@ -184,103 +158,104 @@
 @endsection
 
 @section('content')
-    {{-- @include('sweetalert::alert') --}}
+    @include('sweetalert::alert')
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="py-3 mb-4">
-            <span class="fw-light">Beranda Simpanan
+            <span class="fw-light">Konfigurasi Data</span>
         </h4>
-
         <div class="row">
-            <div class="col-lg-12 col-md-12">
-                <div class="row">
-                    <div class="col-lg-6 mb-5 bgCard">
-                        <a href="/admin/simpanan/setoran">
-                            <div class="container-fluid">
-                                <div class="p-3" id="customCard">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span><i class='bx bxs-donate-heart' style="font-size: 3em;"></i></span>
-                                        <span><i class='bx bxs-chevrons-right' style="font-size: 3em;"></i></span>
-                                    </div>
-                                    <div class="px-2 number mt-3 d-flex justify-content-between align-items-center">
-                                        <span>Setoran Simpanan</span>
-                                    </div>
-                                    <div class="p-4 mt-4" id="customCardBorder">
-                                        <div class="text-center">
-                                            <span class="cardholder">Tambah Setoran</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
+            <div class="col-xl">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Daftar Konfigurasi</h5>
+                        {{-- <a href="/admin/company/create" class="btn btn-primary">Tambah Konfigurasi</a> --}}
                     </div>
 
-                    <div class="col-lg-6 mb-5 bgCard">
-                        <a href="/admin/simpanan/setoran/review">
-                            <div class="container-fluid">
-                                <div class="p-3" id="customCard">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span><i class='bx bxs-donate-heart' style="font-size: 3em;"></i></span>
-                                        <span><i class='bx bxs-message-square-edit' style="font-size: 3em;"></i></span>
-                                    </div>
-                                    <div class="px-2 number mt-3 d-flex justify-content-between align-items-center">
-                                        <span>Pengajuan Simpanan</span>
-                                    </div>
-                                    <div class="p-4 mt-4" id="customCardBorder">
-                                        <div class="text-center">
-                                            <span class="cardholder">Review Pengajuan</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
+                    <div class="card-body">
+                        <table class="table table-striped" id="table1" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th>Nama</th>
+                                    <th>Nilai</th>
+                                    <th>Deskripsi</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($config as $item)
+                                    <tr>
+                                        <td>{{ $item->name }}</td>
+                                        <td>{{ $item->value }}</td>
+                                        <td>{{ $item->desc }}</td>
+                                        @if ($item->active == '1')
+                                            <td><span class="badge bg-success">Aktif</span></td>
+                                        @else
+                                            <td><span class="badge bg-danger">Tidak Aktif</span></td>
+                                        @endif
+                                        <td>
+                                            <a href="{{ route('admin.company.edit', $item->id) }}"
+                                                class="btn icon btn-sm btn-primary d-inline-block m-1"
+                                                data-bs-toggle="tooltip" title="Edit"><i class="bx bxs-pencil"></i></a>
+                                            {{-- <form action="{{ route('admin.company.destroy', $item->id) }}"
+                                                method="POST" class="d-inline-block m-1" data-bs-toggle="tooltip"
+                                                title="Hapus">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn icon btn-sm btn-danger show_confirm"><i
+                                                        class="bx bxs-trash"></i></button>
+                                            </form> --}}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-
-                    <div class="col-lg-6 mb-5 bgCard">
-                        <a href="/admin/simpanan/create">
-                            <div class="container-fluid">
-                                <div class="p-3" id="customCard">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span><i class='bx bxs-donate-heart' style="font-size: 3em;"></i></span>
-                                        <span><i class='bx bxs-chevrons-left' style="font-size: 3em;"></i></span>
-                                    </div>
-                                    <div class="px-2 number mt-3 d-flex justify-content-between align-items-center">
-                                        <span>Penarikan Simpanan</span>
-                                    </div>
-                                    <div class="p-4 mt-4" id="customCardBorder">
-                                        <div class="text-center">
-                                            <span class="cardholder">Tambah Penarikan</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-lg-6 mb-5 bgCard">
-                        <a href="/admin/user">
-                            <div class="container-fluid">
-                                <div class="p-3" id="customCard">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span><i class='bx bxs-donate-heart' style="font-size: 3em;"></i></span>
-                                        <span><i class='bx bxs-message-square-edit' style="font-size: 3em;"></i></span>
-                                    </div>
-                                    <div class="px-2 number mt-3 d-flex justify-content-between align-items-center">
-                                        <span>Penarikan Simpanan</span>
-                                    </div>
-                                    <div class="p-4 mt-4" id="customCardBorder">
-                                        <div class="text-center">
-                                            <span class="cardholder">Edit Penarikan</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
                 </div>
             </div>
         </div>
     </div>
     <!-- / Content -->
+@endsection
+
+@section('vendorJS')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/vendor/sweetalert/sweetalert.all.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('.show_confirm').click(function(event) {
+                event.preventDefault();
+
+                var form = $(this).closest("form");
+
+                Swal.fire({
+                    title: 'Hapus Data?',
+                    text: '',
+                    icon: 'question',
+                    showDenyButton: true,
+                    confirmButtonText: 'Ya, hapus',
+                    denyButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    } else if (result.isDenied) {
+                        // Swal.fire('Changes are not saved', '', 'info');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        @if ($message = session('errorData'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                // text: '',
+                text: '{{ Session::get('errorData') }}',
+            })
+        @endif
+    </script>
 @endsection

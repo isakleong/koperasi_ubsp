@@ -1,33 +1,7 @@
 @extends('layout.admin.main')
 
 @section('vendorCSS')
-    <link rel="stylesheet" href="/main/assets/extensions/filepond/filepond.css">
-    <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
-    <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
-
-    <style>
-        #customCard {
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            background-image: linear-gradient(to right top, #0D41E1, #0C63E7, #0A85ED, #09A6F3, #07C8F9);
-        }
-
-        #customCardBorder {
-            border-top-left-radius: 30px !important;
-            border-top-right-radius: 30px !important;
-            border: none;
-            border-radius: 6px;
-            background-color: blue;
-            color: #fff;
-            background-image: linear-gradient(to right top, #0a33b1, #094eb7, #086abc, #0784c2, #05a1c8);
-        }
-
-        .bgCard:hover {
-            /* transform: scale(1.02); */
-            opacity: 0.75;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="/vendor/datatable/css/datatables.min.css"/>
 @endsection
 
 @section('navbar')
@@ -58,7 +32,7 @@
 
             <!-- Master Data -->
             <li class="menu-header small text-uppercase"><span class="menu-header-text">master data</span></li>
-            <li class="menu-item active">
+            <li class="menu-item">
                 <a href="/admin/menu/user" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-group"></i>
                     <div data-i18n="Basic">Anggota</div>
@@ -98,7 +72,7 @@
 
             <!-- Transaction Data -->
             <li class="menu-header small text-uppercase"><span class="menu-header-text">transaksi</span></li>
-            <li class="menu-item">
+            <li class="menu-item active">
                 <a href="/admin/menu/simpanan" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-donate-heart"></i>
                     <div data-i18n="Basic">Simpanan</div>
@@ -192,160 +166,126 @@
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="py-3 mb-4">
-            <span class="text-muted fw-light">Beranda Anggota /</span> Tambah Anggota
+            <span class="text-muted fw-light">Beranda Simpanan /</span> Review Pengajuan
         </h4>
         <div class="row">
             <div class="col-xl">
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Formulir Anggota Baru</h5>
+                        <h5 class="mb-0">Data Pengajuan Simpanan</h5>
                         {{-- <small class="text-muted float-end">Sistem Akuntansi UBSP</small> --}}
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('admin.user.store') }}" method="post" enctype="multipart/form-data">
+                        <table class="table table-striped" id="table1" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Anggota</th>
+                                    <th>Jenis</th>
+                                    <th>Nominal</th>
+                                    <th>Tanggal</th>
+                                    <th>Jenis Bayar</th>
+                                    <th>Bukti</th>
+                                    <th>Keterangan</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $i = 1
+                                @endphp
+                                @foreach ($transaction as $item)
+                                    <tr>
+                                        <td>{{$i++}}</td>
+                                        <td>{{$item->fname}} {{$item->lname}}</td>
+                                        <td>{{$item->kind}}</td>
+                                        <td>{{$item->total}}</td>
+                                        <td>{{$item->transactionDate}}</td>
+                                        @if ($item->method=='1')
+                                            <td>Transfer</td>
+                                        @else
+                                            <td>Cash</td>
+                                        @endif
+                                        
+                                        @if ($item->method='1')
+                                            <td><img src="/{{ $item->image }}" alt="" class="img-fluid" width="100"></td>
+                                        @else
+                                            <td>-</td>
+                                        @endif
+
+                                        <td>{{$item->notes}}</td>
+
+                                        @if ($item->status=='3')
+                                            <td><span class="badge bg-danger">Ditolak</span></td>
+                                        @elseif ($item->status=='2')
+                                            <td><span class="badge bg-success">Disetujui</span></td>
+                                        @else
+                                            <td><span class="badge bg-warning">Pending</span></td>
+                                        @endif
+                                        <td>
+                                            <a href="{{ route('admin.detail.review.simpanan.deposit', $item->transactionDocId) }}" class="btn icon btn-sm btn-primary d-inline-block m-1" data-bs-toggle="tooltip" title="Edit"><i class="bx bxs-pencil"></i></a>
+                                            <form action="{{ route('admin.detail.review.simpanan.deposit', $item->transactionDocId) }}" method="POST" class="d-inline-block m-1" data-bs-toggle="tooltip" title="Delete">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn icon btn-sm btn-danger show_confirm"><i class="bx bxs-trash"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        {{-- <form action="{{ route('admin.store.simpanan.deposit') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="fname" name="fname" placeholder=""
-                                        oninput=capitalizeName(this) required value="{{ old('fname') }}" />
-                                    <label for="fname">Nama Depan</label>
+                                <div class="form-group">
+                                    <label for="kind">Jenis Simpanan</label>
+                                    <select class="choices form-select" id="kind" name="kind">
+                                        <option></option>
+                                        <option value="wajib" {{ old('kind') == 'wajib' ? 'selected' : '' }}>Simpanan Wajib</option>
+                                        <option value="sukarela" {{ old('kind') == 'sukarela' ? 'selected' : '' }}>Simpanan Sukarela</option>
+                                    </select>
                                 </div>
-                                @error('fname')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
+                                @error('kind')
+                                    <p style="color: red">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-group">
+                                    <label for="memberId">Anggota</label>
+                                    <select class="choices form-select" id="memberId" name="memberId">
+                                        <option></option>
+                                      @foreach ($member as $item)
+                                            <option value="{{ $item->memberId }}" {{ old('memberId') == $item->memberId ? 'selected' : '' }}>{{ $item->fname }} {{ $item->lname }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('memberId')
+                                    <p style="color: red">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="lname" name="lname" placeholder=""
-                                        oninput=capitalizeName(this) required value="{{ old('lname') }}" />
-                                    <label for="lname">Nama Belakang</label>
+                                    <input type="text" class="form-control" id="nominal" name="nominal" placeholder="" required value="{{ old('nominal') }}" />
+                                    <label for="nominal">Nominal</label>
                                 </div>
-                                @error('lname')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="birthplace" name="birthplace"
-                                        placeholder="" oninput=capitalizeName(this) required
-                                        value="{{ old('birthplace') }}" />
-                                    <label for="birthplace">Tempat Lahir</label>
-                                </div>
-                                @error('birthplace')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="date" class="form-control mb-3" id="birthdate" name="birthdate"
-                                        required value="{{ old('birthdate') }}">
-                                    <label for="birthdate">Tanggal Lahir</label>
-                                </div>
-                                @error('birthdate')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="address" name="address"
-                                        placeholder="" oninput=capitalizeName(this) required
-                                        value="{{ old('address') }}" />
-                                    <label for="address">Alamat Tinggal</label>
-                                </div>
-                                @error('address')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="workAddress" name="workAddress"
-                                        placeholder="" oninput=capitalizeName(this) required
-                                        value="{{ old('workAddress') }}" />
-                                    <label for="workAddress">Alamat Kerja</label>
-                                </div>
-                                @error('workAddress')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="email" class="form-control" id="email" name="email"
-                                        placeholder="" required value="{{ old('email') }}" />
-                                    <label for="email">Email</label>
-                                </div>
-                                @error('email')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="phone" name="phone"
-                                        placeholder="" oninput=capitalizeName(this) required
-                                        value="{{ old('phone') }}" />
-                                    <label for="phone">No Hp</label>
-                                </div>
-                                @error('phone')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="mothername" name="mothername"
-                                        placeholder="" oninput=capitalizeName(this) required
-                                        value="{{ old('mothername') }}" />
-                                    <label for="mothername">Nama Ibu Kandung</label>
-                                </div>
-                                @error('mothername')
+                                @error('nominal')
                                     <p class="mt-1" style="color: red">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div class="mb-3">
                                 <div class="form-group">
-                                    <label for="ktp">Foto KTP</label>
-                                    <input type="file" class="image-resize-filepond" name="ktp" accept="image/*">
+                                    <label for="notes">Keterangan (Opsional)</label>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="notes" placeholder=""
+                                        oninput=capitalizeName(this) required>{{ old('notes') }}</textarea>
                                 </div>
-                                @error('ktp')
+                                @error('notes')
                                     <p class="mt-1" style="color: red">{{ $message }}</p>
                                 @enderror
-                            </div>
-                            <div class="mb-3">
-                                <div class="form-group">
-                                    <label for="kk">Foto Kartu Keluarga</label>
-                                    <input type="file" class="image-preview-filepond" name="kk"
-                                        accept="image/*">
-                                </div>
-                                @error('kk')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="divider divider-warning">
-                                <div class="divider-text">Settingan Awal</div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label>Default Password</label>
-                                <input type="text" readonly class="form-control-plaintext" id="defaultPassword"
-                                    name="password" value="Ubsp.123" />
-                            </div>
-
-                            <div class="mb-3">
-                                <label>Simpanan Pokok</label>
-                                <input type="text" readonly class="form-control-plaintext" id="nominal"
-                                    name="nominal" value="Rp {{ number_format($configSaldoPokok->value) }}" />
-                            </div>
-
-                            <div class="divider divider-warning">
-                                <div class="divider-text"></div>
                             </div>
 
                             <div class="col-md mb-3">
@@ -381,7 +321,7 @@
                             <div class="text-end">
                                 <button type="submit" class="btn btn-lg btn-primary show_confirm">Simpan</button>
                             </div>
-                        </form>
+                        </form> --}}
                     </div>
                 </div>
             </div>
@@ -391,41 +331,65 @@
 @endsection
 
 @section('vendorJS')
-    <script src="/main/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js">
-    </script>
-    <script src="/main/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js">
-    </script>
-    <script src="/main/assets/extensions/filepond-plugin-image-crop/filepond-plugin-image-crop.min.js"></script>
-    <script
-        src="/main/assets/extensions/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js">
-    </script>
-    <script src="/main/assets/extensions/filepond-plugin-image-filter/filepond-plugin-image-filter.min.js"></script>
-    <script src="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js"></script>
-    <script src="/main/assets/extensions/filepond-plugin-image-resize/filepond-plugin-image-resize.min.js"></script>
-    <script src="/main/assets/extensions/filepond/filepond.js"></script>
-    <script src="/main/assets/extensions/toastify-js/src/toastify.js"></script>
-    <script src="/main/assets/static/js/pages/filepond.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
+    <script type="text/javascript" src="/vendor/datatable/js/datatables.min.js"></script>
 
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
 
     <script>
-        //capitalize input
-        function capitalizeName(input) {
-            const name = input.value.toLowerCase();
-            const words = name.split(' ');
-            const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
-            input.value = capitalizedWords.join(' ');
-        }
-        //end of capitalize input
-
         $(document).ready(function() {
-            var selectedValue = $('input[name="method"]:checked').val();
+            var table = $('#table1').DataTable({
+                responsive: true
+            });
 
-            if (selectedValue == 'transfer') {
-                $('#bukti-trf').show();
-            } else {
-                $('#bukti-trf').hide();
-            }
+            // var table = $('#table1').DataTable({
+            //     responsive: true,
+            //     processing: true,
+            //     serverSide: true,
+            //     ajax: {
+            //         url: '/admin/coba', // Replace with your Laravel API endpoint
+            //         type: 'GET',
+            //     },
+            //     columns: [
+            //         { data: 'column1', name: 'column1' },
+            //         { data: 'column2', name: 'column2' },
+            //         // Add more columns as needed
+            //     ],
+            // });
+
+            const registerDeleteItemHandlers = () => {
+                $('.show_confirm').click(function(event) {
+                    var form =  $(this).closest("form");
+                    var name = $(this).data("name");
+                    event.preventDefault();
+                    Swal.fire({
+                    title: 'Delete the data?',
+                    text: "If you delete this, it will be gone forever.",
+                    icon: 'question',
+                    showDenyButton: true,
+                    confirmButtonText: 'Yes, delete',
+                    denyButtonText: 'No',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        } else if (result.isDenied) {
+                            // Swal.fire('Changes are not saved', '', 'info');
+                        }
+                    });
+                });
+            };
+
+            registerDeleteItemHandlers();
+
+            $("#table1").on("draw.dt", function () {
+                registerDeleteItemHandlers();
+            });
+
+            table.on( 'responsive-display', function ( e, datatable, row, showHide, update ) {
+                // console.log('Details for row '+row.index()+' '+(showHide ? 'shown' : 'hidden'));
+                registerDeleteItemHandlers();
+            });
 
             $('.show_confirm').click(function(event) {
                 event.preventDefault();
@@ -448,16 +412,35 @@
                 });
             });
 
-            $('input[type="radio"]').on('change', function() {
-                // Get the selected value
-                var selectedValue = $('input[name="method"]:checked').val();
-
-                if (selectedValue == 'transfer') {
-                    $('#bukti-trf').show();
-                } else {
-                    $('#bukti-trf').hide();
-                }
+            $(function() {
+                $("#nominal").keyup(function(e) {
+                    $(this).val(format($(this).val()));
+                });
             });
+
+            var format = function(num) {
+                var str = num.toString().replace("", ""),
+                    parts = false,
+                    output = [],
+                    i = 1,
+                    formatted = null;
+                if (str.indexOf(".") > 0) {
+                    parts = str.split(".");
+                    str = parts[0];
+                }
+                str = str.split("").reverse();
+                for (var j = 0, len = str.length; j < len; j++) {
+                    if (str[j] != ",") {
+                        output.push(str[j]);
+                        if (i % 3 == 0 && j < (len - 1)) {
+                            output.push(",");
+                        }
+                        i++;
+                    }
+                }
+                formatted = output.reverse().join("");
+                return ("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
+            };
         });
     </script>
 
@@ -466,8 +449,16 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Formulir anggota baru belum diisi secara lengkap',
+                text: 'Formulir setoran simpanan belum diisi secara lengkap',
                 // text: '{{ Session::get('errors') }}',
+            })
+        @endif
+
+        @if ($message = session('warning'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ Session::get('warning') }}',
             })
         @endif
     </script>

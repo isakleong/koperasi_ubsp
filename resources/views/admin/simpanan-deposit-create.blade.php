@@ -67,7 +67,7 @@
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="extended-ui-text-divider.html" class="menu-link">
+                        <a href="/admin/config" class="menu-link">
                             <div data-i18n="Text Divider">Konfigurasi Data</div>
                         </a>
                     </li>
@@ -225,12 +225,8 @@
                             <div class="mb-3">
                                 <div class="form-group">
                                     <label for="notes">Keterangan (Opsional)</label>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="notes" placeholder=""
-                                        oninput=capitalizeName(this) required>{{ old('notes') }}</textarea>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="notes" placeholder="">{{ old('notes') }}</textarea>
                                 </div>
-                                @error('notes')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
                             </div>
 
                             <div class="col-md mb-3">
@@ -254,8 +250,7 @@
                                 <div class="form-group has-icon-left">
                                     <label for="image">Bukti Pembayaran</label>
                                     <div class="position-relative">
-                                        <input type="file" class="image-exif-filepond" name="simpanan"
-                                            accept="image/*" />
+                                        <input type="file" class="image-exif-filepond" name="image" accept="image/*" />
                                     </div>
                                 </div>
                                 @error('simpanan')
@@ -299,15 +294,6 @@
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
 
     <script>
-        //capitalize input
-        function capitalizeName(input) {
-            const name = input.value.toLowerCase();
-            const words = name.split(' ');
-            const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
-            input.value = capitalizedWords.join(' ');
-        }
-        //end of capitalize input
-
         $(document).ready(function() {
             $("#kind").select2({
                 placeholder: 'Pilih Jenis Simpanan',
