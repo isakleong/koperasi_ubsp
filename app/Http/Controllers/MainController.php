@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Loan;
 use App\Models\LoanDetail;
 use App\Models\Transaction;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -25,7 +27,44 @@ class MainController extends Controller
 
     public function index() {
         $user = Auth::user();
-        return view('main.index', compact(['user']));
+        $uac = $user->userAccount;
+
+        $saldoTabungan = 0;
+        $saldoPokok = 0;
+        $saldoWajib = 0;
+        $saldoSukarela = 0;
+        $saldoSisaKredit = 0;
+        $accountKredit = "";
+        foreach ($uac as $item) {
+            if($item->openDate != null) {
+                if($item->kind == 'tabungan') {
+                    $saldoTabungan+=$item->balance;
+                } elseif($item->kind == 'pokok') {
+                    $saldoPokok+=$item->balance;
+                } elseif($item->kind == 'wajib') {
+                    $saldoWajib+=$item->balance;
+                } elseif($item->kind == 'sukarela') {
+                    $saldoSukarela+=$item->balance;
+                } elseif($item->kind == 'kredit') {
+                    $accountKredit = $item->accountId;
+                    $saldoSisaKredit+=$item->balance;
+                }
+            }
+        }
+
+       //kredit 
+       $totalKredit = 0;
+       $pokokPinjaman = 0;
+       if($accountKredit != "") {
+        $kredit = Loan::where('accountId', $accountKredit)->first();
+        $totalKredit = $kredit->total;
+        $pokokPinjaman = $kredit->monthlyCicilan;
+
+        //kredit detail
+        $kreditDetail = $kredit->loanDetails;
+       }
+
+        return view('main.index', compact(['user','saldoTabungan','saldoPokok','saldoWajib','saldoSukarela', 'saldoSisaKredit', 'totalKredit', 'pokokPinjaman']));
     }
 
     public function userActivation() {
@@ -250,7 +289,8 @@ class MainController extends Controller
             }
 
         } elseif ($parameter == "edit.profile") {
-            return view('main.profile-edit', compact(['user']));
+            $company = Company::all()->first();
+            return view('main.profile-edit', compact(['user','company']));
 
         } elseif ($parameter == "edit.password") {
             return view('main.password-edit', compact(['user']));
@@ -523,12 +563,6 @@ class MainController extends Controller
     }
 
     public function storeSimpanan(Request $request) {
-        // $request->validate([
-        //     'kind' => ['required', 'not_in:-- Pilih Simpanan --', 'in:Simpanan Wajib,Simpanan Sukarela'],
-        //     'nominal' => 'required',
-        //     'method' => 'required'
-        // ]);
-
         $request['nominal'] = str_replace(',', '', $request->input('nominal'));
 
         $validator = Validator::make(
@@ -919,12 +953,12 @@ class MainController extends Controller
             //end of insert into loan
 
             //insert into loan detail
+            $currentDate = Carbon::now();
             for($i = 0; $i < $tenor; $i++) {
                 $arrLoanDetail = [];
                 $arrLoanDetail["loanDocId"] = $loan->docId;
                 $arrLoanDetail["indexCicilan"] = $i;
-                $currentDate = Carbon::now();
-                $dueDate = $currentDate->addMonths($tenor);
+                $dueDate = $currentDate->copy()->addMonths($i);
                 $arrLoanDetail["dueDate"] = $dueDate;
                 $arrLoanDetail["total"] = $hasilTotalAngsuran;
                 $arrLoanDetail["charges"] = 0;
@@ -1009,34 +1043,112 @@ class MainController extends Controller
         }
     }
 
-    public function editProfile(Request $request, $id) {
-        // Retrieve existing user data
-        $user = User::find($id);
-
-        $excludedFields = ['password', 'ktp', 'kk', 'memberId', 'phone', 'email', 'email_verified_at', 'birthdate', 'workAddress'];
-
-        // Compare form data with existing data
-        $formData = $request->except($excludedFields);
-        $changesDetected = false;
-
-        foreach ($formData as $key => $value) {
-            // Check if the form data is different from existing data
-            if ($user->{$key} != $value) {
-                $changesDetected = true;
-                // You can break out of the loop if changes are detected early
-                // break;
-            }
+    public function editProfile(Request $request) {
+        $validator = Validator::make(
+            [
+                'fname' => $request->input('fname'),
+                'lname' => $request->input('lname'),
+                'birthdate' => $request->input('birthdate'),
+                'birthplace' => $request->input('birthplace'),
+                'address' => $request->input('address'),
+                'workAddress' => $request->input('workAddress'),
+                'phone' => $request->input('phone'),
+                'mothername' => $request->input('mothername'),
+            ],
+            [
+                'fname' => 'required',
+                'lname' => 'required',
+                'birthdate' => 'required|date|before:' . now()->subYears(17)->format('Y-m-d'),
+                'birthplace' => 'required',
+                'address' => 'required',
+                'workAddress' => 'required',
+                'phone' => 'required|min:10|regex:/^([0-9\s\-\+\(\)]*)$/',
+                'mothername' => 'required',
+            ],
+            [
+                'fname.required' => 'Nama depan belum diisi',
+                'lname.required' => 'Nama belakang belum diisi',
+                'birthdate.required' => 'Tanggal lahir belum diisi',
+                'birthdate.date' => 'Tanggal lahir tidak valid',
+                'birthdate.before' => 'Anggota UBSP harus berusia minimal 17 tahun',
+                'birthplace.required' => 'Tempat lahir belum diisi',
+                'address.required' => 'Alamat tinggal belum diisi',
+                'workAddress.required' => 'Alamat kerja belum diisi',
+                'phone.required' => 'No Hp belum diisi',
+                'phone.min' => 'No Hp tidak valid',
+                'phone.regex' => 'No Hp tidak valid',
+                'mothername.required' => 'Nama ibu kandung belum diisi',
+            ],
+        );
+            
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors())->withInput();
         }
 
-        // Update data if changes are detected
-        if ($changesDetected) {
-            dd('there is update');
-            // $user->update($formData);
-            // Add any additional logic or messages as needed
+        try {
+            $input = $request->all();
+
+            DB::beginTransaction();
+            auth()->user()->update($input);
+            DB::commit();
+
+            return redirect('/pengaturan/profile')->withSuccess('Data diri berhasil diubah!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            $errorMsg = $e->getMessage();
+            return view('layout.error', compact(['errorMsg']));
+        }
+    }
+
+    public function editPassword(Request $request) {
+        $validator = Validator::make(
+            [
+                'current_password' => $request->input('current_password'),
+                'password' => $request->input('password'),
+                'password_confirmation' => $request->input('password_confirmation'),
+            ],
+            [
+                'current_password' => 'required',
+                'password' => 'required',
+                'password_confirmation' => 'required|same:password',
+            ],
+            [
+                'current_password.required' => 'Password lama belum diisi',
+                'password.required' => 'Password baru belum diisi',
+                'password_confirmation.same' => 'Password baru tidak sesuai dengan Konfirmasi password baru',
+            ],
+        );
+            
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors())->withInput();
+        }
+
+        $memberId = auth()->user()->memberId;
+        $id = substr($memberId, -1);
+        $salt = substr($memberId, 18, 1);
+
+        $carbonDate = Carbon::parse(auth()->user()->registDate);
+        $hour = $carbonDate->format('H');
+        $minute = $carbonDate->format('i');
+        $second = $carbonDate->format('s');
+
+        $char1 = ($minute + $hour + ($salt * 7)) % 16;
+        $char2 = ($minute + $second + ($salt * 7)) % 16;
+        $char3 = ($minute + ord($id[0]) + ($salt * 7)) % 16;
+        $res = strtoupper(dechex($char1)) . strtoupper(dechex($char2)) . $salt . strtoupper(dechex($char3));
+        $current = $res.$request->current_password;
+        $new = $res.$request->password;
+        
+        $checkValid = Hash::check($current, auth()->user()->password);
+        if($checkValid) {
+            User::findOrFail(Auth::user()->id)->update([
+                'password' => Hash::make($new),
+            ]);
+
+            return redirect('/pengaturan/password')->withSuccess('Password berhasil diubah!');
         } else {
-            dd('nope');
-            // No changes detected, you may choose to handle this case differently
-            // For example, show a message to the user
+            return redirect('/pengaturan/password')->withErrors('Maaf, ubah password gagal karena password lama salah');
         }
+
     }
 }

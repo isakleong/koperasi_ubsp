@@ -201,14 +201,14 @@
                                             <a href="{{ route('admin.company.edit', $item->id) }}"
                                                 class="btn icon btn-sm btn-primary d-inline-block m-1"
                                                 data-bs-toggle="tooltip" title="Edit"><i class="bx bxs-pencil"></i></a>
-                                            <form action="{{ route('admin.company.destroy', $item->id) }}"
+                                            {{-- <form action="{{ route('admin.company.destroy', $item->id) }}"
                                                 method="POST" class="d-inline-block m-1" data-bs-toggle="tooltip"
                                                 title="Hapus">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn icon btn-sm btn-danger show_confirm"><i
                                                         class="bx bxs-trash"></i></button>
-                                            </form>
+                                            </form> --}}
                                         </td>
                                     </tr>
                                 @endforeach

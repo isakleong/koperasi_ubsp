@@ -4,14 +4,8 @@
     Sistem Akuntansi UBSP - Pengajuan Kredit
 @endsection
 
-@section('vendorCSS')
-    <link rel="stylesheet" href="/main/assets/extensions/filepond/filepond.css">
-    <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
-    <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
-@endsection
-
 @section('content')
-
+    @include('sweetalert::alert')
     <div class="content-wrapper container">
         <div class="page-heading">
             <h3>Ubah Data Diri</h3>
@@ -26,8 +20,8 @@
                                     <div class="avatar avatar-2xl">
                                         <img src="/main/assets/compiled/jpg/1.jpg" alt="Avatar">
                                     </div>
-                                    <h3 class="mt-3">{{ ucfirst($user->fname) . ' ' . ucfirst($user->lname) }}</h3>
-                                    <p class="text-small">Anggota</p>
+                                    <h3 class="mt-3 text-center">{{ ucfirst($user->fname) . ' ' . ucfirst($user->lname) }}</h3>
+                                    <p class="text-small text-center">Anggota sejak {{ Carbon\Carbon::parse($user->joinDate)->locale('id')->isoFormat('DD MMMM YYYY') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -35,66 +29,84 @@
                     <div class="col-12 col-lg-8">
                         <div class="card">
                             <div class="card-body">
-                                <form action="{{ route('profile-update', ['id' => $user->id]) }}" method="POST"
-                                    enctype="multipart/form-data">
+                                <form action="{{ route('profile-update') }}" method="POST">
                                     @csrf
                                     @method('PUT')
                                     <div id="register-section1" class="card-content">
                                         <div class="card-body">
+                                            <div class="alert alert-warning">
+                                                Untuk mengubah foto KTP atau KK, Anda dapat : 
+                                                <ul>
+                                                    <li>Datang langsung ke kantor UBSP</li>
+                                                    <li>Mengajukan via email ke {{ $company->email }}</li>
+                                                    @if ($company->phone != null)
+                                                    <li>Mengajukan via telepon ke {{ $company->phone }}</li>
+                                                    @endif
+
+                                                    @if ($company->whatsapp != null)
+                                                    <li>Mengajukan via Whatsapp ke {{ $company->whatsapp }}</li>
+                                                    @endif
+                                                </ul>
+                                            </div>
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="form-group">
                                                         <label for="fname">Nama Depan</label>
-                                                        <input type="text" id="fname" class="form-control"
-                                                            placeholder="Nama Depan" name="fname"
-                                                            value="{{ $user->fname }}">
+                                                        <input type="text" id="fname" class="form-control" placeholder="Nama Depan" name="fname" value="{{ old('fname', $user->fname) }}">
                                                     </div>
+                                                    @error('fname')
+                                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-12">
                                                     <div class="form-group">
                                                         <label for="lname">Nama Belakang</label>
-                                                        <input type="text" id="lname" class="form-control"
-                                                            placeholder="Nama Belakang" name="lname"
-                                                            value="{{ $user->lname }}">
+                                                        <input type="text" id="lname" class="form-control" placeholder="Nama Belakang" name="lname" value="{{ old('lname', $user->lname) }}">
                                                     </div>
+                                                    @error('lname')
+                                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-12">
                                                     <div class="form-group">
                                                         <label for="birthplace">Tempat Lahir</label>
-                                                        <input type="text" id="birthplace" class="form-control"
-                                                            placeholder="Tempat Lahir" name="birthdate"
-                                                            value="{{ $user->birthplace }}">
+                                                        <input type="text" id="birthplace" class="form-control" placeholder="Tempat Lahir" name="birthplace" value="{{ old('birthplace', $user->birthplace) }}">
                                                     </div>
+                                                    @error('birthplace')
+                                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-12">
                                                     <div class="form-group">
                                                         <label for="birthdate">Tanggal Lahir</label>
                                                         <input type="date" class="form-control mb-3" name="birthdate"
-                                                            value="{{ $user->birthdate }}">
+                                                        value="{{ old('birthdate', $user->birthdate) }}">
                                                     </div>
+                                                    @error('birthdate')
+                                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-12">
                                                     <div class="form-group">
                                                         <label for="address">Alamat Tinggal</label>
                                                         <input type="text" id="address" class="form-control"
                                                             name="address" placeholder="Alamat Tinggal"
-                                                            value="{{ $user->address }}">
+                                                            value="{{ old('address', $user->address) }}">
                                                     </div>
+                                                    @error('address')
+                                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-12">
                                                     <div class="form-group">
                                                         <label for="work-address">Alamat Kerja</label>
                                                         <input type="text" id="work-address" class="form-control"
                                                             name="workAddress" placeholder="Alamat Kerja"
-                                                            value="{{ $user->workAddress }}">
+                                                            value="{{ old('workAddress', $user->workAddress) }}">
                                                     </div>
-                                                </div>
-                                                <div class="col-12">
-                                                    <div class="form-group">
-                                                        <label for="email">Email</label>
-                                                        <input type="email" id="email" class="form-control"
-                                                            name="email" placeholder="Email" value="{{ $user->email }}">
-                                                    </div>
+                                                    @error('workAddress')
+                                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-12">
                                                     <div class="form-group">
@@ -103,37 +115,26 @@
                                                             <span class="input-group-text" id="basic-addon1">+62</span>
                                                             <input type="text" class="form-control" placeholder="No Hp"
                                                                 aria-label="No Hp" aria-describedby="basic-addon1"
-                                                                name="phone" value="{{ $user->phone }}">
+                                                                name="phone" value="{{ old('phone', $user->phone) }}">
                                                         </div>
                                                     </div>
+                                                    @error('phone')
+                                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-12">
                                                     <div class="form-group">
                                                         <label for="mothername">Nama Ibu Kandung</label>
                                                         <input type="text" class="form-control" id="mothername"
                                                             name="mothername" placeholder="Nama Ibu Kandung"
-                                                            value="{{ $user->mothername }}">
+                                                            value="{{ old('mothername', $user->mothername) }}">
                                                     </div>
-                                                </div>
-                                                <div class="col-12">
-                                                    <div class="form-group">
-                                                        <label for="ktp">Foto KTP</label>
-                                                        <img src="/{{ $user->ktp }}" alt=""
-                                                            class="img-preview img-fluid mb-3 mt-3 col-4 d-block">
-                                                        <input type="file" class="image-exif-filepond" name="ktp">
-                                                    </div>
-                                                </div>
-                                                <div class="col-12">
-                                                    <div class="form-group">
-                                                        <label for="kk">Foto Kartu Keluarga</label>
-                                                        <img src="/{{ $user->kk }}" alt=""
-                                                            class="img-preview img-fluid mb-3 mt-3 col-4 d-block">
-                                                        <input type="file" class="image-preview-filepond"
-                                                            name="kk">
-                                                    </div>
+                                                    @error('mothername')
+                                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                                    @enderror
                                                 </div>
                                                 <button type="submit"
-                                                    class="btn btn-primary btn-block shadow-lg mt-3">SIMPAN</button>
+                                                    class="btn btn-primary btn-block shadow-lg mt-3 show_confirm">Ubah Data Diri</button>
                                             </div>
                                         </div>
                                     </div>
@@ -149,21 +150,44 @@
 
 @section('vendorJS')
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    {{-- <script src="/vendor/sweetalert/sweetalert.all.js"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script src="/main/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js">
+    <script>
+        $(document).ready(function() {
+            $('.show_confirm').click(function(event) {
+                event.preventDefault();
+
+                var form = $(this).closest("form");
+
+                Swal.fire({
+                    title: 'Ubah data diri?',
+                    text: "Pastikan data diri yang diinput sudah benar.",
+                    icon: 'question',
+                    showDenyButton: true,
+                    confirmButtonText: 'Ya, ubah',
+                    denyButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    } else if (result.isDenied) {
+                        // Swal.fire('Changes are not saved', '', 'info');
+                    }
+                });
+            });
+        });
     </script>
-    <script src="/main/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js">
-    </script>
-    <script src="/main/assets/extensions/filepond-plugin-image-crop/filepond-plugin-image-crop.min.js"></script>
-    <script
-        src="/main/assets/extensions/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js">
-    </script>
-    <script src="/main/assets/extensions/filepond-plugin-image-filter/filepond-plugin-image-filter.min.js"></script>
-    <script src="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js"></script>
-    <script src="/main/assets/extensions/filepond-plugin-image-resize/filepond-plugin-image-resize.min.js"></script>
-    <script src="/main/assets/extensions/filepond/filepond.js"></script>
-    <script src="/main/assets/extensions/toastify-js/src/toastify.js"></script>
-    <script src="/main/assets/static/js/pages/filepond.js"></script>
+
+<script>
+    @if ($message = session('errors'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Mohon maaf, gagal mengubah data diri karena terdapat data yang belum diisi secara lengkap. Silahkan dicek kembali.',
+            // text: '{{ Session::get('errors') }}',
+        })
+    @endif
+</script>
 @endsection
 
 @endsection

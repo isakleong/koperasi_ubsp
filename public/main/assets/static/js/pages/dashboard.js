@@ -1,3 +1,47 @@
+// transaksi tabungan
+function initTransaksiTabungan(objData, objCategory) {
+  var optionsMostViews = {
+    annotations: {
+      position: "back",
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    chart: {
+      id: "transaksiTabungan",
+      type: "bar",
+      height: 350,
+    },
+    fill: {
+      opacity: 1,
+    },
+    plotOptions: {
+      bar: {
+        borderRadius: 12,
+      }
+    },
+    series: [
+      {
+        name: "views",
+        data: objData,
+      },
+    ],
+    colors: "#435ebe",
+    xaxis: {
+      categories: objCategory,
+    },
+  }
+
+  var chartTransaksiTabungan = new ApexCharts(
+    document.querySelector("#chart-transaksi-tabungan"),
+    optionsMostViews
+  );
+
+  chartTransaksiTabungan.render();
+}
+
+
+
 var optionsProfileVisit = {
   annotations: {
     position: "back",
@@ -36,6 +80,7 @@ var optionsProfileVisit = {
     ],
   },
 }
+
 let optionsVisitorsProfile = {
   series: [5250000, 500000, 1000000],
   labels: ["Simpanan Pokok", "Simpanan Wajib", "Simpanan Sukarela"],

@@ -17,6 +17,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller {
     public function register() {
@@ -167,42 +168,64 @@ class AuthController extends Controller {
     }
 
     public function authenticate(Request $request) {
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required'
-        ]);
-
-        // check salt
-        $user = User::where('email', $request->email)->first();
-        if($user) {
-            $id = substr($user->memberId, -1);
-            $salt = substr($user->memberId, 18, 1);
+        $validator = Validator::make(
+            [
+                'email' => $request->input('email'),
+                'password' => $request->input('password')
+            ],
+            [
+                'email' => 'required|email',
+                'password' => 'required'
+            ],
+            [
+                'email.required' => 'Email belum diisi',
+                'email.email' => 'Format email tidak valid',
+                'password.required' => 'Password belum diisi',
+            ],
+        );
             
-            $carbonDate = Carbon::parse($user->registDate);
-            $hour = $carbonDate->format('H');
-            $minute = $carbonDate->format('i');
-            $second = $carbonDate->format('s');
-            $char1 = ($minute + $hour + ($salt * 7)) % 16;
-            $char2 = ($minute + $second + ($salt * 7)) % 16;
-            $char3 = ($minute + ord($id[0]) + ($salt * 7)) % 16;
-            $res = strtoupper(dechex($char1)) . strtoupper(dechex($char2)) . $salt . strtoupper(dechex($char3));
-            $request['password'] = $res.$request['password'];
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors())->withInput();
+        }
+        
+        try {
+            // check salt
+            $user = User::where('email', $request->email)->first();
 
-            $credentials = $request->only('email','password');
+            if($user) {
+                $id = substr($user->memberId, -1);
+                $salt = substr($user->memberId, 18, 1);
+                
+                $carbonDate = Carbon::parse($user->registDate);
+                $hour = $carbonDate->format('H');
+                $minute = $carbonDate->format('i');
+                $second = $carbonDate->format('s');
+                $char1 = ($minute + $hour + ($salt * 7)) % 16;
+                $char2 = ($minute + $second + ($salt * 7)) % 16;
+                $char3 = ($minute + ord($id[0]) + ($salt * 7)) % 16;
+                $res = strtoupper(dechex($char1)) . strtoupper(dechex($char2)) . $salt . strtoupper(dechex($char3));
+                $request['password'] = $res.$request['password'];
 
-            if(Auth::guard('web')->attempt($credentials)){
-                $request->session()->regenerate();
-                // return redirect('auth.login');
-                return redirect('/');
+                $credentials = $request->only('email','password');
+
+                if(Auth::guard('web')->attempt($credentials)){
+                    $request->session()->regenerate();
+                    // return redirect('auth.login');
+                    return redirect('/');
+                } else {
+                    return redirect()->back()->withErrors([
+                        'loginError' => 'Email atau password salah, silahkan coba lagi'
+                    ]);    
+                }
             } else {
                 return redirect()->back()->withErrors([
                     'loginError' => 'Email atau password salah, silahkan coba lagi'
-                ]);    
+                ]);
             }
-        } else {
-            return redirect()->back()->withErrors([
-                'loginError' => 'Email atau password salah, silahkan coba lagi'
-            ]);
+            
+        } catch (\Exception $e) {
+            $errorMsg = $e->getMessage();
+            return view('layout.error', compact(['errorMsg']));
         }
     }
 

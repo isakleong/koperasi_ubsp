@@ -35,24 +35,23 @@
                         </div>
                         <div class="header-top-right">
 
-                            <div class="dropdown">
+                            {{-- <div class="dropdown">
                                 <a href="#" id="topbarUserDropdown" class="user-dropdown d-flex align-items-center dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                     <div class="avatar avatar-md2">
                                         <img src="/main/assets/compiled/jpg/1.jpg" alt="Avatar">
                                     </div>
                                     <div class="text">
-                                        <h6 class="user-dropdown-name">{{ ucfirst($user->fname) . ' ' . ucfirst($user->lname) }}</h6>
-                                        <p class="user-dropdown-status text-sm text-muted">Anggota</p>
+                                        <h6 class="user-dropdown-name">{{ Str::limit(ucfirst($user->fname) . ' ' . ucfirst($user->lname), 12) }}</h6>
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end shadow-lg" aria-labelledby="topbarUserDropdown">
                                     <li><a class="dropdown-item" href="/logout">Keluar</a></li>
                                 </ul>
-                            </div>
+                            </div> --}}
 
                             <!-- Burger button responsive -->
                             <a href="#" class="burger-btn d-block d-xl-none">
-                                <i class="bi bi-justify fs-3"></i>
+                                <span><i class="fas fa-bars"></i> Menu</span>
                             </a>
                         </div>
                     </div>
@@ -60,9 +59,9 @@
                 <nav class="main-navbar">
                     <div class="container">
                         <ul>
-                            <li class="menu-item">
+                            <li class="menu-item active">
                                 <a href="/" class="menu-link">
-                                    <span><i class="bi bi-house-door-fill"></i> Beranda</span>
+                                    <span><i class="fas fa-home"></i> Beranda</span>
                                 </a>
                             </li>
 
@@ -105,7 +104,7 @@
                                 </div>
                             </li>
 
-                            <li class="menu-item has-sub">
+                            <li class="menu-item active has-sub">
                                 <a href="#" class="menu-link">
                                     <span><i class="fas fa-coins"></i> Kredit</span>
                                 </a>
@@ -144,6 +143,12 @@
                                         </ul>
                                     </div>
                                 </div>
+                            </li>
+
+                            <li class="menu-item active confirmLogout">
+                                <a href="/logout" class="menu-link">
+                                    <span><i class="fas fa-door-open"></i> Keluar</span>
+                                </a>
                             </li>
 
                         </ul>
@@ -204,14 +209,13 @@
     </div>
 
     <!-- uncomment for dark mode -->
-    <!-- <script src="/main/assets/static/js/components/dark.js"></script> -->
+    {{-- <script src="/main/assets/static/js/components/dark.js"></script> --}}
     <script src="/main/assets/static/js/pages/horizontal-layout.js"></script>
     <script src="/main/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 
     <script src="/main/assets/compiled/js/app.js"></script>
 
     <script src="/main/assets/extensions/apexcharts/apexcharts.min.js"></script>
-
     @yield('vendorJS')
     </body>
 

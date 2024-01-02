@@ -99,7 +99,7 @@ Route::middleware(['auth.user', 'verified'])->group(function() {
     Route::post('/kredit/rekap', [MainController::class, 'filterRecapKredit'])->name('filter.recap.kredit');
     Route::post('/angsuran/rekap', [MainController::class, 'storeAngsuran'])->name('store.angsuran');
 
-    Route::put('/pengaturan/profile/{id}', [MainController::class, 'editProfile'])->name('profile-update');
+    Route::put('/pengaturan/profile', [MainController::class, 'editProfile'])->name('profile-update');
     Route::post('/pengaturan/password', [MainController::class, 'editPassword'])->name('password-update');
 });
 //END OF USER

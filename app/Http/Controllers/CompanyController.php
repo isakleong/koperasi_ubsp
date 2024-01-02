@@ -181,10 +181,10 @@ class CompanyController extends Controller
 
             DB::commit();
 
-            return redirect('/admin/company')->withSuccess('Data profile UBSP berhasil ditambahkan!');
+            return redirect('/admin/company/edit')->withSuccess('Data profile UBSP berhasil ditambahkan!');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect('/admin/company')->with('errorData', $e->getMessage());
+            return redirect('/admin/company/edit')->with('errorData', $e->getMessage());
         }
     }
 

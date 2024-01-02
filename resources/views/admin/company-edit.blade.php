@@ -322,4 +322,14 @@
             });
         });
     </script>
+
+    <script>
+        @if ($message = session('errorData'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Mohon maaf, gagal mengubah profile UBSP karena terdapat data yang belum diisi secara lengkap. Silahkan dicek kembali.',
+            })
+        @endif
+    </script>
 @endsection

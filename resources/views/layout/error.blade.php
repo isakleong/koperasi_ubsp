@@ -25,9 +25,9 @@
                 <div class="text-center">
                     <img class="img-error" src="/main/assets/compiled/svg/error-500.svg" alt="System Error">
                     <h1 class="error-title">System Error</h1>
-                    <p class="fs-5 text-gray-600">Terjadi kesalahan pada sistem, silahkan menghubungi kami.</p>
+                    <p class="fs-5 text-gray-600">Terjadi kesalahan pada sistem, silahkan menghubungi tim Sistem Akuntansi UBSP.</p>
                     <p class="fs-5 text-gray-600">Pesan Error : {{ $errorMsg }}</p>
-                    <a href="/" class="btn btn-lg btn-outline-primary mt-3">Kembali</a>
+                    <a href="/" class="btn btn-lg btn-outline-primary mt-3">Kembali Ke Beranda</a>
                 </div>
             </div>
         </div>

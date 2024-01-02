@@ -71,6 +71,16 @@
     </div>
 
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
+    <script>
+        @if ($message = session('errors'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Proses login gagal. Pastikan sudah mengisi email dan password dengan benar.',
+                // text: '{{ Session::get('errors') }}',
+            })
+        @endif
+    </script>
 </body>
 
 </html>

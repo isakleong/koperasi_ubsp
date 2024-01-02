@@ -26,7 +26,7 @@
                                         </div>
                                         <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                             <h6 class="font-extrabold mb-1">Total Saldo Tabungan</h6>
-                                            <h6 class="font-extrabold mb-0">Rp 6,750,000</h6>
+                                            <h6 class="font-extrabold mb-0">Rp {{ number_format($saldoTabungan) }}</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -41,7 +41,7 @@
                                         </div>
                                         <div class="name ms-4">
                                             <h6 class="font-extrabold mb-1">Saldo Pokok</h6>
-                                            <h6 class="font-extrabold mb-0">Rp 5,250,000</h6>
+                                            <h6 class="font-extrabold mb-0">Rp {{ number_format($saldoPokok) }}</h6>
                                         </div>
                                     </div>
                                     <div class="recent-message d-flex px-4 py-3">
@@ -50,7 +50,7 @@
                                         </div>
                                         <div class="name ms-4">
                                             <h6 class="font-extrabold mb-1">Saldo Wajib</h6>
-                                            <h6 class="font-extrabold mb-0">Rp 500,000</h6>
+                                            <h6 class="font-extrabold mb-0">Rp {{ number_format($saldoWajib) }}</h6>
                                         </div>
                                     </div>
                                     <div class="recent-message d-flex px-4 py-3">
@@ -59,13 +59,13 @@
                                         </div>
                                         <div class="name ms-4">
                                             <h6 class="font-extrabold mb-1">Saldo Sukarela</h6>
-                                            <h6 class="font-extrabold mb-0">Rp 1,000,000</h6>
+                                            <h6 class="font-extrabold mb-0">Rp {{ number_format($saldoSukarela) }}</h6>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6 col-lg-6 col-md-6">
+                        <div class="col-12 col-lg-6 col-md-12">
                             <div class="card">
                                 <div class="card-body px-4 py-4-5">
                                     <div class="row">
@@ -75,8 +75,8 @@
                                             </div>
                                         </div>
                                         <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                            <h6 class="font-extrabold mb-1">Sisa Kredit</h6>
-                                            <h6 class="font-extrabold mb-0">Rp 1,650,000</h6>
+                                            <h6 class="font-extrabold mb-1">Sisa Tagihan Pinjaman</h6>
+                                            <h6 class="font-extrabold mb-0">Rp {{ number_format($saldoSisaKredit) }}</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -90,11 +90,20 @@
                                             <i class="iconly-boldTicket"></i>
                                         </div>
                                         <div class="name ms-4">
-                                            <h6 class="font-extrabold mb-1">Pokok Pinjaman</h6>
-                                            <h6 class="font-extrabold mb-0">Rp 150,000</h6>
+                                            <h6 class="font-extrabold mb-1">Total Pinjaman</h6>
+                                            <h6 class="font-extrabold mb-0">Rp {{ number_format($totalKredit) }}</h6>
                                         </div>
                                     </div>
                                     <div class="recent-message d-flex px-4 py-3">
+                                        <div class="stats-icon blue mb-2">
+                                            <i class="iconly-boldTicket"></i>
+                                        </div>
+                                        <div class="name ms-4">
+                                            <h6 class="font-extrabold mb-1">Angsuran (Per Bulan)</h6>
+                                            <h6 class="font-extrabold mb-0">Rp {{ number_format($pokokPinjaman) }}</h6>
+                                        </div>
+                                    </div>
+                                    {{-- <div class="recent-message d-flex px-4 py-3">
                                         <div class="stats-icon blue mb-2">
                                             <i class="iconly-boldTicket"></i>
                                         </div>
@@ -102,21 +111,21 @@
                                             <h6 class="font-extrabold mb-1">Tagihan + Denda</h6>
                                             <h6 class="font-extrabold mb-0">Rp 150,000 + Rp 0</h6>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="recent-message d-flex px-4 py-3">
                                         <div class="stats-icon blue mb-2">
                                             <i class="iconly-boldTicket"></i>
                                         </div>
                                         <div class="name ms-4">
                                             <h6 class="font-extrabold mb-1">Dibayar</h6>
-                                            <h6 class="font-extrabold mb-0">Rp 1,500,000</h6>
+                                            <h6 class="font-extrabold mb-0">Rp {{ number_format($totalKredit - $saldoSisaKredit) }}</h6>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12" style="display: none;">
                         <div class="card">
                             <div class="card-header">
                                 <h4>Transaksi Tabungan</h4>
@@ -127,7 +136,7 @@
                                         <div class="d-flex align-items-center">
                                             <svg class="bi text-primary" width="32" height="32" fill="blue"
                                                 style="width:10px">
-                                                <use xlink:href="assets/static/images/bootstrap-icons.svg#circle-fill" />
+                                                <use xlink:href="/main/assets/static/images/bootstrap-icons.svg#circle-fill" />
                                             </svg>
                                             <h5 class="mb-0 ms-3">Pokok</h5>
                                         </div>
@@ -141,7 +150,7 @@
                                         <div class="d-flex align-items-center">
                                             <svg class="bi text-success" width="32" height="32" fill="blue"
                                                 style="width:10px">
-                                                <use xlink:href="assets/static/images/bootstrap-icons.svg#circle-fill" />
+                                                <use xlink:href="/main/assets/static/images/bootstrap-icons.svg#circle-fill" />
                                             </svg>
                                             <h5 class="mb-0 ms-3">Wajib</h5>
                                         </div>
@@ -155,7 +164,7 @@
                                         <div class="d-flex align-items-center">
                                             <svg class="bi text-success" width="32" height="32" fill="blue"
                                                 style="width:10px">
-                                                <use xlink:href="assets/static/images/bootstrap-icons.svg#circle-fill" />
+                                                <use xlink:href="/main/assets/static/images/bootstrap-icons.svg#circle-fill" />
                                             </svg>
                                             <h5 class="mb-0 ms-3">Sukarela</h5>
                                         </div>
@@ -167,7 +176,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12" style="display: none;">
                         <div class="card">
                             <div class="card-header">
                                 <h4>Profile Tabungan</h4>
@@ -177,13 +186,63 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12">
-                        <div class="card">
+                    <div class="col-12" style="display: none;">
+                        {{-- <div class="card">
                             <div class="card-header">
-                                <h4>Kontribusi Tabungan Sukarela</h4>
+                                <h4>Transaksi Tabungan</h4>
                             </div>
                             <div class="card-body">
-                                <div id="chart-profile-visit"></div>
+                                <div id="chart-transaksi-tabungan"></div>
+                            </div>
+                        </div> --}}
+                        <div class="card border-left-primary shadow py-2">
+                            <div class="card-header">
+                                <form id="transaksiTabunganForm">
+                                    <div class="row">
+                                        <div class="col-6 mb-1">
+                                            <h4>Transaksi Tabungan</h4>
+                                        </div>
+                                        {{ csrf_field() }}
+                                        <div class="col-lg-2 mb-1">
+                                            <div class="form-floating">
+                                                <select class="form-select" name="days" id="rangeMostViewsByPage">
+                                                <option value="today">Today</option>
+                                                <option value="yesterday">Yesterday</option>
+                                                <option value="thisweek">This week</option>
+                                                <option value="thismonth" selected>This month</option>
+                                                <option value="thisyear">This year</option>
+                                                <option value="lastweek">Last week</option>
+                                                <option value="lastmonth">Last month</option>
+                                                <option value="lastyear">Last year</option>
+    
+                                                </select>
+                                                <label for="rangeMostViewsByPage">Range</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2 mb-1">
+                                            <div class="form-floating">
+                                                <input type="text" name="count" class="form-control" id="floatingCount" placeholder="Count" value="10">
+                                                <label for="floatingCount">Count</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2 mb-1">
+                                            <button class='btn btn-outline-primary' id="applyFilterTransaksiTabungan">Apply Filter</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="row">
+                                    <div class="col-lg-12 mb-1" id="errorTransaksiTabungan" style='display: none;'>
+                                        <h6 class="font-extrabold mb-3">Error</h6>
+                                        <button class='btn btn-primary' id="retryTransaksiTabungan">Retry</button>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="card-body text-center">
+                                <div id="loaderTransaksiTabungan" style='display: none;'>
+                                    <img src="/lte/assets/images/svg-loaders/audio.svg" class="me-4" style="width: 3rem;" alt="audio"/>
+                                </div>
+                                <div id="chart-transaksi-tabungan"></div>
                             </div>
                         </div>
                     </div>
@@ -195,10 +254,7 @@
 
 @section('vendorJS')
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
-@endsection
-
-@if ($user->status == 2)
-    @section('vendorJS')
+    @if ($user->status == 2)
         <script src="/main/assets/static/js/pages/dashboard.js"></script>
-    @endsection
-@endif
+    @endif
+@endsection

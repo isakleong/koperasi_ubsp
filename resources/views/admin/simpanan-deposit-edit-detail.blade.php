@@ -281,9 +281,11 @@
                                 @enderror
                             </div>
 
-                            <div class="text-end">
-                                <button type="submit" class="btn btn-lg btn-primary show_confirm">Update
-                                    Kategori</button>
+                            <div class="text-center mb-3">
+                                <button type="submit" class="btn btn-block btn-lg btn-primary show_confirm">Update Data</button>
+                            </div>
+                            <div class="text-center mb-3">
+                                <button type="submit" class="btn btn-block btn-lg btn-primary show_confirm">Update Data</button>
                             </div>
                         </form>
                     </div>
