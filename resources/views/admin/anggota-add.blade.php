@@ -186,12 +186,14 @@
         <div class="row">
             <div class="col-xl">
                 <div class="card mb-4">
+                    @if (isset($configuration))
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Formulir Anggota Baru</h5>
                         {{-- <small class="text-muted float-end">Sistem Akuntansi UBSP</small> --}}
                     </div>
+                    @endif
                     <div class="card-body">
-                        @if (isset($configSaldoPokok))
+                        @if (isset($configuration))
                         <form action="{{ route('admin.user.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
@@ -277,7 +279,7 @@
                             <div class="mb-3">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="phone" name="phone"
-                                        placeholder="" oninput=capitalizeName(this) required
+                                        placeholder="" oninput=validateNumberInput(this) required
                                         value="{{ old('phone') }}" />
                                     <label for="phone">No Hp</label>
                                 </div>
@@ -318,24 +320,17 @@
                                 @enderror
                             </div>
 
-                            <div class="divider divider-warning">
-                                <div class="divider-text">Settingan Awal</div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label>Default Password</label>
-                                <input type="text" readonly class="form-control-plaintext" id="defaultPassword"
-                                    name="password" value="Ubsp.123" />
-                            </div>
-
-                            <div class="mb-3">
-                                <label>Simpanan Pokok</label>
-                                <input type="text" readonly class="form-control-plaintext" id="nominal"
-                                    name="nominal" value="Rp {{ number_format($configSaldoPokok->value) }}" />
-                            </div>
-
-                            <div class="divider divider-warning">
-                                <div class="divider-text"></div>
+                            <div class="alert alert-primary" role="alert">
+                                <div>
+                                    <label>Default Password</label>
+                                    <input type="text" readonly class="form-control-plaintext" id="defaultPassword"
+                                        name="password" value="{{ $configuration[0]->value }}" />
+                                </div>
+                                <div>
+                                    <label>Simpanan Pokok</label>
+                                    <input type="text" readonly class="form-control-plaintext" id="nominal"
+                                        name="nominal" value="Rp {{ number_format($configuration[1]->value) }}" />
+                                </div>
                             </div>
 
                             <div class="col-md mb-3">
@@ -373,7 +368,17 @@
                             </div>
                         </form>
                         @else
-                         <h5>Konfigurasi simpanan pokok tidak ditemukan, silahkan melakukan setting terlebih dahulu.</h5>
+                        <div class="container-xxl container-p-y text-center">
+                            <div class="misc-wrapper">
+                                <div class="mb-4">
+                                    <img src="/administrator/assets/img/illustrations/not-found.jpg" alt="page-misc-error-light"
+                                        width="500" class="img-fluid" data-app-dark-img="illustrations/page-misc-error-dark.png"
+                                        data-app-light-img="illustrations/page-misc-error-light.png" />
+                                </div>
+                                
+                                <h5 class="mb-4 mx-2">Konfigurasi simpanan pokok untuk anggota UBSP tidak ditemukan, silahkan melakukan setting terlebih dahulu.</h5>
+                            </div>
+                        </div>
                         @endif
                     </div>
                 </div>
@@ -410,6 +415,10 @@
             input.value = capitalizedWords.join(' ');
         }
         //end of capitalize input
+
+        function validateNumberInput(input) {
+            input.value = input.value.replace(/[^0-9]/g, '');
+        }
 
         $(document).ready(function() {
             var selectedValue = $('input[name="method"]:checked').val();

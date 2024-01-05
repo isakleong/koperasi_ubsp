@@ -90,8 +90,10 @@ class UserController extends Controller
 
     public function create()
     {
-        $configSaldoPokok = Config::where('name','SIMPANAN_POKOK')->first();
-        return view('admin.anggota-add', compact('configSaldoPokok'));
+        $configName = ['SIMPANAN POKOK', 'DEFAULT PASSWORD'];
+        $configuration = Config::whereIn('name', $configName)->get();
+
+        return view('admin.anggota-add', compact('configuration'));
     }
 
     public function store(Request $request)
