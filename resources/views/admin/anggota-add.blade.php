@@ -6,26 +6,33 @@
     <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
 
     <style>
-        #customCard {
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            background-image: linear-gradient(to right top, #0D41E1, #0C63E7, #0A85ED, #09A6F3, #07C8F9);
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: auto;
         }
 
-        #customCardBorder {
-            border-top-left-radius: 30px !important;
-            border-top-right-radius: 30px !important;
-            border: none;
-            border-radius: 6px;
-            background-color: blue;
-            color: #fff;
-            background-image: linear-gradient(to right top, #0a33b1, #094eb7, #086abc, #0784c2, #05a1c8);
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
         }
 
-        .bgCard:hover {
-            /* transform: scale(1.02); */
-            opacity: 0.75;
+
+        #lottie-container {
+            position: absolute;
+            width: 25%;
+            height: 25%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
     </style>
 @endsection
@@ -186,14 +193,14 @@
         <div class="row">
             <div class="col-xl">
                 <div class="card mb-4">
-                    @if (isset($configuration))
+                    @if (isset($configuration) && count($configuration) == 2)
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Formulir Anggota Baru</h5>
                         {{-- <small class="text-muted float-end">Sistem Akuntansi UBSP</small> --}}
                     </div>
                     @endif
                     <div class="card-body">
-                        @if (isset($configuration))
+                        @if (isset($configuration) && count($configuration) == 2)
                         <form action="{{ route('admin.user.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
@@ -303,7 +310,7 @@
                             <div class="mb-3">
                                 <div class="form-group">
                                     <label for="ktp">Foto KTP</label>
-                                    <input type="file" class="image-resize-filepond" name="ktp" accept="image/*">
+                                    <input type="file" class="image-resize-filepond" name="ktp" id="ktp" accept="image/*">
                                 </div>
                                 @error('ktp')
                                     <p class="mt-1" style="color: red">{{ $message }}</p>
@@ -312,7 +319,7 @@
                             <div class="mb-3">
                                 <div class="form-group">
                                     <label for="kk">Foto Kartu Keluarga</label>
-                                    <input type="file" class="image-preview-filepond" name="kk"
+                                    <input type="file" class="image-preview-filepond" name="kk" id="kk"
                                         accept="image/*">
                                 </div>
                                 @error('kk')
@@ -363,8 +370,12 @@
                                 @enderror
                             </div>
 
+                            <div id="overlay">
+                                <div id="lottie-container"></div>
+                            </div>
+
                             <div class="text-end">
-                                <button type="submit" class="btn btn-lg btn-primary show_confirm">Simpan</button>
+                                <button type="submit" class="btn btn-lg btn-primary show_confirm">Tambah Anggota</button>
                             </div>
                         </form>
                         @else
@@ -376,7 +387,7 @@
                                         data-app-light-img="illustrations/page-misc-error-light.png" />
                                 </div>
                                 
-                                <h5 class="mb-4 mx-2">Konfigurasi simpanan pokok untuk anggota UBSP tidak ditemukan, silahkan melakukan setting terlebih dahulu.</h5>
+                                <h5 class="mb-4 mx-2">Konfigurasi anggota UBSP tidak ditemukan, silahkan melakukan setting terlebih dahulu.</h5>
                             </div>
                         </div>
                         @endif
@@ -404,7 +415,10 @@
     <script src="/main/assets/extensions/toastify-js/src/toastify.js"></script>
     <script src="/main/assets/static/js/pages/filepond.js"></script>
 
+    <script src="/administrator/js/jquery.min.js"></script>
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
 
     <script>
         //capitalize input
@@ -460,6 +474,35 @@
                     $('#bukti-trf').hide();
                 }
             });
+
+            $('form').submit(function() {
+                // Disable the submit button
+                $(':submit', this).prop('disabled', true);
+
+                var animation = lottie.loadAnimation({
+                    container: document.getElementById('lottie-container'),
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: '/administrator/assets/lottie/loading.json',
+                    rendererSettings: {
+                        preserveAspectRatio: 'xMidYMid meet'
+                    }
+                });
+
+                $('#overlay').show();
+
+                $('body, html').css('overflow', 'hidden');
+
+                // hideLoadingOverlay();
+
+                return true;
+            });
+
+            // function hideLoadingOverlay() {
+            //     $('#overlay').hide();
+            //     $('body, html').css('overflow', 'auto');
+            // }
         });
     </script>
 
@@ -468,7 +511,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Formulir anggota baru belum diisi secara lengkap',
+                text: 'Formulir anggota baru belum diisi secara lengkap. Silahkan dicek kembali.',
                 // text: '{{ Session::get('errors') }}',
             })
         @endif

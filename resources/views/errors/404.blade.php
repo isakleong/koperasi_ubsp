@@ -52,8 +52,7 @@
         <div class="misc-wrapper">
             <div class="mb-4">
                 <img src="/administrator/assets/img/illustrations/page-misc-error-light.png" alt="page-misc-error-light"
-                    width="500" class="img-fluid" data-app-dark-img="illustrations/page-misc-error-dark.png"
-                    data-app-light-img="illustrations/page-misc-error-light.png" />
+                    width="500" class="img-fluid" />
             </div>
             
             <h2 class="mb-4 mx-2">Halaman yang Anda tuju tidak ditemukan</h2>

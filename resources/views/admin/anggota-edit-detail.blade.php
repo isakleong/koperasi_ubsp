@@ -313,7 +313,7 @@
                                     <p>{{ $transaction['transactionDate'] }}</p>
                                 </div>
                                 <div class="mb-3">
-                                    <label>Jenis Pembsayaran</label>
+                                    <label>Jenis Pembayaran</label>
                                     @if ($transaction['method'] == 1)
                                         <p>Transfer</p>
                                     @else

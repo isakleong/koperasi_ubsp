@@ -105,7 +105,7 @@
                     <div data-i18n="Basic">Angsuran</div>
                 </a>
             </li>
-            
+
             <!-- End of Transaction Data -->
 
             <!-- Report Data -->
@@ -171,41 +171,14 @@
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Data Anggota UBSP</h5>
-
-                        {{-- <div class="mb-3">
-            <form id="filterForm" action="/admin/anggota/edit" method="get">
-                {{ csrf_field() }}
-                <div class="row">
-                    <label for="filterStatus" class="form-label float-end">Filter Status</label>
-                    <select id="filterStatus" class="form-select form-select" name="status" value="{{ $request->status }}">
-                        <option value="aktif" {{ $request->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                        <option value="non-aktif" {{ $request->status == 'non-aktif' ? 'selected' : '' }}>Non Aktif</option>
-                        <option value="not-verified" {{ $request->status == 'not-verified' ? 'selected' : '' }}>Belum Verifikasi</option>
-                        <option value="not-acc" {{ $request->status == 'not-acc' ? 'selected' : '' }}>Belum Disetujui</option>
-                    </select>
-                </div>
-            </form>
-          </div> --}}
-
-                        {{-- <div class="btn-group float-end">
-            <button type="button" class="btn btn-outline-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Filter</button>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="javascript:void(0);">Aktif</a></li>
-              <li><a class="dropdown-item" href="javascript:void(0);">Non Aktif</a></li>
-              <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item" href="javascript:void(0);">Belum Verifikasi</a></li>
-              <li><a class="dropdown-item" href="javascript:void(0);">Belum Disetujui</a></li>
-            </ul>
-          </div> --}}
-
                     </div>
 
                     <div class="card-body">
                         <form action="" method="get">
                             @csrf
                             <div class="row">
-                                <div class="col-12 col-sm-4 col-md-4">
-                                    <div class="input-group input-group-merge mb-4">
+                                <div class="col-12 col-sm-4 col-md-4 mb-4">
+                                    <div class="input-group input-group-merge">
                                         <span class="input-group-text" id="basic-addon-search31"><i
                                                 class="bx bx-search"></i></span>
                                         <input type="text" class="form-control" name="keyword"
@@ -215,7 +188,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-sm-4 col-md-4">
+                                <div class="col-12 col-sm-4 col-md-4 mb-4">
                                     <select id="filterStatus" class="form-select form-select" name="status">
                                         <option value="active" {{ Request::get('status') == 'active' ? 'selected' : '' }}>
                                             Aktif</option>
@@ -225,49 +198,23 @@
                                         <option value="not-verified"
                                             {{ Request::get('status') == 'not-verified' ? 'selected' : '' }}>Belum
                                             Verifikasi</option>
-                                        <option value="not-acc" {{ Request::get('status') == 'not-acc' ? 'selected' : '' }}>
+                                        <option value="not-acc"
+                                            {{ Request::get('status') == 'not-acc' ? 'selected' : '' }}>
                                             Belum Disetujui</option>
                                     </select>
                                 </div>
 
-                                <div class="col-12 col-sm-4 col-md-4">
+                                <div class="col-12 col-sm-4 col-md-4 mb-4">
                                     <button type="submit" class="btn btn-primary">Cari Data</button>
                                 </div>
                             </div>
                         </form>
 
-                        {{-- <div class="row">
-              <div class="col-12 col-sm-8 col-md-6" float-start">Cari Data</label>
-                <div class="input-group input-group-merge mb-4">
-                  <span class="input-group-text" id="basic-addon-search31"><i class="bx bx-search"></i></span>
-                  <input type="text" class="form-control" name="keyword" placeholder="Cari anggota..." aria-label="Search..." aria-describedby="basic-addon-search31" />
-                  
-                </div>
-              </div>
-
-              <div class="col-12 col-sm-8 col-md-6">
-                <div class="input-group input-group-merge mb-4">
-                  <form id="filterForm" action="/admin/anggota/edit" method="get">
-                    {{ csrf_field() }}
-                    <div class="row">
-                        <label for="filterStatus" class="form-label float-end">Filter Status</label>
-                        <select id="filterStatus" class="form-select form-select" name="status" value="{{ $request->status }}">
-                            <option value="aktif" {{ $request->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                            <option value="non-aktif" {{ $request->status == 'non-aktif' ? 'selected' : '' }}>Non Aktif</option>
-                            <option value="not-verified" {{ $request->status == 'not-verified' ? 'selected' : '' }}>Belum Verifikasi</option>
-                            <option value="not-acc" {{ $request->status == 'not-acc' ? 'selected' : '' }}>Belum Disetujui</option>
-                        </select>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div> --}}
-
                         <div id="loadingFilter" style="display: none;">
                             <img class="mb-5" src="/administrator/assets/img/icons/loading.gif" alt="Loading..." />
                         </div>
 
-                        <div class="scrolling-pagination" id="mainData">
+                        <div>
                             @forelse ($users as $item)
                                 @php
                                     $borderClass = '';
@@ -288,15 +235,38 @@
                                         <h5 class="card-title">{{ $item->fname . ' ' . $item->lname }}</h5>
                                         <input type="hidden" id="memberId" value="{{ $item->memberId }}">
                                         <div class="mt-3">
-                                            <a href="{{ route('admin.user.edit', $item->id) }}" type="button"
-                                                class="btn btn-primary">Edit Data</a>
+                                            <div class="d-grid gap-3 col-lg-12">
+                                                <a href="{{ route('admin.user.edit', $item->id) }}" type="button"
+                                                    class="btn btn-primary">Edit Data</a>
+                                                @if ($item->status == 0)
+                                                    <a href="{{ route('verification.send', $item->id) }}" type="button"
+                                                        class="btn btn-primary">Verifikasi Ulang</a>
+                                                @elseif ($item->status == 1)
+                                                <form action="{{ route('admin.acc.user', $item->id) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="col-12 btn btn-primary show_confirm_acc">Terima</button>
+                                                </form>
+                                                <form action="{{ route('admin.reject.user', $item->id) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="col-12 btn btn-primary show_confirm_reject">Tolak</button>
+                                                </form>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             @empty
-                                <tr>
-                                    <td colspan="4" class="text-center">No user found</td>
-                                </tr>
+                                <div class="container-xxl container-p-y text-center">
+                                    <div class="misc-wrapper">
+                                        <div class="mb-4">
+                                            <img src="/administrator/assets/img/illustrations/not-found.jpg"
+                                                alt="page-misc-error-light" width="500" class="img-fluid"
+                                                data-app-dark-img="illustrations/page-misc-error-dark.png"
+                                                data-app-light-img="illustrations/page-misc-error-light.png" />
+                                        </div>
+                                        <h5 class="mb-4 mx-2">Tidak ada daftar anggota.</h5>
+                                    </div>
+                                </div>
                             @endforelse
                             {{ $users->links() }}
                         </div>
@@ -305,7 +275,90 @@
             </div>
         </div>
     </div>
-    <!-- / Content -->
+
+    {{-- <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCenterTitle">Update Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row text-center">
+                        <div class="col mb-3">
+                            <a href="" type="button"
+                                class="btn btn-success show_confirm_acc">Terima</a>
+                        </div>
+                        <div class="col mb-3">
+                            <a href="" type="button"
+                                class="btn btn-danger show_confirm_reject">Tolak</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 1-->
+    <div class="modal fade" id="modalToggle" aria-labelledby="modalToggleLabel" tabindex="-1" style="display: none"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalToggleLabel">Update Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row text-center">
+                        <div class="col mb-3">
+                            <button class="btn btn-success" data-bs-target="#modalConfirmAcc" data-bs-toggle="modal" data-bs-dismiss="modal">Terima</button>
+                        </div>
+                        <div class="col mb-3">
+                            <button class="btn btn-danger" data-bs-target="#modalConfirmReject" data-bs-toggle="modal" data-bs-dismiss="modal">Tolak</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="modalConfirmAcc" aria-hidden="true" aria-labelledby="modalToggleACC" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalToggleACC">Konfirmasi Terima</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah Anda yakin ingin update status terima untuk anggota ini?</p>
+                    <p>Tekan <b>Update</b> untuk melanjutkan.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-target="#modalToggle" data-bs-toggle="modal" data-bs-dismiss="modal">Batal</button>
+                    <a href="{{ route('admin.acc.user', $item->id) }}" type="button" class="btn btn-primary">Update</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalConfirmReject" aria-hidden="true" aria-labelledby="modalToggleReject" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalToggleReject">Konfirmasi Tolak</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah Anda yakin ingin update status tolak untuk anggota ini?</p>
+                    <p>Tekan <b>Update</b> untuk melanjutkan.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-target="#modalToggle" data-bs-toggle="modal" data-bs-dismiss="modal">Batal</button>
+                    <button class="btn btn-primary" data-bs-target="#modalToggle" data-bs-toggle="modal" data-bs-dismiss="modal">Update</button>
+                </div>
+            </div>
+        </div>
+    </div> --}}
 @endsection
 
 @section('vendorJS')
@@ -340,75 +393,26 @@
         //end of capitalize input
 
         $(document).ready(function() {
-            // $('ul.pagination').hide();
-            // $(function() {
-            //     $('.scrolling-pagination').jscroll({
-            //         autoTrigger: true,
-            //         loadingHtml: '<img class="center-block" src="/administrator/assets/img/icons/loading.gif" alt="Loading..." />',
-            //         padding: 0,
-            //         nextSelector: '.pagination li.active + li a',
-            //         contentSelector: 'div.scrolling-pagination',
-            //         callback: function() {
-            //             $('ul.pagination').remove();
+            // $('#openModalButton').on('click', function() {
+            //     // Perform AJAX request before opening the modal
+            //     var memberId = $('#memberId').val();
+            //     var urlPath = '/admin/anggota/edit/' + memberId;
+            //     alert(memberId);
+            //     $.ajax({
+            //         url: urlPath,
+            //         type: 'GET',
+            //         success: function(response) {
+            //             // Assuming the response is successful, you can open the modal here
+            //             $('#modalData').modal('show');
+            //         },
+            //         error: function(xhr, status, error) {
+            //             // Handle error if the AJAX request fails
+            //             console.error(xhr.responseText);
             //         }
             //     });
             // });
 
-            // $('select').on('change', function(e) {
-            //   e.preventDefault();
-
-            //   var selectedStatus = $(this).val();
-
-            //   // Disable the select and filter while loading
-            //   $(this).prop('disabled', true);
-            //   $("#btnCari").prop('disabled', true);
-
-            //   $('#mainData').html("");
-
-            //   $('#loadingFilter').show();
-
-            //   setTimeout(function() {
-            //       $.ajax({
-            //           url: '/admin/user',
-            //           type: 'GET',
-            //           data: { status: selectedStatus },
-            //           success: function(response) {
-            //               $('#loadingFilter').hide();
-            //               $('#mainData').html(response); //update the data with filtered result
-            //               $("#filterStatus").prop('disabled', false);
-            //               $("#btnCari").prop('disabled', false);
-            //               // history.pushState({}, '', '/admin/user?status=' + selectedStatus);
-            //           },
-            //           error: function(xhr) {
-            //               console.log('AJAX error:', xhr.responseText);
-            //               $('#loadingFilter').hide();
-            //               $("#filterStatus").prop('disabled', false);
-            //               $("#btnCari").prop('disabled', false);
-            //           }
-            //       });
-            //   }, 800);
-            // });
-
-            $('#openModalButton').on('click', function() {
-                // Perform AJAX request before opening the modal
-                var memberId = $('#memberId').val();
-                var urlPath = '/admin/anggota/edit/' + memberId;
-                alert(memberId);
-                $.ajax({
-                    url: urlPath,
-                    type: 'GET',
-                    success: function(response) {
-                        // Assuming the response is successful, you can open the modal here
-                        $('#modalData').modal('show');
-                    },
-                    error: function(xhr, status, error) {
-                        // Handle error if the AJAX request fails
-                        console.error(xhr.responseText);
-                    }
-                });
-            });
-
-            $('.show_confirm').click(function(event) {
+            $('.show_option').click(function(event) {
                 event.preventDefault();
 
                 var form = $(this).closest("form");
@@ -429,15 +433,25 @@
                 });
             });
 
-            $('input[type="radio"]').on('change', function() {
-                // Get the selected value
-                var selectedValue = $('input[name="method"]:checked').val();
+            $('.show_confirm_reject').click(function(event) {
+                event.preventDefault();
 
-                if (selectedValue == 'transfer') {
-                    $('#bukti-trf').show();
-                } else {
-                    $('#bukti-trf').hide();
-                }
+                var form = $(this).closest("form");
+
+                Swal.fire({
+                    title: 'Simpan Data?',
+                    text: '',
+                    icon: 'question',
+                    showDenyButton: true,
+                    confirmButtonText: 'Ya, simpan',
+                    denyButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    } else if (result.isDenied) {
+                        // Swal.fire('Changes are not saved', '', 'info');
+                    }
+                });
             });
         });
     </script>

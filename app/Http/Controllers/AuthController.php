@@ -24,6 +24,18 @@ class AuthController extends Controller {
         return view('auth.register');
     }
 
+    public function resendVerificationEmail(Request $request) {
+        $user = $request->user();
+
+        if ($user->hasVerifiedEmail()) {
+            return redirect($this->redirectPath())->with('verified', true);
+        }
+
+        $user->sendEmailVerificationNotification();
+
+        return back()->with('resent', true);
+    }
+
     public function registerProcess(Request $request) {
 
         $request->validate([

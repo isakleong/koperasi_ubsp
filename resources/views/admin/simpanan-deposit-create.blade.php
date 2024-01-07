@@ -260,7 +260,7 @@
 @endsection
 
 @section('vendorJS')
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="/administrator/js/jquery.min.js"></script>
     <script src="/main/assets/masking/dist/jquery.mask.js"></script>
     <script src="/main/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js">
     </script>

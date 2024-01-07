@@ -63,6 +63,40 @@ class UserController extends Controller
         // return view('admin.anggota-edit', compact('users', 'request'));
     }
 
+    public function accData(Request $request, $id) {
+        $now = date('Y-m-d H:i:s');
+        $user = User::findOrFail($id);
+
+        try {
+            DB::beginTransaction();
+
+            $user->joinDate = $now;
+            $user->status = 2;
+            $user->save();
+
+            foreach ($user->userAccount as $userAccount) {
+                if ($userAccount->kind === 'pokok') {
+                    $userAccount->openDate = $now;
+                    $userAccount->save();
+
+                    $userAccount->transaction()->update(['status' => 2]);
+                }
+            }
+
+            DB::commit();
+
+            return redirect('/admin/user')->withSuccess('Data status user berhasil diupdate!');
+        } catch (\Exception  $e) {
+            DB::rollback();
+            $errorMsg = $e->getMessage();
+            return view('layout.admin.error', compact(['errorMsg']));
+        }
+    }
+
+    public function rejectData(Request $request) {
+
+    }
+
     private function fetchDataFromDatabase($keyword, $status)
     {
         if($status == 'active') {
@@ -200,7 +234,7 @@ class UserController extends Controller
                 $destinationPath = 'image/upload/'.$memberId.'/'.'profile/';
                 File::makeDirectory($destinationPath, 0777, true, true);
 
-                $imageName = "ktp_".$memberId.time().Str::random(5);
+                $imageName = "ktp-".time().Str::random(5).".".$imageKTP->getClientOriginalExtension();
                 $input['ktp'] = $destinationPath.$imageName;
             }
 
@@ -208,7 +242,7 @@ class UserController extends Controller
                 $destinationPath = 'image/upload/'.$memberId.'/'.'profile/';
                 File::makeDirectory($destinationPath, 0777, true, true);
                 
-                $imageName = "kk_".$memberId.time().Str::random(5);
+                $imageName = "kk-".time().Str::random(5).".".$imageKK->getClientOriginalExtension();
                 $input['kk'] = $destinationPath.$imageName;
             }
 
@@ -217,116 +251,78 @@ class UserController extends Controller
                 $destinationPath = 'image/upload/'.$memberId.'/'.'simpanan/pokok/';
                 File::makeDirectory($destinationPath, 0777, true, true);
 
-                $imageName = $memberId."_".time().Str::random(5);
+                $imageName = "simpanan-".time()."-".Str::random(5).".".$imageSimpanan->getClientOriginalExtension();
                 $buktiSimpanan = $destinationPath.$imageName;
             }
             //end of image handler
 
-            $input["status"] = 2;
+            $input["status"] = 0;
 
-            $user = null;
-            DB::transaction(function($user) use($input, $imageKTP, $imageKK, $imageSimpanan, $buktiSimpanan, $nominal) {
-                $user = User::create($input);
-                $user->save();
+            DB::beginTransaction();
+            
+            //insert into user
+            $user = User::create($input);
 
-                Image::make($imageKTP)->resize(800, 600, function ($constraint) {
-                    $constraint->aspectRatio();
-                })->save($input['ktp']);
-    
-                Image::make($imageKK)->resize(800, 600, function ($constraint) {
-                    $constraint->aspectRatio();
-                })->save($input['kk']);
-    
-                Image::make($imageSimpanan)->resize(800, 600, function ($constraint) {
-                    $constraint->aspectRatio();
-                })->save($buktiSimpanan);
+            Image::make($imageKTP)->resize(800, 600, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($input['ktp']);
 
+            Image::make($imageKK)->resize(800, 600, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($input['kk']);
 
-                //insert into user_account
-                $arrUserAccount = [];
-                $arrUserAccount["memberId"] = $user->memberId;
+            Image::make($imageSimpanan)->resize(800, 600, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($buktiSimpanan);
 
-                //generate acount id
-                $salt_1 = random_int(0, 9);
-                $salt_2 = Str::random(7);
-                $salt_3 = Str::random(16);
-                $arrUserAccount["accountId"] = strtoupper("UAC-".$salt_1.$salt_2."-".$salt_3);
+            //insert into user account
+            $arrUserAccount = [];
+            $arrUserAccount["memberId"] = $user->memberId;
 
-                $arrUserAccount["kind"] = "pokok";
-                $arrUserAccount["balance"] = $nominal;
+            $salt_1 = random_int(0, 9);
+            $salt_2 = Str::random(7);
+            $salt_3 = Str::random(16);
+            $arrUserAccount["accountId"] = strtoupper("UAC-".$salt_1.$salt_2."-".$salt_3);
 
-                $userAccount = $user->userAccount()->create($arrUserAccount);
-                $userAccount->save();
+            $arrUserAccount["kind"] = "pokok";
+            $arrUserAccount["balance"] = $nominal;
 
-                // $userAccount = UserAccount::create($arrUserAccount);
-                // $userAccount->save();
+            $userAccount = $user->userAccount()->create($arrUserAccount);
+            $userAccount->save();
 
-                //insert into transaction
-                $arrTransaction = [];
-                $arrTransaction["accountId"] = $userAccount->accountId;
-                $arrTransaction["kind"] = "pokok";
-                $arrTransaction["total"] = $nominal;
-                $arrTransaction["method"] = 1;
-                $arrTransaction["transactionDate"] = date('Y-m-d H:i:s');
-                $arrTransaction["image"] = $buktiSimpanan;
-                $arrTransaction["notes"] = "registrasi simpanan pokok";
-                $arrTransaction["status"] = 0;
-                $userAccount->transaction()->create($arrTransaction);
+            //insert into transaction
+            $arrTransaction = [];
+            $arrTransaction["accountId"] = $userAccount->accountId;
+            $arrTransaction["kind"] = "pokok";
+            $arrTransaction["total"] = $nominal;
+            $arrTransaction["method"] = 1;
+            $arrTransaction["transactionDate"] = date('Y-m-d H:i:s');
+            $arrTransaction["image"] = $buktiSimpanan;
+            $arrTransaction["notes"] = "registrasi simpanan pokok";
+            $arrTransaction["status"] = 0;
 
-                event(new Registered($user));
-
-                Auth::login($user);
-            });
+            $userAccount->transaction()->create($arrTransaction);
 
             DB::commit();
 
-            return redirect('/email/verify');
+            event(new Registered($user));
+            Auth::login($user);
+            return redirect('/admin/menu/user')->withSuccess('Data anggota berhasil ditambahkan!');
         } catch (\Exception $e) {
             DB::rollback();
+
+            File::deleteDirectory('image/upload/'.$memberId);
+
             $errorMsg = $e->getMessage();
             return view('layout.admin.error', compact(['errorMsg']));
         }
     }
 
-    public function show(User $user)
-    {
-        dd('sd');
-        // dd("edit");
-        // $status = $request->has('status') ? $request->input('status') : "aktif";
-
-        // if($status == "aktif") {
-        //     $users = DB::table('users')
-        //     ->where('status', 2)
-        //     ->orderBy('id', 'desc')
-        //     ->cursorPaginate(10);
-        // } elseif ($status == "non-aktif") {
-        //     $users = DB::table('users')
-        //     ->where('status', 3)
-        //     ->orderBy('id', 'desc')
-        //     ->cursorPaginate(10);
-        // } elseif ($status == "not-verified") {
-        //     $users = DB::table('users')
-        //     ->where('status', 0)
-        //     ->orderBy('id')
-        //     ->cursorPaginate(10);
-        // } elseif ($status == "not-acc") {
-        //     $users = DB::table('users')
-        //     ->where('status', 1)
-        //     ->orderBy('id', 'desc')
-        //     ->cursorPaginate(10);
-        // }
-
-        // if ($request->ajax()) {
-        //     return view('admin.partials.filtered-data-anggota', compact('users'))->render();
-        // }
-
-        // return view('admin.anggota-edit', compact('users', 'request'));
+    public function show(User $user) {
     }
 
     public function edit(User $user)
-    {
-        // Retrieve transactions with a specific user_account type
-        
+    {   
         $userAccount = $user->userAccount()
             ->where('kind', 'pokok')
             ->where('memberId', $user->memberId)
@@ -394,7 +390,6 @@ class UserController extends Controller
                 ],
                 'phone' => 'required|min:10|regex:/^([0-9\s\-\+\(\)]*)$/',
                 'mothername' => 'required',
-                // 'method' => 'required|in:cash,transfer',
                 'method' => [
                     'nullable',
                     Rule::in(['cash', 'transfer']),
@@ -441,7 +436,7 @@ class UserController extends Controller
                 $destinationPath = 'image/upload/'.$user->memberId.'/'.'profile/';
                 File::makeDirectory($destinationPath, 0777, true, true);
 
-                $imageName = "ktp_".$user->memberId.time().Str::random(5).$imageKTP->getClientOriginalExtension();
+                $imageName = "ktp-".time().Str::random(5).".".$imageKTP->getClientOriginalExtension();
                 $input['ktp'] = $destinationPath.$imageName;
             }
 
@@ -452,30 +447,52 @@ class UserController extends Controller
                 $destinationPath = 'image/upload/'.$user->memberId.'/'.'profile/';
                 File::makeDirectory($destinationPath, 0777, true, true);
                 
-                $imageName = "kk_".$user->memberId.time().Str::random(5).$imageKK->getClientOriginalExtension();
+                $imageName = "kk-".time().Str::random(5).".".$imageKK->getClientOriginalExtension();
                 $input['kk'] = $destinationPath.$imageName;
             }
 
             $buktiSimpanan = "";
             $simpananDelete = "";
             if($imageSimpanan = $request->file('simpanan')) {
-                $simpananDelete = public_path()."/".$user->kk;
+                $simpananDelete = public_path()."/".$transaction['image'];
 
                 $destinationPath = 'image/upload/'.$user->memberId.'/'.'simpanan/pokok/';
                 File::makeDirectory($destinationPath, 0777, true, true);
 
-                $imageName = $user->memberId."_".time().Str::random(5).$imageSimpanan->getClientOriginalExtension();
+                $imageName = "simpanan-".time().Str::random(5).".".$imageSimpanan->getClientOriginalExtension();
                 $buktiSimpanan = $destinationPath.$imageName;
             }
-            if($input['method'] == 'cash') {
-                $simpananDelete = public_path()."/".$user->kk;
+            
+            if(isset($input['method'])) {
+                if($input['method'] == 'cash') {
+                    $simpananDelete = public_path()."/".$transaction['image'];
+                }
             }
             //end of image handler
 
             DB::beginTransaction();
 
-            // dd($input);
             $user->update($input);
+
+            if(isset($input['method'])) {
+                // Get the user with their user accounts
+                $user = User::find($userId);
+
+                if(strtolower($input['method']) == "cash") {
+                    $input['method'] = 2;
+                } else {
+                    $input['method'] = 1;
+                }
+
+                foreach ($user->userAccount as $userAccount) {
+                    if ($userAccount->kind === 'pokok') {
+                        $userAccount->transaction()->update([
+                            'method' => $input['method'],
+                            'image' => $buktiSimpanan
+                        ]);
+                    }
+                }
+            }
 
             //update image
             if (isset($input['ktp'])) {
@@ -511,12 +528,10 @@ class UserController extends Controller
 
             return redirect('/admin/user')->withSuccess('Data anggota berhasil diupdate!');
         } catch (\Exception $e) {
-            dd("hhhe");
             DB::rollback();
             $errorMsg = $e->getMessage();
             return view('layout.admin.error', compact(['errorMsg']));
         }
-        
     }
 
     public function destroy(User $user)

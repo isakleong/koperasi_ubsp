@@ -34,6 +34,13 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
     $user->update(['status' => 1]);
     return redirect('/');
 })->middleware(['auth', 'signed'])->name('verification.verify');
+
+// Route::get('/email/verify/resend', [AuthController::class, 'resendVerificationEmail'])->name('verification.resend');
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+ 
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 //END OF USER AUTHENTICATION (LOGIN AND REGISTER)
 
 //RESET PASSWORD
@@ -129,6 +136,14 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
 
     Route::get('/menu/user', [AdminController::class, 'showUserMenu']);
     Route::resource('/user', UserController::class);
+    Route::post('user/{id}/acc', [UserController::class, 'accData'])->name('acc.user');
+    Route::post('user/{id}/reject', [UserController::class, 'rejectData'])->name('reject.user');
+
+    // Route::post('/email/verification-notification', function (Request $request) {
+    //     $request->user()->sendEmailVerificationNotification();
+     
+    //     return back()->with('message', 'Verification link sent!');
+    // })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
     Route::resource('/account_category', AccountCategoryController::class);
     Route::resource('/account', AccountController::class);
