@@ -103,6 +103,7 @@ class AccountController extends Controller
                     $parentAccount = Account::find($input['parentID']);
                     $newAccount->appendToNode($parentAccount)->save();
                 } elseif($input['accountRelation'] == 'header') {
+                    dd($input['parentID']);
                     $parentAccount = Account::find($input['parentID']);
                     $newAccount->prependToNode($parentAccount)->save();
                 }

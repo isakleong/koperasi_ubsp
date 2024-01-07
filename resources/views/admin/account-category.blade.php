@@ -92,7 +92,7 @@
                     <div data-i18n="Basic">Angsuran</div>
                 </a>
             </li>
-            
+
             <!-- End of Transaction Data -->
 
             <!-- Report Data -->
@@ -162,47 +162,64 @@
                     </div>
 
                     <div class="card-body">
-                        <table class="table table-striped" id="table1" style="width: 100%">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama Kategori</th>
-                                    <th>Saldo Normal</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $i = 1;
-                                @endphp
-                                @foreach ($category as $item)
+                        @if (count($category) == 0)
+                            <div class="container-xxl container-p-y text-center">
+                                <div class="misc-wrapper">
+                                    <div class="mb-4">
+                                        <img src="/administrator/assets/img/illustrations/not-found.jpg"
+                                            alt="page-misc-error-light" width="500" class="img-fluid"
+                                            data-app-dark-img="illustrations/page-misc-error-dark.png"
+                                            data-app-light-img="illustrations/page-misc-error-light.png" />
+                                    </div>
+                                    <h5 class="mb-4 mx-2">Tidak ada daftar kategori akun.</h5>
+                                </div>
+                            </div>
+                        @else
+                            <table class="table table-striped" id="table1" style="width: 100%">
+                                <thead>
                                     <tr>
-                                        <td>{{ $i++ }}</td>
-                                        <td>{{ $item->name }}</td>
-                                        <td>{{ $item->normalBalance }}</td>
-                                        @if ($item->active == '1')
-                                            <td><span class="badge bg-success">Active</span></td>
-                                        @else
-                                            <td><span class="badge bg-danger">Inactive</span></td>
-                                        @endif
-                                        <td>
-                                            <a href="{{ route('admin.account_category.edit', $item->id) }}"
-                                                class="btn icon btn-sm btn-primary d-inline-block m-1"
-                                                data-bs-toggle="tooltip" title="Edit"><i class="bx bxs-pencil"></i></a>
-                                            <form action="{{ route('admin.account_category.destroy', $item->id) }}"
-                                                method="POST" class="d-inline-block m-1" data-bs-toggle="tooltip"
-                                                title="Hapus">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn icon btn-sm btn-danger show_confirm"><i
-                                                        class="bx bxs-trash"></i></button>
-                                            </form>
-                                        </td>
+                                        <th>No</th>
+                                        <th>Nama Kategori</th>
+                                        <th>Saldo Normal</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $i = 1;
+                                    @endphp
+                                    @foreach ($category as $item)
+                                        <tr>
+                                            <td>{{ $i++ }}</td>
+                                            <td>{{ $item->name }}</td>
+                                            <td>{{ $item->normalBalance }}</td>
+                                            @if ($item->active == '1')
+                                                <td><span class="badge bg-success">Active</span></td>
+                                            @else
+                                                <td><span class="badge bg-danger">Inactive</span></td>
+                                            @endif
+                                            <td>
+                                                <a href="{{ route('admin.account_category.edit', $item->id) }}"
+                                                    class="btn icon btn-sm btn-primary d-inline-block m-1"
+                                                    data-bs-toggle="tooltip" title="Edit"><i
+                                                        class="bx bxs-pencil"></i></a>
+                                                <form action="{{ route('admin.account_category.destroy', $item->id) }}"
+                                                    method="POST" class="d-inline-block m-1" data-bs-toggle="tooltip"
+                                                    title="Hapus">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="btn icon btn-sm btn-danger show_confirm"><i
+                                                            class="bx bxs-trash"></i></button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @endif
+
                     </div>
                 </div>
             </div>

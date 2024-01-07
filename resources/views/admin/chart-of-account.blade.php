@@ -92,7 +92,7 @@
                     <div data-i18n="Basic">Angsuran</div>
                 </a>
             </li>
-            
+
             <!-- End of Transaction Data -->
 
             <!-- Report Data -->
@@ -162,25 +162,36 @@
                     </div>
 
                     <div class="card-body">
-                        <!-- Display the hierarchy in a table -->
-                        <table class="table table-striped" id="table1" style="width: 100%">
-                            <thead>
-                                <tr>
-                                    <th>Kode Akun</th>
-                                    <th>Nama Akun</th>
-                                    <th>Kategori</th>
-                                    <!-- Add other columns as needed -->
-                                    <th>Edit</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($account as $rootNode)
-                                    @include('admin.partials.account-tree', ['account' => $rootNode])
-                                @endforeach
-                            </tbody>
-                        </table>
-
-
+                        @if (count($account) == 0)
+                            <div class="container-xxl container-p-y text-center">
+                                <div class="misc-wrapper">
+                                    <div class="mb-4">
+                                        <img src="/administrator/assets/img/illustrations/not-found.jpg"
+                                            alt="page-misc-error-light" width="500" class="img-fluid"
+                                            data-app-dark-img="illustrations/page-misc-error-dark.png"
+                                            data-app-light-img="illustrations/page-misc-error-light.png" />
+                                    </div>
+                                    <h5 class="mb-4 mx-2">Tidak ada daftar akun.</h5>
+                                </div>
+                            </div>
+                        @else
+                            <table class="table table-striped" id="table1" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th>Kode Akun</th>
+                                        <th>Nama Akun</th>
+                                        <th>Kategori</th>
+                                        <!-- Add other columns as needed -->
+                                        <th>Edit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($account as $rootNode)
+                                        @include('admin.partials.account-tree', ['account' => $rootNode])
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @endif
                     </div>
                 </div>
             </div>
