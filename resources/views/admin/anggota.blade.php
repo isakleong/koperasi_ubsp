@@ -173,7 +173,7 @@
 @endsection
 
 @section('content')
-    @include('sweetalert::alert')
+    {{-- @include('sweetalert::alert') --}}
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="py-3 mb-4">
@@ -236,5 +236,16 @@
 @section('vendorJS')
 <script src="/administrator/js/jquery.min.js"></script>
 <script src="/vendor/sweetalert/sweetalert.all.js"></script>
+
+<script>
+    @if ($message = session('success'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Success',
+            // text: '{{ Session::get('errors') }}',
+        })
+    @endif
+</script>
     
 @endsection

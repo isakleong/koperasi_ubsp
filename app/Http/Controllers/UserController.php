@@ -168,6 +168,7 @@ class UserController extends Controller
                 'lname.required' => 'Nama belakang belum diisi',
                 'birthdate.required' => 'Tanggal lahir belum diisi',
                 'birthdate.date' => 'Tanggal lahir tidak valid',
+                'birthdate.before' => 'Anggota UBSP harus berusia minimal 17 tahun',
                 'birthplace.required' => 'Tempat lahir belum diisi',
                 'address.required' => 'Alamat tinggal belum diisi',
                 'workAddress.required' => 'Alamat kerja belum diisi',
@@ -189,7 +190,8 @@ class UserController extends Controller
             );
             
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator->errors())->withInput();
+            // return redirect()->back()->withErrors($validator->errors())->withInput();
+            // return redirect('/admin/menu/user')->withSuccess('Data anggota berhasil ditambahkan!');
         }
 
         try {
@@ -306,7 +308,6 @@ class UserController extends Controller
             DB::commit();
 
             event(new Registered($user));
-            Auth::login($user);
             return redirect('/admin/menu/user')->withSuccess('Data anggota berhasil ditambahkan!');
         } catch (\Exception $e) {
             DB::rollback();

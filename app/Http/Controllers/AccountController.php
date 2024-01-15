@@ -99,17 +99,22 @@ class AccountController extends Controller
 
             // Check if a parent account is selected
             if (isset($input['parentID'])) {
+                $parentAccount = Account::find($input['parentID']);
+
                 if($input['accountRelation'] == 'child') {
-                    $parentAccount = Account::find($input['parentID']);
                     $newAccount->appendToNode($parentAccount)->save();
                 } elseif($input['accountRelation'] == 'header') {
-                    dd($input['parentID']);
-                    $parentAccount = Account::find($input['parentID']);
-                    $newAccount->prependToNode($parentAccount)->save();
+                    // $newAccount->parent_id = null;
+                    // $newAccount->name = null;
+                    $newAccount->save();
+
+                    // $newAccount->prependToNode($parentAccount)->save();
+                    $parentAccount->prependToNode($newAccount)->save();
                 }
             } else {
                 $newAccount->saveAsRoot();
             }
+            // dd($newAccount, $parentAccount);
 
             return redirect('/admin/account')->withSuccess('Data akun berhasil ditambahkan!');
         } catch (\Exception $e) {

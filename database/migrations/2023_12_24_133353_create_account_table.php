@@ -30,6 +30,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('account');
+        // Schema::dropIfExists('account');
+        Schema::table('table', function (Blueprint $table){
+            $table->dropNestedSet();
+        });
     }
 };

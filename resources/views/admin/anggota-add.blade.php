@@ -5,12 +5,14 @@
     <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
     <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
 
+    <link rel="stylesheet" href="/vendor/sweetalert/sweetalert2.css">
+
     <style>
-        body, html {
+        /* body, html {
             height: 100%;
             margin: 0;
             overflow: auto;
-        }
+        } */
 
         #overlay {
             display: none;
@@ -416,7 +418,7 @@
     <script src="/main/assets/static/js/pages/filepond.js"></script>
 
     <script src="/administrator/js/jquery.min.js"></script>
-    <script src="/vendor/sweetalert/sweetalert.all.js"></script>
+    <script src="/vendor/sweetalert/sweetalert2.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
 
@@ -443,6 +445,21 @@
                 $('#bukti-trf').hide();
             }
 
+            var animation = lottie.loadAnimation({
+                    container: document.getElementById('lottie-container'),
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: '/administrator/assets/lottie/loading.json',
+                    rendererSettings: {
+                        preserveAspectRatio: 'xMidYMid meet'
+                    }
+                });
+
+                $('#overlay').show();
+
+                $('body, html').css('overflow', 'hidden');
+
             $('.show_confirm').click(function(event) {
                 event.preventDefault();
 
@@ -455,6 +472,10 @@
                     showDenyButton: true,
                     confirmButtonText: 'Ya, simpan',
                     denyButtonText: 'Batal',
+                    customClass: {
+                        confirmButton: "btn btn-primary",
+                        denyButton: "btn btn-danger"
+                    },
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit();
@@ -462,6 +483,16 @@
                         // Swal.fire('Changes are not saved', '', 'info');
                     }
                 });
+
+                // Swal.fire({
+                //     title: "Question!",
+                //     text: " You clicked the button!",
+                //     icon: "question",
+                //     customClass: {
+                //         confirmButton: "btn btn-primary"
+                //     },
+                //     buttonsStyling: !1
+                // });
             });
 
             $('input[type="radio"]').on('change', function() {

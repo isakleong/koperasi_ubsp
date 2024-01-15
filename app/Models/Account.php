@@ -29,6 +29,11 @@ class Account extends Model
         'approvedOn',
     ];
 
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
     public function category(){
         return $this->belongsTo(AccountCategory::class, 'categoryID', 'id');
     }
