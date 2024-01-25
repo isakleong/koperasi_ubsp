@@ -190,7 +190,7 @@ class UserController extends Controller
             );
             
         if ($validator->fails()) {
-            // return redirect()->back()->withErrors($validator->errors())->withInput();
+            return redirect()->back()->withErrors($validator->errors())->withInput();
             // return redirect('/admin/menu/user')->withSuccess('Data anggota berhasil ditambahkan!');
         }
 
@@ -265,17 +265,23 @@ class UserController extends Controller
             //insert into user
             $user = User::create($input);
 
-            Image::make($imageKTP)->resize(800, 600, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($input['ktp']);
+            if(isset($imageKTP)) {
+                Image::make($imageKTP)->resize(800, 600, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($input['ktp']);
+            }
 
-            Image::make($imageKK)->resize(800, 600, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($input['kk']);
+            if(isset($imageKK)) {
+                Image::make($imageKK)->resize(800, 600, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($input['kk']);
+            }
 
-            Image::make($imageSimpanan)->resize(800, 600, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($buktiSimpanan);
+            if(isset($imageSimpanan)){
+                Image::make($imageSimpanan)->resize(800, 600, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($buktiSimpanan);
+            }
 
             //insert into user account
             $arrUserAccount = [];

@@ -315,9 +315,9 @@
                                 <div class="mb-3">
                                     <label>Jenis Pembayaran</label>
                                     @if ($transaction['method'] == 1)
-                                        <p>Transfer</p>
-                                    @else
                                         <p>Cash</p>
+                                    @else
+                                        <p>Transfer</p>
                                     @endif
                                 </div>
                                 <div class="mb-3">

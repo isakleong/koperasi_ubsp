@@ -1,5 +1,9 @@
 @extends('layout.admin.main')
 
+@section('vendorCSS')
+    <link rel="stylesheet" type="text/css" href="/vendor/flatpickr/flatpickr.css"/>
+@endsection
+
 @section('navbar')
     <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
         <div class="app-brand demo">
@@ -40,7 +44,7 @@
                     <div data-i18n="Basic">Kategori Akun</div>
                 </a>
             </li>
-            <li class="menu-item active">
+            <li class="menu-item">
                 <a href="/admin/account" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-archive"></i>
                     <div data-i18n="Basic">Daftar Akun</div>
@@ -92,13 +96,13 @@
                     <div data-i18n="Basic">Angsuran</div>
                 </a>
             </li>
-            
+
             <!-- End of Transaction Data -->
 
             <!-- Report Data -->
             <li class="menu-header small text-uppercase"><span class="menu-header-text">laporan</span></li>
-            <li class="menu-item">
-                <a href="/admin/menu/user" class="menu-link">
+            <li class="menu-item active">
+                <a href="/admin/journal" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-book-open"></i>
                     <div data-i18n="Basic">Jurnal Harian</div>
                 </a>
@@ -151,98 +155,67 @@
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="py-3 mb-4">
-            <span class="text-muted fw-light">Daftar Akun / </span> Tambah Akun
+            <span class="fw-light">Jurnal Harian</span>
         </h4>
         <div class="row">
             <div class="col-xl">
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Tambah Akun</h5>
+                        <h5 class="mb-0">Tambah Jurnal Harian</h5>
+                        <a href="/admin/account_category/create" class="btn btn-primary">Tambah Data</a>
                     </div>
 
                     <div class="card-body">
-                        <form action="{{ route('admin.account.store') }}" method="post">
+                        <form action="{{ route('admin.account_category.store') }}" method="post">
                             @csrf
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="name" name="name"
-                                        placeholder="" oninput=capitalizeName(this) required
-                                        value="{{ old('name') }}" />
-                                    <label for="name">Nama Akun</label>
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col-md-4 col-12 mb-3">
+                                    <label for="startDate" class="form-label">Tanggal Awal</label>
+                                    <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun" id="startDate" name="startDate" />
+                                    @error('startDate')
+                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                    @enderror
                                 </div>
-                                @error('name')
+
+                                <div class="col-md-4 col-12 mb-3">
+                                    <label for="endDate" class="form-label">Tanggal Akhir</label>
+                                    <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun" id="endDate" name="endDate" />
+                                    @error('endDate')
+                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                    @enderror
+                                </div>
+    
+                                <div class="col-md-4 col-12 mb-3">
+                                    <label for="endDate" class="form-label">Tanggal Akhir</label>
+                                    <a href="/admin/account_category/create" class="btn btn-primary">Tambah Data</a>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="normalBalance" class="form-label">Saldo Normal</label>
+                                <select class="form-select" id="normalBalance" aria-label="normalBalance"
+                                    name="normalBalance">
+                                    <option selected>--- Pilih Saldo Normal ---</option>
+                                    <option value="D" {{ old('normalBalance') == 'D' ? 'selected' : '' }}>Debit
+                                    </option>
+                                    <option value="K" {{ old('normalBalance') == 'K' ? 'selected' : '' }}>Kredit
+                                    </option>
+                                </select>
+                                @error('normalBalance')
                                     <p class="mt-1" style="color: red">{{ $message }}</p>
                                 @enderror
                             </div>
-
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="accountNo" name="accountNo"
-                                        placeholder="" oninput=capitalizeName(this) required
-                                        value="{{ old('accountNo') }}" />
-                                    <label for="accountNo">Nomor Akun</label>
-                                </div>
-                                @error('accountNo')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-group">
-                                    <label for="categoryID">Kategori Akun</label>
-                                    <select class="choices form-select" id="categoryID" name="categoryID"><option value="" selected disabled>---Pilih Kategori---</option>  
-                                      @foreach ($category as $item)
-                                            <option value="{{ $item->id }}" {{ old('categoryID') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @error('categoryID')
-                                    <p style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3" id="relation" style="display: none;">
-                                <div class="form-group">
-                                    <label for="accountRelation">Relasi Akun</label>
-                                    <select id="accountRelation" class="choices form-select" name="accountRelation">
-                                        <option value="" selected disabled>---Pilih Relasi---</option>
-                                        <option value="none" {{ old('accountRelation') =='none' ? 'selected' : '' }}>Tidak Ada</option>
-                                        <option value="header" {{ old('accountRelation') =='header' ? 'selected' : '' }}>Akun Header</option>
-                                        <option value="child" {{ old('accountRelation') =='child' ? 'selected' : '' }}>Sub Akun</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="mb-3" id="relationDetail" style="display: none;">
-                                <div class="form-group">
-                                    <label for="parentID">Detail Relasi:</label>
-                                    <select id="parentID" name="parentID" class="choices form-select">
-                                        <option value="">---Pilih Akun---</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-group">
-                                    <label for="description">Deskripsi</label>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description" placeholder=""
-                                        oninput=capitalizeName(this) required value="{{ old('description') }}"></textarea>
-                                </div>
-                                @error('description')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
                             <div class="form-check form-switch mb-3">
                                 <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
                                     name="active" checked />
-                                <label class="form-check-label" for="flexSwitchCheckChecked">Active</label>
+                                <label class="form-check-label" for="flexSwitchCheckChecked">Aktif?</label>
                             </div>
                             <div class="text-end">
                                 <button type="submit" class="btn btn-lg btn-primary show_confirm">Tambah
                                     Kategori</button>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -252,58 +225,15 @@
 @endsection
 
 @section('vendorJS')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
+    <script src="/vendor/flatpickr/flatpickr.js"></script>
 
     <script>
-        //capitalize input
-        function capitalizeName(input) {
-            const name = input.value.toLowerCase();
-            const words = name.split(' ');
-            const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
-            input.value = capitalizedWords.join(' ');
-        }
-        //end of capitalize input
-
         $(document).ready(function() {
-          var checkSelectedCategory = $("#categoryID").val();
-          if(checkSelectedCategory != null) {
-            $('#accountRelation').val('').trigger('change');
-          }
-
-            $('#categoryID').change(function() {
-              $("#relation").show();
-              $("#relationDetail").hide();
-              $('#accountRelation').val('').trigger('change');
-            });
-
-            $('#accountRelation').change(function() {
-                var relation = $(this).val();
-
-                if (relation == 'none' || relation == null) {
-                    $("#relationDetail").hide();
-                } else {
-                    $("#relationDetail").show();
-
-                    var categoryId = $("#categoryID").val();
-                    $.ajax({
-                        url: '/admin/xxx',
-                        type: 'GET',
-                        data: {
-                            categoryID: categoryId
-                        },
-                        success: function(data) {
-                            console.log(data);
-                            var select = $('#parentID');
-                            select.empty();
-                            $.each(data, function(key, value) {
-                                select.append('<option value="' + value.id + '">' + value
-                                    .name + '</option>');
-                            });
-                            
-                        }
-                    });
-                }
+            $(".dob-picker").flatpickr({
+                monthSelectorType: "static",
+                dateFormat: "d-m-Y"
             });
 
             $('.show_confirm').click(function(event) {
@@ -312,11 +242,11 @@
                 var form = $(this).closest("form");
 
                 Swal.fire({
-                    title: 'Simpan Data?',
+                    title: 'Hapus Data?',
                     text: '',
                     icon: 'question',
                     showDenyButton: true,
-                    confirmButtonText: 'Ya, simpan',
+                    confirmButtonText: 'Ya, hapus',
                     denyButtonText: 'Batal',
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -327,5 +257,16 @@
                 });
             });
         });
+    </script>
+
+    <script>
+        @if ($message = session('errorData'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                // text: '',
+                text: '{{ Session::get('errorData') }}',
+            })
+        @endif
     </script>
 @endsection

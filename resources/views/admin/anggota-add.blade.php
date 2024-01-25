@@ -445,20 +445,7 @@
                 $('#bukti-trf').hide();
             }
 
-            var animation = lottie.loadAnimation({
-                    container: document.getElementById('lottie-container'),
-                    renderer: 'svg',
-                    loop: true,
-                    autoplay: true,
-                    path: '/administrator/assets/lottie/loading.json',
-                    rendererSettings: {
-                        preserveAspectRatio: 'xMidYMid meet'
-                    }
-                });
-
-                $('#overlay').show();
-
-                $('body, html').css('overflow', 'hidden');
+            
 
             $('.show_confirm').click(function(event) {
                 event.preventDefault();

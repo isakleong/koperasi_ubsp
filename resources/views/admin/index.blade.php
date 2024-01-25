@@ -98,7 +98,7 @@
             <!-- Report Data -->
             <li class="menu-header small text-uppercase"><span class="menu-header-text">laporan</span></li>
             <li class="menu-item">
-                <a href="/admin/menu/user" class="menu-link">
+                <a href="/admin/journal" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-book-open"></i>
                     <div data-i18n="Basic">Jurnal Harian</div>
                 </a>

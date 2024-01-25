@@ -21,7 +21,9 @@ class AccountController extends Controller
         // $nodes = Account::get()->toTree();
 
         // $account = Account::where('parent_id', null)->withDepth()->reversed()->with('ancestors')->get()->toFlatTree();
-        $account = Account::with('category')->withDepth()->with('ancestors')->get()->toTree();
+        
+        // $account = Account::with('category')->withDepth()->with('ancestors')->get()->toTree();
+        $account = Account::with('category')->withDepth()->get()->toTree();
         // dd($account);
         return view('admin.chart-of-account', compact('account'));
     }
@@ -127,18 +129,76 @@ class AccountController extends Controller
         //
     }
 
-    public function edit(string $id)
+    public function edit(Account $account)
     {
-        //
+        $category = AccountCategory::get();
+        return view('admin.chart-of-account-edit', compact('account','category'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, Account $account)
     {
-        //
+        $validator = Validator::make(
+            [
+                'name' => $request->input('name'),
+                'accountNo' => $request->input('accountNo'),
+                'categoryID' => $request->input('categoryID'),
+                'parentID' => $request->input('parentID'),
+                'accountRelation' => $request->input('accountRelation'),
+            ],
+            [
+                'name' => [
+                    'required',
+                    Rule::unique('account')->where(function ($query) use ($request) {}),
+                ],
+                'accountNo' => [
+                    'required',
+                    Rule::unique('account')->where(function ($query) use ($request) {}),
+                ],
+                'categoryID' => 'required',
+                'parentID' => 'nullable|exists:account,id',
+                'accountRelation' => 'required|in:none,header,child',
+            ],
+            [
+                'name.required' => 'Nama akun belum diisi',
+                'name.unique' => 'Nama akun sudah dipakai, mohon untuk pilih nama akun yang lain',
+                'accountNo.required' => 'Nomor akun belum diisi',
+                'accountNo.unique' => 'Nomor akun sudah dipakai, mohon untuk pilih nomor akun yang lain',
+                'categoryID.required' => 'Kategori akun belum dipilih',
+                'parentID.exists' => 'XXXX',
+                'accountRelation.required' => 'Relasi akun belum dipilih',
+                'accountRelation.in' => 'Relasi akun tidak valid',
+            ],
+        );
+            
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors())->withInput();
+        }
+
+        if(!$request->has('active')) {
+            $request->merge(['active'=>'0']);
+        } else {
+            $request->merge(['active'=>'1']);
+        }
+
+        try {
+            $input = $request->all();
+
+            $account->update($input);
+
+            return redirect('/admin/account')->withSuccess('Data akun berhasil diupdate!');
+        } catch(\Exception $e) {
+            return redirect('/admin/account')->with('errorData', $e->getMessage());
+        }
     }
 
-    public function destroy(string $id)
+    public function destroy(Account $account)
     {
-        //
+        try {
+            $account->delete();
+
+            return redirect('/admin/account')->withSuccess('Data akun berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect('/admin/account')->with('errorData', $e->getMessage());
+        }
     }
 }

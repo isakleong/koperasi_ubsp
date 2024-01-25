@@ -1,5 +1,9 @@
 @extends('layout.admin.main')
 
+@section('vendorCSS')
+    <link rel="stylesheet" type="text/css" href="/vendor/datatable/css/datatables.min.css"/>
+@endsection
+
 @section('navbar')
     <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
         <div class="app-brand demo">
@@ -181,8 +185,9 @@
                                         <th>Kode Akun</th>
                                         <th>Nama Akun</th>
                                         <th>Kategori</th>
+                                        <th>Status</th>
                                         <!-- Add other columns as needed -->
-                                        <th>Edit</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -201,11 +206,64 @@
 @endsection
 
 @section('vendorJS')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="/vendor/datatable/js/datatables.min.js"></script>
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
 
     <script>
         $(document).ready(function() {
+            var table = $('#table1').DataTable({
+                responsive: true
+            });
+
+            // var table = $('#table1').DataTable({
+            //     responsive: true,
+            //     processing: true,
+            //     serverSide: true,
+            //     ajax: {
+            //         url: '/admin/coba', // Replace with your Laravel API endpoint
+            //         type: 'GET',
+            //     },
+            //     columns: [
+            //         { data: 'column1', name: 'column1' },
+            //         { data: 'column2', name: 'column2' },
+            //         // Add more columns as needed
+            //     ],
+            // });
+
+            const registerDeleteItemHandlers = () => {
+                $('.show_confirm').click(function(event) {
+                    var form =  $(this).closest("form");
+                    var name = $(this).data("name");
+                    event.preventDefault();
+                    Swal.fire({
+                    title: 'Delete the data?',
+                    text: "If you delete this, it will be gone forever.",
+                    icon: 'question',
+                    showDenyButton: true,
+                    confirmButtonText: 'Yes, delete',
+                    denyButtonText: 'No',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        } else if (result.isDenied) {
+                            // Swal.fire('Changes are not saved', '', 'info');
+                        }
+                    });
+                });
+            };
+
+            registerDeleteItemHandlers();
+
+            $("#table1").on("draw.dt", function () {
+                registerDeleteItemHandlers();
+            });
+
+            table.on( 'responsive-display', function ( e, datatable, row, showHide, update ) {
+                // console.log('Details for row '+row.index()+' '+(showHide ? 'shown' : 'hidden'));
+                registerDeleteItemHandlers();
+            });
+
             $('.show_confirm').click(function(event) {
                 event.preventDefault();
 

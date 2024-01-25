@@ -6,6 +6,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\JournalController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
@@ -166,6 +167,9 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
 
     //ANGSURAN
     Route::get('/menu/angsuran', [AdminController::class, 'showAngsuranMenu']);
+
+    //LAPORAN
+    Route::resource('/journal', JournalController::class);
 
     
     //checker
