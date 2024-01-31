@@ -161,15 +161,15 @@
             <div class="col-xl">
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Tambah Jurnal Harian</h5>
-                        <a href="/admin/account_category/create" class="btn btn-primary">Tambah Data</a>
+                        <h5 class="mb-0">Laporan Jurnal Harian</h5>
+                        <a href="/admin/journal/create" class="btn btn-primary">Input Jurnal Umum</a>
                     </div>
 
                     <div class="card-body">
                         <form action="{{ route('admin.account_category.store') }}" method="post">
                             @csrf
-                            <div class="row d-flex justify-content-between align-items-center">
-                                <div class="col-md-4 col-12 mb-3">
+                            <div class="row d-flex justify-content-between align-items-end">
+                                <div class="col-md-3 col-12 mb-3">
                                     <label for="startDate" class="form-label">Tanggal Awal</label>
                                     <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun" id="startDate" name="startDate" />
                                     @error('startDate')
@@ -177,42 +177,37 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-4 col-12 mb-3">
+                                <div class="col-md-3 col-12 mb-3">
                                     <label for="endDate" class="form-label">Tanggal Akhir</label>
                                     <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun" id="endDate" name="endDate" />
                                     @error('endDate')
                                         <p class="mt-1" style="color: red">{{ $message }}</p>
                                     @enderror
                                 </div>
-    
-                                <div class="col-md-4 col-12 mb-3">
-                                    <label for="endDate" class="form-label">Tanggal Akhir</label>
-                                    <a href="/admin/account_category/create" class="btn btn-primary">Tambah Data</a>
-                                </div>
-                            </div>
 
-                            <div class="mb-3">
-                                <label for="normalBalance" class="form-label">Saldo Normal</label>
-                                <select class="form-select" id="normalBalance" aria-label="normalBalance"
-                                    name="normalBalance">
-                                    <option selected>--- Pilih Saldo Normal ---</option>
-                                    <option value="D" {{ old('normalBalance') == 'D' ? 'selected' : '' }}>Debit
-                                    </option>
-                                    <option value="K" {{ old('normalBalance') == 'K' ? 'selected' : '' }}>Kredit
-                                    </option>
-                                </select>
-                                @error('normalBalance')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
-                                    name="active" checked />
-                                <label class="form-check-label" for="flexSwitchCheckChecked">Aktif?</label>
-                            </div>
-                            <div class="text-end">
-                                <button type="submit" class="btn btn-lg btn-primary show_confirm">Tambah
-                                    Kategori</button>
+                                <div class="col-md-3 col-12 mb-3">
+                                    <label for="normalBalance" class="form-label">Periode</label>
+                                    <select class="form-select" id="normalBalance" aria-label="normalBalance"
+                                        name="normalBalance">
+                                        <option selected>--- Pilih Periode ---</option>
+                                        <option value="D">Tanggal</option>
+                                        <option value="D">Hari ini</option>
+                                        <option value="D">Minggu ini</option>
+                                        <option value="D">Bulan ini</option>
+                                        <option value="D">Tahun ini</option>
+                                        <option value="D">Kemarin</option>
+                                        <option value="D">Minggu Lalu</option>
+                                        <option value="D">Bulan Lalu</option>
+                                        <option value="D">Tahun Lalu</option>
+                                    </select>
+                                    @error('normalBalance')
+                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-3 col-12 mb-3">
+                                    <a href="/admin/account_category/create" class="btn btn-primary">Cari Data</a>
+                                </div>
                             </div>
                         </form>
 

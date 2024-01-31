@@ -158,59 +158,70 @@
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Tambah Jurnal Harian</h5>
-                        <a href="/admin/account_category/create" class="btn btn-primary">Tambah Data</a>
+                        {{-- <a href="/admin/account_category/create" class="btn btn-primary">Tambah Data</a> --}}
                     </div>
 
                     <div class="card-body">
-                        <form action="{{ route('admin.account_category.store') }}" method="post">
-                            @csrf
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="date" class="form-control mb-3" id="birthdate" name="birthdate"
-                                        required value="{{ old('birthdate') }}">
-                                    <label for="birthdate">Tanggal Transaksi</label>
-                                </div>
-                                @error('birthdate')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="name"
-                                        name="name"placeholder="" oninput=capitalizeName(this) required
-                                        value="{{ old('name') }}" />
-                                    <label for="name">dd</label>
-                                </div>
-                                @error('name')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="normalBalance" class="form-label">Saldo Normal</label>
-                                <select class="form-select" id="normalBalance" aria-label="normalBalance"
-                                    name="normalBalance">
-                                    <option selected>--- Pilih Saldo Normal ---</option>
-                                    <option value="D" {{ old('normalBalance') == 'D' ? 'selected' : '' }}>Debit
-                                    </option>
-                                    <option value="K" {{ old('normalBalance') == 'K' ? 'selected' : '' }}>Kredit
-                                    </option>
-                                </select>
-                                @error('normalBalance')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
-                                    name="active" checked />
-                                <label class="form-check-label" for="flexSwitchCheckChecked">Aktif?</label>
-                            </div>
+                        {{-- <form action="{{ route('admin.account_category.store') }}" method="post">
+                            @csrf                           
                             <div class="text-end">
                                 <button type="submit" class="btn btn-lg btn-primary show_confirm">Tambah
                                     Kategori</button>
                             </div>
-                        </form>
+                        </form> --}}
+
+                        <div class="col-12">
+                            <div class="card">
+                                <h5 class="card-header">Form Repeater</h5>
+                                <div class="card-body">
+                                <form class="form-repeater">
+                                    <div data-repeater-list="group-a">
+                                    <div data-repeater-item>
+                                        <div class="row">
+                                        <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+                                            <label class="form-label" for="form-repeater-1-1">Username</label>
+                                            <input type="text" id="form-repeater-1-1" class="form-control" placeholder="john.doe" />
+                                        </div>
+                                        <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+                                            <label class="form-label" for="form-repeater-1-2">Password</label>
+                                            <input type="password" id="form-repeater-1-2" class="form-control" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" />
+                                        </div>
+                                        <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
+                                            <label class="form-label" for="form-repeater-1-3">Gender</label>
+                                            <select id="form-repeater-1-3" class="form-select">
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
+                                            <label class="form-label" for="form-repeater-1-4">Profession</label>
+                                            <select id="form-repeater-1-4" class="form-select">
+                                            <option value="Designer">Designer</option>
+                                            <option value="Developer">Developer</option>
+                                            <option value="Tester">Tester</option>
+                                            <option value="Manager">Manager</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
+                                            <button class="btn btn-label-danger mt-4" data-repeater-delete>
+                                            <i class="bx bx-x me-1"></i>
+                                            <span class="align-middle">Delete</span>
+                                            </button>
+                                        </div>
+                                        </div>
+                                        <hr>
+                                    </div>
+                                    </div>
+                                    <div class="mb-0">
+                                    <button class="btn btn-primary" data-repeater-create>
+                                        <i class="bx bx-plus me-1"></i>
+                                        <span class="align-middle">Add</span>
+                                    </button>
+                                    </div>
+                                </form>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -224,8 +235,40 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
 
+    <script src="/vendor/jquery-repeater/jquery-repeater.js"></script>
+
     <script>
         $(document).ready(function() {
+            $(function() {
+                var n, o, e = $(".bootstrap-maxlength-example"),
+                    t = $(".form-repeater");
+                e.length && e.each(function() {
+                    $(this).maxlength({
+                        warningClass: "label label-success bg-success text-white",
+                        limitReachedClass: "label label-danger",
+                        separator: " out of ",
+                        preText: "You typed ",
+                        postText: " chars available.",
+                        validate: !0,
+                        threshold: +this.getAttribute("maxlength")
+                    })
+                }), t.length && (n = 2, o = 1, t.on("submit", function(e) {
+                    e.preventDefault()
+                }), t.repeater({
+                    show: function() {
+                        var r = $(this).find(".form-control, .form-select"),
+                            a = $(this).find(".form-label");
+                        r.each(function(e) {
+                            var t = "form-repeater-" + n + "-" + o;
+                            $(r[e]).attr("id", t), $(a[e]).attr("for", t), o++
+                        }), n++, $(this).slideDown()
+                    },
+                    hide: function(e) {
+                        confirm("Are you sure you want to delete this element?") && $(this).slideUp(e)
+                    }
+                }));
+            });
+
             $('.show_confirm').click(function(event) {
                 event.preventDefault();
 
