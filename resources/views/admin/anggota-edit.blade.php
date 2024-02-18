@@ -236,8 +236,10 @@
                                         <input type="hidden" id="memberId" value="{{ $item->memberId }}">
                                         <div class="mt-3">
                                             <div class="d-grid gap-3 col-lg-12">
-                                                <a href="{{ route('admin.user.edit', $item->id) }}" type="button"
-                                                    class="btn btn-primary">Edit Data</a>
+                                                <a href="{{ route('admin.user.edit', $item->id) }}" type="button" class="btn btn-primary">Edit Data</a>
+
+                                                <a href="{{ route('admin.user.edit', $item->id) }}" type="button" class="btn btn-primary">Lihat Detail</a>
+
                                                 @if ($item->status == 0)
                                                     <a href="{{ route('verification.send', $item->id) }}" type="button"
                                                         class="btn btn-primary">Verifikasi Ulang</a>
@@ -276,89 +278,7 @@
         </div>
     </div>
 
-    {{-- <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalCenterTitle">Update Status</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row text-center">
-                        <div class="col mb-3">
-                            <a href="" type="button"
-                                class="btn btn-success show_confirm_acc">Terima</a>
-                        </div>
-                        <div class="col mb-3">
-                            <a href="" type="button"
-                                class="btn btn-danger show_confirm_reject">Tolak</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal 1-->
-    <div class="modal fade" id="modalToggle" aria-labelledby="modalToggleLabel" tabindex="-1" style="display: none"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalToggleLabel">Update Status</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row text-center">
-                        <div class="col mb-3">
-                            <button class="btn btn-success" data-bs-target="#modalConfirmAcc" data-bs-toggle="modal" data-bs-dismiss="modal">Terima</button>
-                        </div>
-                        <div class="col mb-3">
-                            <button class="btn btn-danger" data-bs-target="#modalConfirmReject" data-bs-toggle="modal" data-bs-dismiss="modal">Tolak</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     
-    <div class="modal fade" id="modalConfirmAcc" aria-hidden="true" aria-labelledby="modalToggleACC" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalToggleACC">Konfirmasi Terima</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Apakah Anda yakin ingin update status terima untuk anggota ini?</p>
-                    <p>Tekan <b>Update</b> untuk melanjutkan.</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-target="#modalToggle" data-bs-toggle="modal" data-bs-dismiss="modal">Batal</button>
-                    <a href="{{ route('admin.acc.user', $item->id) }}" type="button" class="btn btn-primary">Update</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modalConfirmReject" aria-hidden="true" aria-labelledby="modalToggleReject" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalToggleReject">Konfirmasi Tolak</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Apakah Anda yakin ingin update status tolak untuk anggota ini?</p>
-                    <p>Tekan <b>Update</b> untuk melanjutkan.</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-target="#modalToggle" data-bs-toggle="modal" data-bs-dismiss="modal">Batal</button>
-                    <button class="btn btn-primary" data-bs-target="#modalToggle" data-bs-toggle="modal" data-bs-dismiss="modal">Update</button>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 @endsection
 
 @section('vendorJS')

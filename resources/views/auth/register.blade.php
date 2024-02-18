@@ -74,7 +74,7 @@
                                         <div class="form-group pulse mb-3 mt-3 text-center">
                                             <p>Setoran Keanggotaan Sistem Akuntansi UBSP</p>
                                             <p>Untuk menjadi anggota, Anda perlu membayar simpanan pokok sebesar Rp
-                                                1,000,000 (hanya sekali) dan simpanan wajib sebesar Rp 100,000 (tiap
+                                                {{ $configuration[0]->value }} (hanya sekali) dan simpanan wajib sebesar Rp {{ $configuration[1]->value }} (tiap
                                                 bulan).</p>
                                             <p>Simpanan pokok dan wajib tidak dapat ditarik selama menjadi anggota, dan
                                                 akan dikembalikan apabila keluar dari keanggotaan Sistem Akuntansi UBSP.
@@ -85,7 +85,7 @@
                                         <div class="form-group">
                                             <label for="nominal">Nominal Simpanan Pokok</label>
                                             <input type="text" id="nominal" class="form-control"
-                                                placeholder="Nominal Simpanan Pokok" name="nominal" value="100,000"
+                                                placeholder="Nominal Simpanan Pokok" name="nominal" value={{ $configuration[0]->value }}
                                                 readonly>
                                         </div>
                                     </div>
@@ -212,7 +212,7 @@
                                                 <span class="input-group-text" id="basic-addon1">+62</span>
                                                 <input type="text" class="form-control" placeholder="No Hp"
                                                     aria-label="No Hp" aria-describedby="basic-addon1" id="phone"
-                                                    name="phone" value="{{ old('phone') }}">
+                                                    name="phone" value="{{ old('phone') }}" oninput=validateNumberInput(this)>
                                             </div>
                                             <p id="phone-check" style="color: red; display: none;">No HP harus diisi
                                             </p>
@@ -339,45 +339,11 @@
     }
     //end of capitalize input
 
-    $(document).ready(function() {
-        //onchange
-        // $("#fname").keyup(function () {
-        //     validateData("fname");
-        // });
-        // $("#lname").keyup(function () {
-        //     validateData("lname");
-        // });
-        // $("#birthplace").keyup(function () {
-        //     validateData("birthplace");
-        // });
-        // $("#birthdate").keyup(function () {
-        //     validateData("birthdate"); 
-        // });    
-        // $("#birthdate").change(function () {
-        //     validateData("birthdate");
-        // });
-        // $("#address").keyup(function () {
-        //     validateData("address");
-        // });
-        // $("#workAddress").keyup(function () {
-        //     validateData("workAddress");
-        // });
-        // $("#email").keyup(function () {
-        //     validateData("email");
-        // });
-        // $("#phone").keyup(function () {
-        //     validateData("phone");
-        // });
-        // $("#password").keyup(function () {
-        //     validateData("password");
-        // });
-        // $("#confirmPassword").keyup(function () {
-        //     validateData("confirmPassword");
-        // });
-        // $("#mothername").keyup(function () {
-        //     validateData("mothername");
-        // });
+    function validateNumberInput(input) {
+        input.value = input.value.replace(/[^0-9]/g, '');
+    }
 
+    $(document).ready(function() {
         //prevent enter submit button
         $("#formRegister").on("keypress", function(event) {
             var keyPressed = event.keyCode || event.which;

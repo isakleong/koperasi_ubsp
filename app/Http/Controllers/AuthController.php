@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Config;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserAccount;
@@ -21,7 +22,9 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller {
     public function register() {
-        return view('auth.register');
+        $configName = ['SIMPANAN POKOK', 'SIMPANAN WAJIB'];
+        $configuration = Config::whereIn('name', $configName)->get();
+        return view('auth.register', compact('configuration'));
     }
 
     public function resendVerificationEmail(Request $request) {

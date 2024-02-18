@@ -161,8 +161,8 @@
             <div class="col-xl">
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Laporan Jurnal Harian</h5>
-                        <a href="/admin/journal/create" class="btn btn-primary">Input Jurnal Umum</a>
+                        <h5 class="mb-0">Laporan Jurnal</h5>
+                        <a href="/admin/journal/create" class="btn btn-primary">Input Jurnal</a>
                     </div>
 
                     <div class="card-body">

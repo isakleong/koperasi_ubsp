@@ -79,7 +79,7 @@ class UserController extends Controller
                     $userAccount->openDate = $now;
                     $userAccount->save();
 
-                    $userAccount->transaction()->update(['status' => 2]);
+                    $userAccount->transaction()->update(['status' => 2, 'approvedOn' => $now]);
                 }
             }
 

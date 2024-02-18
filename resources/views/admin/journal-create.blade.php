@@ -147,7 +147,7 @@
 @endsection
 
 @section('content')
-    @include('sweetalert::alert')
+    {{-- @include('sweetalert::alert') --}}
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="py-3 mb-4">
@@ -157,7 +157,7 @@
             <div class="col-xl">
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Tambah Jurnal Harian</h5>
+                        <h5 class="mb-0">Tambah Transaksi Jurnal</h5>
                         {{-- <a href="/admin/account_category/create" class="btn btn-primary">Tambah Data</a> --}}
                     </div>
 
@@ -170,58 +170,113 @@
                             </div>
                         </form> --}}
 
-                        <div class="col-12">
-                            <div class="card">
-                                <h5 class="card-header">Form Repeater</h5>
-                                <div class="card-body">
-                                <form class="form-repeater">
-                                    <div data-repeater-list="group-a">
-                                    <div data-repeater-item>
-                                        <div class="row">
-                                        <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
-                                            <label class="form-label" for="form-repeater-1-1">Username</label>
-                                            <input type="text" id="form-repeater-1-1" class="form-control" placeholder="john.doe" />
-                                        </div>
-                                        <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
-                                            <label class="form-label" for="form-repeater-1-2">Password</label>
-                                            <input type="password" id="form-repeater-1-2" class="form-control" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" />
-                                        </div>
-                                        <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
-                                            <label class="form-label" for="form-repeater-1-3">Gender</label>
-                                            <select id="form-repeater-1-3" class="form-select">
-                                            <option value="Male">Male</option>
-                                            <option value="Female">Female</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
-                                            <label class="form-label" for="form-repeater-1-4">Profession</label>
-                                            <select id="form-repeater-1-4" class="form-select">
-                                            <option value="Designer">Designer</option>
-                                            <option value="Developer">Developer</option>
-                                            <option value="Tester">Tester</option>
-                                            <option value="Manager">Manager</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
-                                            <button class="btn btn-label-danger mt-4" data-repeater-delete>
-                                            <i class="bx bx-x me-1"></i>
-                                            <span class="align-middle">Delete</span>
-                                            </button>
-                                        </div>
-                                        </div>
-                                        <hr>
-                                    </div>
-                                    </div>
-                                    <div class="mb-0">
-                                    <button class="btn btn-primary" data-repeater-create>
-                                        <i class="bx bx-plus me-1"></i>
-                                        <span class="align-middle">Add</span>
+                        <form action="{{ route('admin.journal.store') }}" method="post">
+                            @csrf
+                            <div class="row">
+                                <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+                                    <label class="form-label">Akun</label>
+                                    <select class="choices form-select" name="accountID[]"><option value="" selected disabled>---Pilih Akun---</option>  
+                                        @foreach ($account as $item)
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('accountID[]')
+                                        <p style="color: red">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+                                    <label class="form-label">Keterangan</label>
+                                    <input type="text" class="form-control" name="description[]" value="{{ old('description[]') }}" />
+                                    @error('description[]')
+                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
+                                    <label class="form-label">Debit</label>
+                                    <input type="text" class="form-control" name="debit[]" required value="{{ old('debit[]') }}" />
+                                    @error('debit[]')
+                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
+                                    <label class="form-label">Kredit</label>
+                                    <input type="text" class="form-control" name="kredit[]" required value="{{ old('debit[]') }}" />
+                                    @error('kredit[]')
+                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
+                                    <button class="btn btn-label-danger mt-4 data-repeater-delete">
+                                    <i class="bx bx-x me-1"></i>
+                                    <span class="align-middle">Delete</span>
                                     </button>
-                                    </div>
-                                </form>
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="row data-repeater">
+                                <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+                                    <label class="form-label">Akun</label>
+                                    <select class="choices form-select" name="accountID[]"><option value="" selected disabled>---Pilih Akun---</option>  
+                                        @foreach ($account as $item)
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('accountID[]')
+                                        <p style="color: red">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+                                    <label class="form-label">Keterangan</label>
+                                    <input type="text" class="form-control" name="description[]" value="{{ old('description[]') }}"/>
+                                    @error('description[]')
+                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
+                                    <label class="form-label">Debit</label>
+                                    <input type="text" class="form-control" name="debit[]" required value="{{ old('debit[]') }}"/>
+                                    @error('debit[]')
+                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
+                                    <label class="form-label">Kredit</label>
+                                    <input type="text" class="form-control" name="kredit[]" required value="{{ old('kredit[]') }}"/>
+                                    @error('kredit[]')
+                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
+                                    <button class="btn btn-label-danger mt-4 data-repeater-delete">
+                                    <i class="bx bx-x me-1"></i>
+                                    <span class="align-middle">Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                           
+                            <div>
+                                <div class="row">
+                                    <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0"></div>
+                                    <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0"></div>
+                                    
+                                    <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
+                                        <label class="form-label">Total Debit:</label>
+                                        <span class="totalDebit" id="totalDebit">0.00</span>
+                                    </div>
+                            
+                                    <!-- Total Kredit for the current group -->
+                                    <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
+                                        <label class="form-label">Total Kredit:</label>
+                                        <span class="totalKredit" id="totalKredi">0.00</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary mb-3 data-repeater-create">
+                                    <i class="bx bx-plus me-1"></i>
+                                    <span class="align-middle">Tambah</span>
+                                </button>
+                                <button type="submit" class="btn btn-primary float-end show_confirm">Simpan</button>
+                            </div>
+                        </form>
 
                     </div>
                 </div>
@@ -235,38 +290,16 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
 
-    <script src="/vendor/jquery-repeater/jquery-repeater.js"></script>
-
     <script>
         $(document).ready(function() {
-            $(function() {
-                var n, o, e = $(".bootstrap-maxlength-example"),
-                    t = $(".form-repeater");
-                e.length && e.each(function() {
-                    $(this).maxlength({
-                        warningClass: "label label-success bg-success text-white",
-                        limitReachedClass: "label label-danger",
-                        separator: " out of ",
-                        preText: "You typed ",
-                        postText: " chars available.",
-                        validate: !0,
-                        threshold: +this.getAttribute("maxlength")
-                    })
-                }), t.length && (n = 2, o = 1, t.on("submit", function(e) {
-                    e.preventDefault()
-                }), t.repeater({
-                    show: function() {
-                        var r = $(this).find(".form-control, .form-select"),
-                            a = $(this).find(".form-label");
-                        r.each(function(e) {
-                            var t = "form-repeater-" + n + "-" + o;
-                            $(r[e]).attr("id", t), $(a[e]).attr("for", t), o++
-                        }), n++, $(this).slideDown()
-                    },
-                    hide: function(e) {
-                        confirm("Are you sure you want to delete this element?") && $(this).slideUp(e)
-                    }
-                }));
+            $('.data-repeater-delete').hide();
+            $('.data-repeater-create').click(function(event) {
+                event.preventDefault();
+                $(this).parent().parent().find(".data-repeater").clone().insertBefore($(this).parent()).removeClass("data-repeater");
+                $('.data-repeater-delete').fadeIn();
+                $(this).parent().parent().find(".data-repeater-delete").click(function(e) {
+                    $(this).parent().parent().remove(); 
+                });
             });
 
             $('.show_confirm').click(function(event) {
@@ -275,11 +308,11 @@
                 var form = $(this).closest("form");
 
                 Swal.fire({
-                    title: 'Hapus Data?',
+                    title: 'Simpan Data?',
                     text: '',
                     icon: 'question',
                     showDenyButton: true,
-                    confirmButtonText: 'Ya, hapus',
+                    confirmButtonText: 'Ya, simpan',
                     denyButtonText: 'Batal',
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -289,6 +322,69 @@
                     }
                 });
             });
+
+            $(function() {
+                $("input[name^='debit']").keyup(function(e) {
+                    $(this).val(format($(this).val()));
+                    updateTotals();
+                });
+
+                $("input[name^='kredit']").keyup(function(e) {
+                    $(this).val(format($(this).val()));
+                    updateTotals();
+                });
+
+                function updateTotals() {
+                    var totalDebit = 0;
+                    var totalKredit = 0;
+
+                    $("input[name^='debit']").each(function() {
+                        var val = parseFloat($(this).val().replace(",", ""));
+                        if (!isNaN(val)) {
+                            totalDebit += val;
+                        }
+                    });
+
+                    $("input[name^='kredit']").each(function() {
+                        var val = parseFloat($(this).val().replace(",", ""));
+                        if (!isNaN(val)) {
+                            totalKredit += val;
+                        }
+                    });
+
+                    // Display or use the totals as needed
+                    $("#totalDebit").text(format(totalDebit.toFixed(2)));
+                    $("#totalKredit").text(format(totalKredit.toFixed(2)));
+                }
+
+                var format = function(num) {
+                    // Your formatting logic here
+                };
+            });
+
+            var format = function(num) {
+                var str = num.toString().replace("", ""),
+                    parts = false,
+                    output = [],
+                    i = 1,
+                    formatted = null;
+                if (str.indexOf(".") > 0) {
+                    parts = str.split(".");
+                    str = parts[0];
+                }
+                str = str.split("").reverse();
+                for (var j = 0, len = str.length; j < len; j++) {
+                    if (str[j] != ",") {
+                        output.push(str[j]);
+                        if (i % 3 == 0 && j < (len - 1)) {
+                            output.push(",");
+                        }
+                        i++;
+                    }
+                }
+                formatted = output.reverse().join("");
+                return ("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
+            };
         });
     </script>
 
@@ -298,7 +394,7 @@
                 icon: 'error',
                 title: 'Oops...',
                 // text: '',
-                text: '{{ Session::get('errorData') }}',
+                text: 'Formulir anggota baru belum diisi secara lengkap. Silahkan dicek kembali.',
             })
         @endif
     </script>
