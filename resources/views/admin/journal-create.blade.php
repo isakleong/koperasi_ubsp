@@ -193,14 +193,14 @@
                                 </div>
                                 <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
                                     <label class="form-label">Debit</label>
-                                    <input type="text" class="form-control" name="debit[]" required value="{{ old('debit[]') }}" />
+                                    <input type="text" class="form-control debit" name="debit[]" required value="{{ old('debit[]') }}" />
                                     @error('debit[]')
                                         <p class="mt-1" style="color: red">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
                                     <label class="form-label">Kredit</label>
-                                    <input type="text" class="form-control" name="kredit[]" required value="{{ old('debit[]') }}" />
+                                    <input type="text" class="form-control kredit" name="kredit[]" required value="{{ old('debit[]') }}" />
                                     @error('kredit[]')
                                         <p class="mt-1" style="color: red">{{ $message }}</p>
                                     @enderror
@@ -234,14 +234,14 @@
                                 </div>
                                 <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
                                     <label class="form-label">Debit</label>
-                                    <input type="text" class="form-control" name="debit[]" required value="{{ old('debit[]') }}"/>
+                                    <input type="text" class="form-control debit" name="debit[]" required value="{{ old('debit[]') }}"/>
                                     @error('debit[]')
                                         <p class="mt-1" style="color: red">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
                                     <label class="form-label">Kredit</label>
-                                    <input type="text" class="form-control" name="kredit[]" required value="{{ old('kredit[]') }}"/>
+                                    <input type="text" class="form-control kredit" name="kredit[]" required value="{{ old('kredit[]') }}"/>
                                     @error('kredit[]')
                                         <p class="mt-1" style="color: red">{{ $message }}</p>
                                     @enderror
@@ -324,67 +324,140 @@
             });
 
             $(function() {
-                $("input[name^='debit']").keyup(function(e) {
-                    $(this).val(format($(this).val()));
-                    updateTotals();
-                });
-
-                $("input[name^='kredit']").keyup(function(e) {
+                $(".debit").keyup(function(e) {
                     $(this).val(format($(this).val()));
                     updateTotals();
                 });
 
                 function updateTotals() {
                     var totalDebit = 0;
-                    var totalKredit = 0;
-
-                    $("input[name^='debit']").each(function() {
-                        var val = parseFloat($(this).val().replace(",", ""));
-                        if (!isNaN(val)) {
-                            totalDebit += val;
-                        }
+                    $('.debit').each(function(){
+                        var val = $(this).val().replace(",", "");
+                        totalDebit += +val;
+                        $("#totalDebit").text(totalDebit);
                     });
-
-                    $("input[name^='kredit']").each(function() {
-                        var val = parseFloat($(this).val().replace(",", ""));
-                        if (!isNaN(val)) {
-                            totalKredit += val;
-                        }
-                    });
-
-                    // Display or use the totals as needed
-                    $("#totalDebit").text(format(totalDebit.toFixed(2)));
-                    $("#totalKredit").text(format(totalKredit.toFixed(2)));
                 }
 
                 var format = function(num) {
-                    // Your formatting logic here
-                };
-            });
-
-            var format = function(num) {
-                var str = num.toString().replace("", ""),
+                    var str = num.toString().replace("", ""),
                     parts = false,
                     output = [],
                     i = 1,
                     formatted = null;
-                if (str.indexOf(".") > 0) {
-                    parts = str.split(".");
-                    str = parts[0];
-                }
-                str = str.split("").reverse();
-                for (var j = 0, len = str.length; j < len; j++) {
-                    if (str[j] != ",") {
-                        output.push(str[j]);
-                        if (i % 3 == 0 && j < (len - 1)) {
-                            output.push(",");
-                        }
-                        i++;
+                    if (str.indexOf(".") > 0) {
+                        parts = str.split(".");
+                        str = parts[0];
                     }
-                }
-                formatted = output.reverse().join("");
-                return ("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
-            };
+                    str = str.split("").reverse();
+                    for (var j = 0, len = str.length; j < len; j++) {
+                        if (str[j] != ",") {
+                            output.push(str[j]);
+                            if (i % 3 == 0 && j < (len - 1)) {
+                                output.push(",");
+                            }
+                            i++;
+                        }
+                    }
+                    formatted = output.reverse().join("");
+                    return ("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
+                };
+            });
+
+            // $(function() {
+            //     $("input[name^='debit']").keyup(function(e) {
+            //         $(this).val(format($(this).val()));
+            //         updateTotals();
+            //     });
+
+            //     $("input[name^='kredit']").keyup(function(e) {
+            //         $(this).val(format($(this).val()));
+            //         updateTotals();
+            //     });
+
+            //     function updateTotals() {
+            //         var totalDebit = 0;
+            //         var totalKredit = 0;
+
+            //         $('input[name^='debit']').each(function(){
+            //             $(this).find('input').each(function(i,n){
+            //                 totalDebit += parseInt($(n).val(),10); 
+            //             });
+            //             alert(totalDebit);
+            //         });
+
+            //         // $("input[name^='debit']").each(function() {
+            //         //     var val = +$(this).val().replace(",", "");
+            //         //     if (!Number.isNaN(val)) {
+            //         //         totalDebit += val;
+            //         //     }
+            //         // });
+
+            //         $("input[name^='kredit']").each(function() {
+            //             var val = parseFloat($(this).val().replace(",", ""));
+            //             if (!isNaN(val)) {
+            //                 totalKredit += val;
+            //             }
+            //         });
+
+            //         // Display or use the totals as needed
+            //         // $("#totalDebit").text(format(totalDebit.toFixed(2)));
+            //         // $("#totalKredit").text(format(totalKredit.toFixed(2)));
+
+            //         var formatted = Number(totalDebit).toLocaleString('en-US', { minimumFractionDigits: 2 });
+            //         $("#totalDebit").text(formatted);
+            //         $("#totalKredit").text(totalKredit);
+            //     }
+
+            //     updateTotals();
+
+            //     var format = function(num) {
+            //         var str = num.toString().replace("", ""),
+            //         parts = false,
+            //         output = [],
+            //         i = 1,
+            //         formatted = null;
+            //         if (str.indexOf(".") > 0) {
+            //             parts = str.split(".");
+            //             str = parts[0];
+            //         }
+            //         str = str.split("").reverse();
+            //         for (var j = 0, len = str.length; j < len; j++) {
+            //             if (str[j] != ",") {
+            //                 output.push(str[j]);
+            //                 if (i % 3 == 0 && j < (len - 1)) {
+            //                     output.push(",");
+            //                 }
+            //                 i++;
+            //             }
+            //         }
+            //         formatted = output.reverse().join("");
+            //         return ("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
+            //     };
+            // });
+
+            // var format = function(num) {
+            //     var str = num.toString().replace("", ""),
+            //         parts = false,
+            //         output = [],
+            //         i = 1,
+            //         formatted = null;
+            //     if (str.indexOf(".") > 0) {
+            //         parts = str.split(".");
+            //         str = parts[0];
+            //     }
+            //     str = str.split("").reverse();
+            //     for (var j = 0, len = str.length; j < len; j++) {
+            //         if (str[j] != ",") {
+            //             output.push(str[j]);
+            //             if (i % 3 == 0 && j < (len - 1)) {
+            //                 output.push(",");
+            //             }
+            //             i++;
+            //         }
+            //     }
+            //     formatted = output.reverse().join("");
+            //     return ("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
+            // };
         });
     </script>
 
