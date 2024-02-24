@@ -172,7 +172,7 @@
 
                         <form action="{{ route('admin.journal.store') }}" method="post">
                             @csrf
-                            <div class="row">
+                            <div class="row border border-2 m-2 mb-3 p-2">
                                 <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
                                     <label class="form-label">Akun</label>
                                     <select class="choices form-select" name="accountID[]"><option value="" selected disabled>---Pilih Akun---</option>  
@@ -205,15 +205,9 @@
                                         <p class="mt-1" style="color: red">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
-                                    <button class="btn btn-label-danger mt-4 data-repeater-delete">
-                                    <i class="bx bx-x me-1"></i>
-                                    <span class="align-middle">Delete</span>
-                                    </button>
-                                </div>
                             </div>
 
-                            <div class="row data-repeater">
+                            <div class="row border border-2 m-2 mb-3 p-2 data-repeater">
                                 <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
                                     <label class="form-label">Akun</label>
                                     <select class="choices form-select" name="accountID[]"><option value="" selected disabled>---Pilih Akun---</option>  
@@ -247,7 +241,7 @@
                                     @enderror
                                 </div>
                                 <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
-                                    <button class="btn btn-label-danger mt-4 data-repeater-delete">
+                                    <button class="btn btn-danger mt-4 data-repeater-delete">
                                     <i class="bx bx-x me-1"></i>
                                     <span class="align-middle">Delete</span>
                                     </button>
@@ -261,13 +255,13 @@
                                     
                                     <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
                                         <label class="form-label">Total Debit:</label>
-                                        <span class="totalDebit" id="totalDebit">0.00</span>
+                                        <span class="totalDebit" id="totalDebit">0</span>
                                     </div>
                             
                                     <!-- Total Kredit for the current group -->
                                     <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
                                         <label class="form-label">Total Kredit:</label>
-                                        <span class="totalKredit" id="totalKredi">0.00</span>
+                                        <span class="totalKredit" id="totalKredit">0</span>
                                     </div>
                                 </div>
                                 <button class="btn btn-primary mb-3 data-repeater-create">
@@ -289,19 +283,109 @@
 @section('vendorJS')
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
+    <script src="https://unpkg.com/autonumeric"></script>
 
     <script>
-        $(document).ready(function() {
-            $('.data-repeater-delete').hide();
-            $('.data-repeater-create').click(function(event) {
-                event.preventDefault();
-                $(this).parent().parent().find(".data-repeater").clone().insertBefore($(this).parent()).removeClass("data-repeater");
-                $('.data-repeater-delete').fadeIn();
-                $(this).parent().parent().find(".data-repeater-delete").click(function(e) {
-                    $(this).parent().parent().remove(); 
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.debit').forEach(function(input) {
+                new AutoNumeric(input, {
+                    currencySymbol: 'Rp ',
+                    digitGroupSeparator: ',',
+                    decimalCharacter: '.',
+                    emptyInputBehavior: "zero",
+                    watchExternalChanges: true
                 });
             });
 
+            document.querySelectorAll('.kredit').forEach(function(input) {
+                new AutoNumeric(input, {
+                    currencySymbol: 'Rp ',
+                    digitGroupSeparator: ',',
+                    decimalCharacter: '.',
+                    emptyInputBehavior: "zero",
+                    watchExternalChanges: true
+                });
+            });
+
+            function updateTotal() {
+                var totalDebit = 0;
+                var totalKredit = 0;
+
+                var debitInput = document.querySelectorAll('.debit');
+                var kreditInput = document.querySelectorAll('.kredit');
+
+                debitInput.forEach(function(item) {
+                    // Use `unformat` method to get the numeric value
+                    var val = AutoNumeric.getNumericString(item);
+                    totalDebit += parseFloat(val);
+                });
+
+                kreditInput.forEach(function(item) {
+                    // Use `unformat` method to get the numeric value
+                    var val = AutoNumeric.getNumericString(item);
+                    totalKredit += parseFloat(val);
+                });
+
+                document.getElementById("totalDebit").textContent = totalDebit.toFixed(2);
+                document.getElementById("totalKredit").textContent = totalKredit.toFixed(2);
+            }
+
+            document.addEventListener('input', function(event) {
+                if (event.target.classList.contains('debit') || event.target.classList.contains('kredit')) {
+                    updateTotal();
+                }
+            });
+
+            $('.data-repeater-delete').hide();
+            $('.data-repeater-create').click(function(event) {
+                event.preventDefault();
+
+                var $parent = $(this).parent().parent();
+                var $dataRepeaters = $parent.find(".data-repeater");
+
+                // Clone the last data repeater form
+                var $newForm = $dataRepeaters.last().clone().find('input, textarea').val('').end();
+
+                // Find the input elements within the cloned element and initialize AutoNumeric
+                $newForm.find('.debit').each(function() {
+                    new AutoNumeric(this, {
+                        currencySymbol: 'Rp ',
+                        digitGroupSeparator: ',',
+                        decimalCharacter: '.',
+                        emptyInputBehavior: "zero",
+                        watchExternalChanges: true
+                    });
+                });
+
+                $newForm.find('.kredit').each(function() {
+                    new AutoNumeric(this, {
+                        currencySymbol: 'Rp ',
+                        digitGroupSeparator: ',',
+                        decimalCharacter: '.',
+                        emptyInputBehavior: "zero",
+                        watchExternalChanges: true
+                    });
+                });
+
+                // Insert the new form before the current button's parent
+                $newForm.insertBefore($(this).parent()).removeClass("data-repeater");
+
+                // Show delete button only if there are more than or equal to 2 forms
+                if ($dataRepeaters.length >= 1) {
+                    $newForm.find(".data-repeater-delete").show();
+                }
+
+                // Attach click event to delete button
+                $newForm.find(".data-repeater-delete").click(function(e) {
+                    $(this).parent().parent().remove();
+                    updateTotal();
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
             $('.show_confirm').click(function(event) {
                 event.preventDefault();
 
@@ -322,142 +406,6 @@
                     }
                 });
             });
-
-            $(function() {
-                $(".debit").keyup(function(e) {
-                    $(this).val(format($(this).val()));
-                    updateTotals();
-                });
-
-                function updateTotals() {
-                    var totalDebit = 0;
-                    $('.debit').each(function(){
-                        var val = $(this).val().replace(",", "");
-                        totalDebit += +val;
-                        $("#totalDebit").text(totalDebit);
-                    });
-                }
-
-                var format = function(num) {
-                    var str = num.toString().replace("", ""),
-                    parts = false,
-                    output = [],
-                    i = 1,
-                    formatted = null;
-                    if (str.indexOf(".") > 0) {
-                        parts = str.split(".");
-                        str = parts[0];
-                    }
-                    str = str.split("").reverse();
-                    for (var j = 0, len = str.length; j < len; j++) {
-                        if (str[j] != ",") {
-                            output.push(str[j]);
-                            if (i % 3 == 0 && j < (len - 1)) {
-                                output.push(",");
-                            }
-                            i++;
-                        }
-                    }
-                    formatted = output.reverse().join("");
-                    return ("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
-                };
-            });
-
-            // $(function() {
-            //     $("input[name^='debit']").keyup(function(e) {
-            //         $(this).val(format($(this).val()));
-            //         updateTotals();
-            //     });
-
-            //     $("input[name^='kredit']").keyup(function(e) {
-            //         $(this).val(format($(this).val()));
-            //         updateTotals();
-            //     });
-
-            //     function updateTotals() {
-            //         var totalDebit = 0;
-            //         var totalKredit = 0;
-
-            //         $('input[name^='debit']').each(function(){
-            //             $(this).find('input').each(function(i,n){
-            //                 totalDebit += parseInt($(n).val(),10); 
-            //             });
-            //             alert(totalDebit);
-            //         });
-
-            //         // $("input[name^='debit']").each(function() {
-            //         //     var val = +$(this).val().replace(",", "");
-            //         //     if (!Number.isNaN(val)) {
-            //         //         totalDebit += val;
-            //         //     }
-            //         // });
-
-            //         $("input[name^='kredit']").each(function() {
-            //             var val = parseFloat($(this).val().replace(",", ""));
-            //             if (!isNaN(val)) {
-            //                 totalKredit += val;
-            //             }
-            //         });
-
-            //         // Display or use the totals as needed
-            //         // $("#totalDebit").text(format(totalDebit.toFixed(2)));
-            //         // $("#totalKredit").text(format(totalKredit.toFixed(2)));
-
-            //         var formatted = Number(totalDebit).toLocaleString('en-US', { minimumFractionDigits: 2 });
-            //         $("#totalDebit").text(formatted);
-            //         $("#totalKredit").text(totalKredit);
-            //     }
-
-            //     updateTotals();
-
-            //     var format = function(num) {
-            //         var str = num.toString().replace("", ""),
-            //         parts = false,
-            //         output = [],
-            //         i = 1,
-            //         formatted = null;
-            //         if (str.indexOf(".") > 0) {
-            //             parts = str.split(".");
-            //             str = parts[0];
-            //         }
-            //         str = str.split("").reverse();
-            //         for (var j = 0, len = str.length; j < len; j++) {
-            //             if (str[j] != ",") {
-            //                 output.push(str[j]);
-            //                 if (i % 3 == 0 && j < (len - 1)) {
-            //                     output.push(",");
-            //                 }
-            //                 i++;
-            //             }
-            //         }
-            //         formatted = output.reverse().join("");
-            //         return ("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
-            //     };
-            // });
-
-            // var format = function(num) {
-            //     var str = num.toString().replace("", ""),
-            //         parts = false,
-            //         output = [],
-            //         i = 1,
-            //         formatted = null;
-            //     if (str.indexOf(".") > 0) {
-            //         parts = str.split(".");
-            //         str = parts[0];
-            //     }
-            //     str = str.split("").reverse();
-            //     for (var j = 0, len = str.length; j < len; j++) {
-            //         if (str[j] != ",") {
-            //             output.push(str[j]);
-            //             if (i % 3 == 0 && j < (len - 1)) {
-            //                 output.push(",");
-            //             }
-            //             i++;
-            //         }
-            //     }
-            //     formatted = output.reverse().join("");
-            //     return ("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
-            // };
         });
     </script>
 

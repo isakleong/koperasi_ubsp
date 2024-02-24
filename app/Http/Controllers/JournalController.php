@@ -23,7 +23,11 @@ class JournalController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make(
-            $request->all(),
+            [
+                'accountID.*' => $request->input('accountID'),
+                'debit.*' => $request->input('debit'),
+                'kredit.*' => $request->input('kredit'),
+            ],
             [
                 'accountID.*' => 'required|exists:account,id',
                 'debit.*' => 'required',
@@ -39,7 +43,7 @@ class JournalController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors())->withInput();
         } else {
-            dd("hello");
+            dd("hellox");
         }
     }
 
