@@ -11,6 +11,8 @@ class JournalDetail extends Model
 
     protected $table = 'journal_entry_detail';
 
+    public $incrementing = false;
+
     protected $fillable = [
         'docId',
         'accountNo',

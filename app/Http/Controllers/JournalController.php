@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Models\Journal;
+use App\Models\JournalDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,19 +23,30 @@ class JournalController extends Controller
 
     public function store(Request $request)
     {
+        // $validator = Validator::make($request->all(), [
+        //     'accountID.*' => 'required|exists:account,id',
+        //     'debit.*' => 'required',
+        //     'kredit.*' => 'required',
+        // ], [
+        //     'accountID.*.required' => 'Akun belum dipilih',
+        //     'accountID.*.exists' => 'Akun tidak valid',
+        //     'debit.*.required' => 'Nominal debit belum diisi',
+        //     'kredit.*.required' => 'Nominal kredit belum diisi',
+        // ]);
+
         $validator = Validator::make(
+            $request->all(), 
             [
-                'accountID.*' => $request->input('accountID'),
-                'debit.*' => $request->input('debit'),
-                'kredit.*' => $request->input('kredit'),
-            ],
-            [
-                'accountID.*' => 'required|exists:account,id',
-                'debit.*' => 'required',
-                'kredit.*' => 'required',
+                "accountID"    => "required|array|min:2",
+                "accountID.*"  => "required|exists:account,id",
+                "debit"    => "required|array|min:2",
+                "debit.*"  => "required",
+                "kredit"    => "required|array|min:2",
+                "kredit.*"  => "required",
             ],
             [
                 'accountID.*.required' => 'Akun belum dipilih',
+                'accountID.*.exists' => 'Akun tidak valid',
                 'debit.*.required' => 'Nominal debit belum diisi',
                 'kredit.*.required' => 'Nominal kredit belum diisi',
             ]
@@ -42,9 +54,28 @@ class JournalController extends Controller
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors())->withInput();
-        } else {
-            dd("hellox");
         }
+
+        $docId = "sdsd";
+
+        foreach ($request->input('accountID') as $key => $value) {
+            $debit = intval(str_replace(['Rp', ','], '', $request->input('debit')[$key]));
+            $kredit = intval(str_replace(['Rp', ','], '', $request->input('kredit')[$key]));
+            $docId.=$key;
+
+            JournalDetail::create([
+                'docId' => $docId,
+                'accountNo' => $value,
+                'indexNo' => $key,
+                'description' => $request->input('description')[$key],
+                'debit' => $debit,
+                'kredit' => $kredit,
+            ]);
+        }
+
+        return redirect('/admin/journal/create')->withSuccess('Data jurnal berhasil ditambahkan!');
+
+
     }
 
     public function show(Journal $journal)
