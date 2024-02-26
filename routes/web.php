@@ -81,8 +81,8 @@ Route::middleware(['auth.user', 'verified'])->group(function() {
     Route::get('/simpanan/pengajuan', [MainController::class, 'showFormData'])->name('add.simpanan');
     Route::get('/simpanan/rekap', [MainController::class, 'showFormData'])->name('recap.simpanan');
 
-    Route::get('/tabungan/pengajuan', [MainController::class, 'showFormData'])->name('add.tabungan');
-    Route::get('/tabungan/rekap', [MainController::class, 'showFormData'])->name('recap.tabungan');
+    // Route::get('/tabungan/pengajuan', [MainController::class, 'showFormData'])->name('add.tabungan');
+    // Route::get('/tabungan/rekap', [MainController::class, 'showFormData'])->name('recap.tabungan');
 
     Route::get('/kredit/pengajuan', [MainController::class, 'showFormData'])->name('add.kredit');
     Route::get('/angsuran/pengajuan', [MainController::class, 'showFormData'])->name('add.angsuran');
@@ -159,7 +159,7 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     Route::post('/simpanan/penarikan', [AdminController::class, 'storeSimpananWithdrawal'])->name('store.simpanan.withdrawal');
 
     //TABUNGAN
-    Route::get('/menu/tabungan', [AdminController::class, 'showTabunganMenu']);
+    // Route::get('/menu/tabungan', [AdminController::class, 'showTabunganMenu']);
     
 
     //KREDIT

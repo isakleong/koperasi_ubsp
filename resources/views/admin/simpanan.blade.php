@@ -96,16 +96,11 @@
             <li class="menu-header small text-uppercase"><span class="menu-header-text">transaksi</span></li>
             <li class="menu-item active">
                 <a href="/admin/menu/simpanan" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-donate-heart"></i>
+                    <i class="menu-icon tf-icons bx bx-wallet"></i>
                     <div data-i18n="Basic">Simpanan</div>
                 </a>
             </li>
-            <li class="menu-item">
-                <a href="/admin/menu/tabungan" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-wallet"></i>
-                    <div data-i18n="Basic">Tabungan</div>
-                </a>
-            </li>
+            
             <li class="menu-item">
                 <a href="/admin/menu/kredit" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-credit-card-front"></i>
@@ -188,7 +183,7 @@
                             <div class="container-fluid">
                                 <div class="p-3" id="customCard">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <span><i class='bx bxs-donate-heart' style="font-size: 3em;"></i></span>
+                                        <span><i class='bx bxs-wallet' style="font-size: 3em;"></i></span>
                                         <span><i class='bx bxs-chevrons-right' style="font-size: 3em;"></i></span>
                                     </div>
                                     <div class="px-2 number mt-3 d-flex justify-content-between align-items-center">
@@ -209,7 +204,7 @@
                             <div class="container-fluid">
                                 <div class="p-3" id="customCard">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <span><i class='bx bxs-donate-heart' style="font-size: 3em;"></i></span>
+                                        <span><i class='bx bxs-wallet' style="font-size: 3em;"></i></span>
                                         <span><i class='bx bxs-message-square-edit' style="font-size: 3em;"></i></span>
                                     </div>
                                     <div class="px-2 number mt-3 d-flex justify-content-between align-items-center">
@@ -230,7 +225,7 @@
                             <div class="container-fluid">
                                 <div class="p-3" id="customCard">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <span><i class='bx bxs-donate-heart' style="font-size: 3em;"></i></span>
+                                        <span><i class='bx bxs-wallet' style="font-size: 3em;"></i></span>
                                         <span><i class='bx bxs-chevrons-left' style="font-size: 3em;"></i></span>
                                     </div>
                                     <div class="px-2 number mt-3 d-flex justify-content-between align-items-center">
@@ -251,7 +246,7 @@
                             <div class="container-fluid">
                                 <div class="p-3" id="customCard">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <span><i class='bx bxs-donate-heart' style="font-size: 3em;"></i></span>
+                                        <span><i class='bx bxs-wallet' style="font-size: 3em;"></i></span>
                                         <span><i class='bx bxs-message-square-edit' style="font-size: 3em;"></i></span>
                                     </div>
                                     <div class="px-2 number mt-3 d-flex justify-content-between align-items-center">

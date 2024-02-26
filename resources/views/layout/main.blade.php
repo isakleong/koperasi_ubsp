@@ -85,27 +85,6 @@
 
                             <li class="menu-item active has-sub">
                                 <a href="#" class="menu-link">
-                                    {{-- <span><i class="bi bi-collection-fill"></i> Tabungan</span> --}}
-                                    
-                                    <span><i class="fas fa-piggy-bank"></i> Tabungan</span>
-                                </a>
-                                <div class="submenu">
-                                    <!-- Wrap to submenu-group-wrapper if you want 3-level submenu. Otherwise remove it. -->
-                                    <div class="submenu-group-wrapper">
-                                        <ul class="submenu-group">
-                                            <li class="submenu-item">
-                                                <a href="{{ route('add.tabungan') }}" class="submenu-link">Pengajuan</a>
-                                            </li>
-                                            <li class="submenu-item">
-                                                <a href="{{ route('recap.tabungan') }}" class="submenu-link">Rekap Tabungan</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
-
-                            <li class="menu-item active has-sub">
-                                <a href="#" class="menu-link">
                                     <span><i class="fas fa-coins"></i> Kredit</span>
                                 </a>
                                 <div class="submenu">

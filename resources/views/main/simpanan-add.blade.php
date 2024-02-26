@@ -40,6 +40,7 @@
                                                                 <option>-- Pilih Simpanan --</option>
                                                                 <option>Simpanan Wajib</option>
                                                                 <option>Simpanan Sukarela</option>
+                                                                <option>Simpanan Sibuhar</option>
                                                             </select>
                                                         </fieldset>
                                                     </div>

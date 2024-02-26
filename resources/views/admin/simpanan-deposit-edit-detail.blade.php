@@ -80,16 +80,11 @@
             <li class="menu-header small text-uppercase"><span class="menu-header-text">transaksi</span></li>
             <li class="menu-item active">
                 <a href="/admin/menu/simpanan" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-donate-heart"></i>
+                    <i class="menu-icon tf-icons bx bx-wallet"></i>
                     <div data-i18n="Basic">Simpanan</div>
                 </a>
             </li>
-            <li class="menu-item">
-                <a href="/admin/menu/tabungan" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-wallet"></i>
-                    <div data-i18n="Basic">Tabungan</div>
-                </a>
-            </li>
+            
             <li class="menu-item">
                 <a href="/admin/menu/kredit" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-credit-card-front"></i>
