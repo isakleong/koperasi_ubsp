@@ -69,7 +69,9 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])->middle
 
 //END OF RESET PASSWORD
 
-// Route::get('/test', [MainController::class, 'test']);
+Route::get('/test', function () {
+    return view('admin.report.anggota-report');
+})->name('tes-aja');
 
 //USER
 Route::middleware(['auth.user', 'verified'])->group(function() {

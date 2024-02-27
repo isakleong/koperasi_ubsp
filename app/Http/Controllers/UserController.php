@@ -16,6 +16,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class UserController extends Controller
 {
@@ -27,6 +28,29 @@ class UserController extends Controller
 
         // Perform data filtering based on the provided parameters
         $users = $this->fetchDataFromDatabase($keyword, $status);
+
+        if($request->has('download'))
+	    {
+            try {
+                // $data = [
+                //     'title' => 'Laporan Anggota UBSP',
+                //     'date' => date('d/m/Y'),
+                //     'users' => $users
+                // ];
+                
+                $data = [
+                    'title' => 'Laporan Anggota UBSP',
+                    'date' => date('d/m/Y'),
+                    'users' => $users
+                ];
+
+                $pdf = PDF::loadView('admin.report.anggota-report', $data);
+                // $pdf = Pdf::loadView('admin.report.anggota-report', ['data' => $data]);
+	            return $pdf->download('test.pdf');
+            } catch (\Throwable $th) {
+                dd($th);
+            }
+	    }
 
         // Render the view with the filtered data
         return view('admin.anggota-edit', compact('users'));
@@ -330,20 +354,25 @@ class UserController extends Controller
 
     public function edit(User $user)
     {   
+        $userAccount = array();
+        $transaction = array();
+
         $userAccount = $user->userAccount()
             ->where('kind', 'pokok')
             ->where('memberId', $user->memberId)
             ->first();
-        $userAccount->balance = 'Rp ' . number_format($userAccount->balance, 0, ',', ',');
-
-        $transaction = collect();
-        foreach ($user->userAccount as $account) {
-            $transaction = $transaction->merge($account->transaction()
-            ->where('kind', 'pokok')
-            ->where('accountId', $account->accountId)
-            ->first());
+        if($userAccount != null) {
+            $userAccount->balance = 'Rp ' . number_format($userAccount->balance, 0, ',', ',');
+            
+            $transaction = collect();
+            foreach ($user->userAccount as $account) {
+                $transaction = $transaction->merge($account->transaction()
+                ->where('kind', 'pokok')
+                ->where('accountId', $account->accountId)
+                ->first());
+            }
+            $transaction['transactionDate'] = Carbon::parse($transaction['transactionDate'])->format('d-m-Y');
         }
-        $transaction['transactionDate'] = Carbon::parse($transaction['transactionDate'])->format('d-m-Y');
 
         return view('admin.anggota-edit-detail', compact('user', 'userAccount', 'transaction'));
     }

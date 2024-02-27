@@ -289,7 +289,7 @@
                                     </div>
                                 </div>
                                 <button type="submit"
-                                    class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Daftar</button>
+                                    class="btn btn-primary btn-block btn-lg shadow-lg mt-5 show_confirm">Daftar</button>
                             </div>
                             <div class="text-center mt-5 text-lg fs-4">
                                 <p class='text-gray-600'>Sudah punya akun? <a href="{{ route('login') }}"
@@ -351,6 +351,27 @@
                 event.preventDefault();
                 return false;
             }
+        });
+
+        $('.show_confirm').click(function(event) {
+            event.preventDefault();
+
+            var form = $(this).closest("form");
+
+            Swal.fire({
+                title: 'Daftar jadi anggota?',
+                text: "Pastikan data yang diinput sudah benar.",
+                icon: 'question',
+                showDenyButton: true,
+                confirmButtonText: 'Ya, ubah',
+                denyButtonText: 'Batal',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                } else if (result.isDenied) {
+                    // Swal.fire('Changes are not saved', '', 'info');
+                }
+            });
         });
 
         function validateData(type) {
@@ -604,7 +625,7 @@
         });
 
         $(function() {
-            $("#nominal").keyup(function(e) {
+            $("#nominal").each(function(e) {
                 $(this).val(format($(this).val()));
             });
         });

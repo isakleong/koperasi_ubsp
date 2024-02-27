@@ -10,6 +10,9 @@
             display: flex;
             justify-content: center;
         }
+        /* table tbody tr td:nth-child(2)::before {
+            content: "  : ";
+        } */
     </style>
 @endsection
 
@@ -166,6 +169,8 @@
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Data Anggota UBSP</h5>
+                        {{-- <a class="btn btn-primary" href="{{route('users.index',['download'=>'pdf'])}}">Download PDF</a> --}}
+                        <a type="button" class="btn btn-primary" href="{{route('admin.user.index',['download'=>'pdf'])}}">Download PDF</a>
                     </div>
 
                     <div class="card-body">
@@ -231,11 +236,87 @@
                                         <input type="hidden" id="memberId" value="{{ $item->memberId }}">
                                         <div class="mt-3">
                                             <div class="d-grid gap-3 col-lg-12">
-                                                <a href="{{ route('admin.user.edit', $item->id) }}" type="button" class="btn btn-primary">Edit Data</a>
+                                                {{-- <a href="{{ route('admin.user.edit', $item->id) }}" type="button" class="btn btn-primary">Edit Data</a> --}}
+                                                {{-- <a href="{{ route('admin.user.edit', $item->id) }}" type="button" class="btn btn-primary">Lihat Detail</a> --}}
 
-                                                <a href="{{ route('admin.user.edit', $item->id) }}" type="button" class="btn btn-primary">Lihat Detail</a>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalScrollable{{$item->id}}">Lihat Detail</button>
 
-                                                @if ($item->status == 0)
+                                                <!-- Modal Detail -->
+                                                <div class="modal fade" id="modalScrollable{{$item->id}}" tabindex="-1" aria-labelledby="modalScrollableTitle{{$item->id}}" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="modalScrollableTitle{{$item->id}}">Detail Anggota</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <a href="{{ route('admin.user.edit', $item->id) }}" type="button" class="btn btn-outline-primary">Edit Data</a>
+                                                            <table class="table table-sm mt-3">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>Nama Depan</td>
+                                                                        <td>{{ $item->fname }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Nama Belakang</td>
+                                                                        <td>{{ $item->lname }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Tempat Lahir</td>
+                                                                        <td>{{ $item->birthplace }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Tanggal Lahir</td>
+                                                                        <td>{{ $item->birthdate }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Alamat Tinggal</td>
+                                                                        <td>{{ $item->address }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Alamat Kerja</td>
+                                                                        <td>{{ $item->workAddress }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Email</td>
+                                                                        <td>{{ $item->email }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>No HP</td>
+                                                                        <td>{{ $item->phone }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Nama Ibu Kandung</td>
+                                                                        <td>{{ $item->mothername }}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            {{-- <button type="button" class="btn btn-outline-danger">Tolak</button> --}}
+                                                            {{-- <button type="button" class="btn btn-primary">Terima</button> --}}
+
+                                                            @if ($item->status == 0)
+                                                                <a href="{{ route('verification.send', $item->id) }}" type="button"
+                                                                    class="btn btn-primary">Verifikasi Ulang</a>
+                                                            @elseif ($item->status == 1)
+                                                            <form action="{{ route('admin.reject.user', $item->id) }}" method="POST">
+                                                                @csrf
+                                                                <button type="submit" class="col-12 btn btn-outline-danger show_confirm_reject">Tolak</button>
+                                                            </form>
+                                                            <form action="{{ route('admin.acc.user', $item->id) }}" method="POST">
+                                                                @csrf
+                                                                <button type="submit" class="col-12 btn btn-primary show_confirm_acc">Terima</button>
+                                                            </form>
+                                                            @else
+                                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+
+                                                {{-- @if ($item->status == 0)
                                                     <a href="{{ route('verification.send', $item->id) }}" type="button"
                                                         class="btn btn-primary">Verifikasi Ulang</a>
                                                 @elseif ($item->status == 1)
@@ -247,7 +328,7 @@
                                                     @csrf
                                                     <button type="submit" class="col-12 btn btn-primary show_confirm_reject">Tolak</button>
                                                 </form>
-                                                @endif
+                                                @endif --}}
                                             </div>
                                         </div>
                                     </div>
@@ -272,6 +353,9 @@
             </div>
         </div>
     </div>
+
+
+    
 
     
 @endsection
@@ -351,14 +435,39 @@
             $('.show_confirm_reject').click(function(event) {
                 event.preventDefault();
 
+                $('.modal').modal('hide');
+
                 var form = $(this).closest("form");
 
                 Swal.fire({
-                    title: 'Simpan Data?',
+                    title: 'Tolak Anggota?',
                     text: '',
                     icon: 'question',
                     showDenyButton: true,
-                    confirmButtonText: 'Ya, simpan',
+                    confirmButtonText: 'Ya, tolak',
+                    denyButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    } else if (result.isDenied) {
+                        // Swal.fire('Changes are not saved', '', 'info');
+                    }
+                });
+            });
+
+            $('.show_confirm_acc').click(function(event) {
+                event.preventDefault();
+
+                $('.modal').modal('hide');
+
+                var form = $(this).closest("form");
+
+                Swal.fire({
+                    title: 'Terima Anggota?',
+                    text: '',
+                    icon: 'question',
+                    showDenyButton: true,
+                    confirmButtonText: 'Ya, terima',
                     denyButtonText: 'Batal',
                 }).then((result) => {
                     if (result.isConfirmed) {
