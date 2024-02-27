@@ -16,7 +16,8 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Barryvdh\DomPDF\Facade\Pdf;
+// use Barryvdh\DomPDF\Facade\Pdf;
+use PDF;
 
 class UserController extends Controller
 {
@@ -38,15 +39,29 @@ class UserController extends Controller
                 //     'users' => $users
                 // ];
                 
-                $data = [
-                    'title' => 'Laporan Anggota UBSP',
-                    'date' => date('d/m/Y'),
-                    'users' => $users
-                ];
+                // $data = [
+                //     'title' => 'Laporan Anggota UBSP',
+                //     'date' => date('d/m/Y'),
+                //     'users' => $users
+                // ];
 
-                $pdf = PDF::loadView('admin.report.anggota-report', $data);
+                $dataReport = User::all();
+                // $dataReport = User::where('status', $status)->orderBy('id', 'desc')->get();
+
+                $pdf = PDF::loadView('admin.report.anggota-report', compact('dataReport'));
+                $pdf->setOption('enable-local-file-access', true);
+                // $pdf->setPaper('A4', 'portrait');
+
                 // $pdf = Pdf::loadView('admin.report.anggota-report', ['data' => $data]);
 	            return $pdf->download('test.pdf');
+
+                // $mpdf = new \Mpdf\Mpdf();
+                // $stylesheet = file_get_contents(public_path().'/'.'vendor/bootstrap/css/bootstrap.min.css');
+                // $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS); // CSS Script goes here.
+                // $mpdf->WriteHTML(view('admin.report.anggota-report', compact('users')), \Mpdf\HTMLParserMode::HTML_BODY);
+                // $mpdf->Output('Laporan Anggota UBSP.pdf', 'D');
+
+
             } catch (\Throwable $th) {
                 dd($th);
             }
