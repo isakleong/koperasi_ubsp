@@ -171,7 +171,13 @@
                                 @foreach ($config as $item)
                                     <tr>
                                         <td>{{ $item->name }}</td>
-                                        <td>{{ $item->value }}</td>
+                                        <td>
+                                            @if(is_numeric($item->value))
+                                                <span class="autonumeric">{{ $item->value }}</span>
+                                            @else
+                                                {{ $item->value }}
+                                            @endif
+                                        </td>
                                         <td>{{ $item->desc }}</td>
                                         @if ($item->active == '1')
                                             <td><span class="badge bg-success">Aktif</span></td>
@@ -206,9 +212,25 @@
 @section('vendorJS')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
+    <script src="https://unpkg.com/autonumeric"></script>
+
+    {{-- <script>
+        // Initialize AutoNumeric on the element with the 'autonumeric' class
+        var autoNumericElement = document.querySelector('.autonumeric');
+        var autoNumeric = new AutoNumeric(autoNumericElement);
+    </script> --}}
 
     <script>
         $(document).ready(function() {
+            $('.autonumeric').each(function() {
+                new AutoNumeric(this, {
+                    digitGroupSeparator: ',',
+                    decimalPlaces:'0',
+                    emptyInputBehavior: "zero",
+                    watchExternalChanges: true
+                });
+            });
+
             $('.show_confirm').click(function(event) {
                 event.preventDefault();
 

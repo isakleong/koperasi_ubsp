@@ -36,11 +36,15 @@
                                                     <label for="first-name-icon">Jenis Simpanan</label>
                                                     <div class="position-relative">
                                                         <fieldset class="form-group">
+                                                            @php
+                                                                $options = $configuration[0]->value;
+                                                                $optionArray = explode('|', $options);
+                                                            @endphp
                                                             <select class="form-select" id="basicSelect" name="kind">
                                                                 <option>-- Pilih Simpanan --</option>
-                                                                <option>Simpanan Wajib</option>
-                                                                <option>Simpanan Sukarela</option>
-                                                                <option>Simpanan Sibuhar</option>
+                                                                @foreach($optionArray as $option)
+                                                                    <option value="{{ $option }}">{{ $option }}</option>
+                                                                @endforeach
                                                             </select>
                                                         </fieldset>
                                                     </div>

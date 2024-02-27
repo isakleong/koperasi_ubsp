@@ -12,7 +12,7 @@ class ConfigController extends Controller
 {
     public function index()
     {
-        $config = Config::all();
+        $config = Config::orderBy('kind')->get();
         return view('admin.config',compact('config'));
     }
 

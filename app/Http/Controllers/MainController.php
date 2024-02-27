@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Config;
 use App\Models\Loan;
 use App\Models\LoanDetail;
 use App\Models\Transaction;
@@ -78,7 +79,10 @@ class MainController extends Controller
         $parameter = Route::currentRouteName();
 
         if ($parameter == "add.simpanan") {
-            return view('main.simpanan-add', compact(['user']));
+            $configName = ['JENIS SIMPANAN', 'SIMPANAN WAJIB'];
+            $configuration = Config::whereIn('name', $configName)->get();
+
+            return view('main.simpanan-add', compact(['user', 'configuration']));
 
         } elseif ($parameter == "recap.simpanan") {
             $startDate = Carbon::now()->subMonth();
@@ -563,6 +567,10 @@ class MainController extends Controller
     }
 
     public function storeSimpanan(Request $request) {
+        //get config data
+        // $configName = ['SIMPANAN POKOK', 'SIMPANAN WAJIB'];
+        // $configuration = Config::whereIn('name', $configName)->get();
+
         $request['nominal'] = str_replace(',', '', $request->input('nominal'));
 
         $validator = Validator::make(
@@ -573,7 +581,7 @@ class MainController extends Controller
                 'image' => $request->file('image'),
             ],
             [
-                'kind' => 'required|not_in:-- Pilih Simpanan --|in:Simpanan Wajib,Simpanan Sukarela',
+                'kind' => 'required|not_in:-- Pilih Simpanan --|in:Simpanan Wajib,Simpanan Sukarela,Simpanan Sibuhar',
                 'nominal' => 'required|numeric|min:50000',
                 'method' => 'required|in:cash,transfer',
                 'image' => 'required_if:method,transfer',

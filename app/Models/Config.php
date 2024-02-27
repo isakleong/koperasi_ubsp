@@ -16,6 +16,7 @@ class Config extends Model
         'name',
         'value',
         'desc',
+        'kind',
         'active'
     ];
 }
