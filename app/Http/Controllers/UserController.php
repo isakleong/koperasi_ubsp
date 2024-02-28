@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportUser;
 use App\Models\Config;
 use App\Models\User;
 use Carbon\Carbon;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 // use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 
 class UserController extends Controller
@@ -45,7 +47,7 @@ class UserController extends Controller
                 //     'users' => $users
                 // ];
 
-                $dataReport = User::all();
+                $dataReport = User::orderBy('id', 'desc')->get();
                 // $dataReport = User::where('status', $status)->orderBy('id', 'desc')->get();
 
                 $pdf = PDF::loadView('admin.report.anggota-report', compact('dataReport'));
@@ -66,6 +68,10 @@ class UserController extends Controller
                 dd($th);
             }
 	    }
+
+        if($request->has('export')){
+            return Excel::download(new ExportUser, "Laporan Anggota UBSP.xlsx");
+        }
 
         // Render the view with the filtered data
         return view('admin.anggota-edit', compact('users'));

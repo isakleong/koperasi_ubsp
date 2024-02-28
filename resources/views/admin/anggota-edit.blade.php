@@ -170,7 +170,8 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Data Anggota UBSP</h5>
                         {{-- <a class="btn btn-primary" href="{{route('users.index',['download'=>'pdf'])}}">Download PDF</a> --}}
-                        <a type="button" class="btn btn-primary" href="{{route('admin.user.index',['download'=>'pdf'])}}">Download PDF</a>
+                        <a type="button" class="btn btn-primary" href="{{route('admin.user.index',['download'=>'pdf'])}}">Export PDF</a>
+                        <a type="button" class="btn btn-primary" href="{{route('admin.user.index',['export'=>'excel'])}}">Export Excel</a>
                     </div>
 
                     <div class="card-body">

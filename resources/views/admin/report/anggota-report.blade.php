@@ -95,7 +95,14 @@
                         <td>{{$item->email}}</td>
                         <td>{{$item->phone}}</td>
                         <td>{{$item->mothername}}</td>
-                        <td>{{$item->mothername}}</td>
+                        @php
+                            $formattedDate = "";
+                            if($item->registDate != null) {
+                                $dateTime = new DateTime($item->registDate);
+                                $formattedDate = $dateTime->format('d-m-Y');
+                            }
+                        @endphp
+                        <td>{{$formattedDate}}</td>
                     </tr>
                 @endforeach
             </tbody>
