@@ -10,7 +10,6 @@
             display: flex;
             justify-content: center;
         }
-
         /* table tbody tr td:nth-child(2)::before {
                     content: "  : ";
                 } */
@@ -215,23 +214,12 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Export Excel</button>
-                                        <button type="button" class="btn btn-primary">Export PDF</button>
-                                        <button type="button" class="btn btn-outline-primary">
-                                            <span class="tf-icons bx bxs-file me-1" style='color:#279a1b'></span>Excel
-                                        </button>
-                                        <button type="button" class="btn btn-outline-primary">
-                                            <span class="tf-icons bx bxs-file-pdf me-1" style='color:#ff0000'></span>PDF
-                                        </button>
+                                        <a type="button" class="btn btn-outline-primary" href="{{ route('admin.user.index', ['export' => 'excel']) }}"><span class="tf-icons bx bxs-file me-1" style='color:#279a1b'></span>Excel</a>
+                                        <a type="button" class="btn btn-outline-primary" href="{{ route('admin.user.index', ['download' => 'pdf']) }}"><span class="tf-icons bx bxs-file-pdf me-1" style='color:#ff0000'></span>PDF</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <a type="button" class="btn btn-primary"
-                            href="{{ route('admin.user.index', ['download' => 'pdf']) }}">Export PDF</a>
-                        <a type="button" class="btn btn-primary"
-                            href="{{ route('admin.user.index', ['export' => 'excel']) }}">Export Excel</a>
                     </div>
 
                     <div class="card-body">

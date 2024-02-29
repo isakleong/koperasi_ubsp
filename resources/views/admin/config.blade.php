@@ -74,7 +74,7 @@
                     <div data-i18n="Basic">Simpanan</div>
                 </a>
             </li>
-            
+
             <li class="menu-item">
                 <a href="/admin/menu/kredit" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-credit-card-front"></i>
@@ -87,7 +87,7 @@
                     <div data-i18n="Basic">Angsuran</div>
                 </a>
             </li>
-            
+
             <!-- End of Transaction Data -->
 
             <!-- Report Data -->
@@ -157,50 +157,180 @@
                     </div>
 
                     <div class="card-body">
-                        <table class="table table-striped" id="table1" style="width: 100%">
-                            <thead>
-                                <tr>
-                                    <th>Nama</th>
-                                    <th>Nilai</th>
-                                    <th>Deskripsi</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($config as $item)
-                                    <tr>
-                                        <td>{{ $item->name }}</td>
-                                        <td>
-                                            @if(is_numeric($item->value))
-                                                <span class="autonumeric">{{ $item->value }}</span>
-                                            @else
-                                                {{ $item->value }}
-                                            @endif
-                                        </td>
-                                        <td>{{ $item->desc }}</td>
-                                        @if ($item->active == '1')
-                                            <td><span class="badge bg-success">Aktif</span></td>
-                                        @else
-                                            <td><span class="badge bg-danger">Tidak Aktif</span></td>
-                                        @endif
-                                        <td>
-                                            <a href="{{ route('admin.config.edit', $item->id) }}"
-                                                class="btn icon btn-sm btn-primary d-inline-block m-1"
-                                                data-bs-toggle="tooltip" title="Edit"><i class="bx bxs-pencil"></i></a>
-                                            {{-- <form action="{{ route('admin.company.destroy', $item->id) }}"
-                                                method="POST" class="d-inline-block m-1" data-bs-toggle="tooltip"
-                                                title="Hapus">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn icon btn-sm btn-danger show_confirm"><i
-                                                        class="bx bxs-trash"></i></button>
-                                            </form> --}}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="nav-align-top mb-4">
+                                    <ul class="nav nav-pills mb-3" role="tablist">
+                                        <li class="nav-item">
+                                            <button type="button" class="nav-link active" role="tab"
+                                                data-bs-toggle="tab" data-bs-target="#simpanan"
+                                                aria-controls="simpanan" aria-selected="true">
+                                                Simpanan
+                                            </button>
+                                        </li>
+                                        <li class="nav-item">
+                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                                                data-bs-target="#kredit"
+                                                aria-controls="navs-pills-top-profile" aria-selected="false">
+                                                Kredit
+                                            </button>
+                                        </li>
+                                        <li class="nav-item">
+                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                                                data-bs-target="#lainnya"
+                                                aria-controls="navs-pills-top-messages" aria-selected="false">
+                                                Lainnya
+                                            </button>
+                                        </li>
+                                    </ul>
+
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="simpanan" role="tabpanel">
+                                            <table class="table table-striped" id="table1" style="width: 100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nama</th>
+                                                        <th>Nilai</th>
+                                                        <th>Deskripsi</th>
+                                                        <th>Status</th>
+                                                        <th>Aksi</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($config as $item)
+                                                        <tr>
+                                                            <td>{{ $item->name }}</td>
+                                                            <td>
+                                                                @if (is_numeric($item->value))
+                                                                    <span class="autonumeric">{{ $item->value }}</span>
+                                                                @else
+                                                                    {{ $item->value }}
+                                                                @endif
+                                                            </td>
+                                                            <td>{{ $item->desc }}</td>
+                                                            @if ($item->active == '1')
+                                                                <td><span class="badge bg-success">Aktif</span></td>
+                                                            @else
+                                                                <td><span class="badge bg-danger">Tidak Aktif</span></td>
+                                                            @endif
+                                                            <td>
+                                                                <a href="{{ route('admin.config.edit', $item->id) }}"
+                                                                    class="btn icon btn-sm btn-primary d-inline-block m-1"
+                                                                    data-bs-toggle="tooltip" title="Edit"><i class="bx bxs-pencil"></i></a>
+                                                                {{-- <form action="{{ route('admin.company.destroy', $item->id) }}"
+                                                                    method="POST" class="d-inline-block m-1" data-bs-toggle="tooltip"
+                                                                    title="Hapus">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit" class="btn icon btn-sm btn-danger show_confirm"><i
+                                                                            class="bx bxs-trash"></i></button>
+                                                                </form> --}}
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane fade" id="kredit" role="tabpanel">
+                                            <table class="table table-striped" id="table1" style="width: 100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nama</th>
+                                                        <th>Nilai</th>
+                                                        <th>Deskripsi</th>
+                                                        <th>Status</th>
+                                                        <th>Aksi</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($config as $item)
+                                                        @if (strtolower($item->kind) == "kredit")
+                                                            <tr>
+                                                                <td>{{ $item->name }}</td>
+                                                                <td>
+                                                                    @if (is_numeric($item->value))
+                                                                        <span class="autonumeric">{{ $item->value }}</span>
+                                                                    @else
+                                                                        {{ $item->value }}
+                                                                    @endif
+                                                                </td>
+                                                                <td>{{ $item->desc }}</td>
+                                                                @if ($item->active == '1')
+                                                                    <td><span class="badge bg-success">Aktif</span></td>
+                                                                @else
+                                                                    <td><span class="badge bg-danger">Tidak Aktif</span></td>
+                                                                @endif
+                                                                <td>
+                                                                    <a href="{{ route('admin.config.edit', $item->id) }}"
+                                                                        class="btn icon btn-sm btn-primary d-inline-block m-1"
+                                                                        data-bs-toggle="tooltip" title="Edit"><i class="bx bxs-pencil"></i></a>
+                                                                    {{-- <form action="{{ route('admin.company.destroy', $item->id) }}"
+                                                                        method="POST" class="d-inline-block m-1" data-bs-toggle="tooltip"
+                                                                        title="Hapus">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit" class="btn icon btn-sm btn-danger show_confirm"><i
+                                                                                class="bx bxs-trash"></i></button>
+                                                                    </form> --}}
+                                                                </td>
+                                                            </tr>
+                                                        @endif
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane fade" id="lainnya" role="tabpanel">
+                                            <table class="table table-striped" id="tableOther" style="width: 100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nama</th>
+                                                        <th>Nilai</th>
+                                                        <th>Deskripsi</th>
+                                                        <th>Status</th>
+                                                        <th>Aksi</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($config as $item)
+                                                        @if (strtolower($item->kind) == "simpanan")
+                                                            <tr>
+                                                                <td>{{ $item->name }}</td>
+                                                                <td>
+                                                                    @if (is_numeric($item->value))
+                                                                        <span class="autonumeric">{{ $item->value }}</span>
+                                                                    @else
+                                                                        {{ $item->value }}
+                                                                    @endif
+                                                                </td>
+                                                                <td>{{ $item->desc }}</td>
+                                                                @if ($item->active == '1')
+                                                                    <td><span class="badge bg-success">Aktif</span></td>
+                                                                @else
+                                                                    <td><span class="badge bg-danger">Tidak Aktif</span></td>
+                                                                @endif
+                                                                <td>
+                                                                    <a href="{{ route('admin.config.edit', $item->id) }}"
+                                                                        class="btn icon btn-sm btn-primary d-inline-block m-1"
+                                                                        data-bs-toggle="tooltip" title="Edit"><i class="bx bxs-pencil"></i></a>
+                                                                    {{-- <form action="{{ route('admin.company.destroy', $item->id) }}"
+                                                                        method="POST" class="d-inline-block m-1" data-bs-toggle="tooltip"
+                                                                        title="Hapus">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit" class="btn icon btn-sm btn-danger show_confirm"><i
+                                                                                class="bx bxs-trash"></i></button>
+                                                                    </form> --}}
+                                                                </td>
+                                                            </tr>
+                                                        @endif
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -211,6 +341,7 @@
 
 @section('vendorJS')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/vendor/datatable/js/datatables.min.js"></script>
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
     <script src="https://unpkg.com/autonumeric"></script>
 
@@ -222,10 +353,15 @@
 
     <script>
         $(document).ready(function() {
+            var table = $('#table1').DataTable({
+                responsive: true
+            });
+
+
             $('.autonumeric').each(function() {
                 new AutoNumeric(this, {
                     digitGroupSeparator: ',',
-                    decimalPlaces:'0',
+                    decimalPlaces: '0',
                     emptyInputBehavior: "zero",
                     watchExternalChanges: true
                 });
