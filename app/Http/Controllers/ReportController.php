@@ -16,7 +16,7 @@ class ReportController extends Controller
                 $status = $request->input('status');
 
                 if (!empty($status)) {
-                    $dataReport = User::where('status', 'IN', $status)->orderBy('id', 'desc')->get();
+                    $dataReport = User::whereIn('status', $status)->orderBy('id', 'desc')->get();
                 } else {
                     $dataReport = User::orderBy('id', 'desc')->get();
                 }
@@ -30,7 +30,7 @@ class ReportController extends Controller
                 $status = $request->input('status');
 
                 if (!empty($status)) {
-                    $dataReport = User::where('status', 'IN', $status)->orderBy('id', 'desc')->get();
+                    $dataReport = User::whereIn('status', $status)->orderBy('id', 'desc')->get();
                 } else {
                     $dataReport = User::orderBy('id', 'desc')->get();
                 }
