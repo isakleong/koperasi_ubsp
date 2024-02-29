@@ -183,40 +183,52 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-md">
-                                                <p class="fw-medium">Status Anggota</p>
-                                                <div class="form-check mt-3">
-                                                    <input class="form-check-input" type="checkbox" value=""
-                                                        id="export-option-1" />
-                                                    <label class="form-check-label" for="export-option-1"> Aktif </label>
-                                                </div>
-                                                <div class="form-check mt-1">
-                                                    <input class="form-check-input" type="checkbox" value=""
-                                                        id="export-option-2" />
-                                                    <label class="form-check-label" for="export-option-2"> Non Aktif
-                                                    </label>
-                                                </div>
-                                                <div class="form-check mt-1">
-                                                    <input class="form-check-input" type="checkbox" value=""
-                                                        id="export-option-3" />
-                                                    <label class="form-check-label" for="export-option-3"> Belum
-                                                        Verifikasi </label>
-                                                </div>
-                                                <div class="form-check mt-1">
-                                                    <input class="form-check-input" type="checkbox" value=""
-                                                        id="export-option-4" />
-                                                    <label class="form-check-label" for="export-option-4"> Belum Disetujui
-                                                    </label>
+                                    <form action="{{ route('admin.export.user') }}" method="post">
+                                        @csrf
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md">
+                                                    <p class="fw-medium">Status Anggota</p>
+                                                    <div class="form-check mt-3">
+                                                        <input class="form-check-input" type="checkbox" value="2"
+                                                            id="export-option-1" name="status[]"/>
+                                                        <label class="form-check-label" for="export-option-1"> Aktif </label>
+                                                    </div>
+                                                    <div class="form-check mt-1">
+                                                        <input class="form-check-input" type="checkbox" value="3"
+                                                            id="export-option-2" name="status[]"/>
+                                                        <label class="form-check-label" for="export-option-2"> Non Aktif
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check mt-1">
+                                                        <input class="form-check-input" type="checkbox" value="0"
+                                                            id="export-option-3" name="status[]"/>
+                                                        <label class="form-check-label" for="export-option-3"> Belum
+                                                            Verifikasi </label>
+                                                    </div>
+                                                    <div class="form-check mt-1">
+                                                        <input class="form-check-input" type="checkbox" value="1"
+                                                            id="export-option-4" name="status[]" />
+                                                        <label class="form-check-label" for="export-option-4"> Belum Disetujui
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check mt-1">
+                                                        <input class="form-check-input" type="checkbox" value="4"
+                                                            id="export-option-5" name="status[]"/>
+                                                        <label class="form-check-label" for="export-option-4"> Ditolak
+                                                        </label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <a type="button" class="btn btn-outline-primary" href="{{ route('admin.user.index', ['export' => 'excel']) }}"><span class="tf-icons bx bxs-file me-1" style='color:#279a1b'></span>Excel</a>
-                                        <a type="button" class="btn btn-outline-primary" href="{{ route('admin.user.index', ['download' => 'pdf']) }}"><span class="tf-icons bx bxs-file-pdf me-1" style='color:#ff0000'></span>PDF</a>
-                                    </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-outline-primary" name="action" value="excel">Excel</button>
+                                            <button type="submit" class="btn btn-outline-primary" name="action" value="pdf">PDF</button>
+
+                                            {{-- <a type="button" class="btn btn-outline-primary" href="{{ route('admin.user.index', ['export' => 'excel']) }}"><span class="tf-icons bx bxs-file me-1" style='color:#279a1b'></span>Excel</a>
+                                            <a type="button" class="btn btn-outline-primary" href="{{ route('admin.user.index', ['download' => 'pdf']) }}"><span class="tf-icons bx bxs-file-pdf me-1" style='color:#ff0000'></span>PDF</a> --}}
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>

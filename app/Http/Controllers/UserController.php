@@ -32,81 +32,78 @@ class UserController extends Controller
         // Perform data filtering based on the provided parameters
         $users = $this->fetchDataFromDatabase($keyword, $status);
 
-        if($request->has('download'))
-	    {
-            try {
-                // $data = [
-                //     'title' => 'Laporan Anggota UBSP',
-                //     'date' => date('d/m/Y'),
-                //     'users' => $users
-                // ];
-                
-                // $data = [
-                //     'title' => 'Laporan Anggota UBSP',
-                //     'date' => date('d/m/Y'),
-                //     'users' => $users
-                // ];
+        // $statusExport = [];
+        // if ($request->has('export-option-1')) {
+        //     //aktif
+        //     $statusExport[] = '2';
+        // }
+    
+        // if ($request->has('export-option-2')) {
+        //     //non aktif
+        //     $statusExport[] = '3';
+        // }
+    
+        // if ($request->has('export-option-3')) {
+        //     //belum verifikasi
+        //     $statusExport[] = '0';
+        // }
+    
+        // if ($request->has('export-option-4')) {
+        //     //belum disetujui
+        //     $statusExport[] = '1';
+        // }
 
-                $dataReport = User::orderBy('id', 'desc')->get();
-                // $dataReport = User::where('status', $status)->orderBy('id', 'desc')->get();
+        // if ($request->has('export-option-5')) {
+        //     //belum disetujui
+        //     $statusExport[] = '4';
+        // }
 
-                $pdf = PDF::loadView('admin.report.anggota-report', compact('dataReport'));
-                $pdf->setOption('enable-local-file-access', true);
-                // $pdf->setPaper('A4', 'portrait');
+        // if($request->has('download'))
+	    // {
+        //     try {
+        //         dd($statusExport);
+        //         if (!empty($statusExport)) {
+        //             dd("hahh");
+        //             $dataReport = User::where('status', 'IN', $statusExport)->orderBy('id', 'desc')->get();
+        //         } else {
+        //             dd("hahheee");
+        //             $dataReport = User::orderBy('id', 'desc')->get();
+        //         }
 
-                // $pdf = Pdf::loadView('admin.report.anggota-report', ['data' => $data]);
-	            return $pdf->download('test.pdf');
+        //         $pdf = PDF::loadView('admin.report.anggota-report', compact('dataReport'));
+        //         $pdf->setOption('enable-local-file-access', true);
 
-                // $mpdf = new \Mpdf\Mpdf();
-                // $stylesheet = file_get_contents(public_path().'/'.'vendor/bootstrap/css/bootstrap.min.css');
-                // $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS); // CSS Script goes here.
-                // $mpdf->WriteHTML(view('admin.report.anggota-report', compact('users')), \Mpdf\HTMLParserMode::HTML_BODY);
-                // $mpdf->Output('Laporan Anggota UBSP.pdf', 'D');
+	    //         return $pdf->download('test.pdf');
+        //     } catch (\Throwable $th) {
+        //         dd($th);
+        //     }
+	    // }
 
+        // if($request->has('export')){
+        //     return Excel::download(new ExportUser, "Laporan Anggota UBSP.xlsx");
+        // }
 
-            } catch (\Throwable $th) {
-                dd($th);
-            }
-	    }
-
-        if($request->has('export')){
-            return Excel::download(new ExportUser, "Laporan Anggota UBSP.xlsx");
-        }
-
-        // Render the view with the filtered data
         return view('admin.anggota-edit', compact('users'));
-
-        // $users = User::when($request->keyword!=null, function ($q) use ($request) {
-        //     return $q->where('fname', 'LIKE', '%'.$request->keyword.'%')
-        //     ->orWhere('lname', 'LIKE', '%'.$request->keyword.'%')
-        //     ->orWhere('address', 'LIKE', '%'.$request->keyword.'%')
-        //     ->orWhere('workAddress', 'LIKE', '%'.$request->keyword.'%');
-        // }, function ($q) use ($keyword) {
-        //     return $q->where('fname', 'LIKE', '%'.$keyword.'%')
-        //     ->orWhere('lname', 'LIKE', '%'.$keyword.'%')
-        //     ->orWhere('address', 'LIKE', '%'.$keyword.'%')
-        //     ->orWhere('workAddress', 'LIKE', '%'.$keyword.'%');
-        // }) ->when($request->status!=null, function ($q) use($request){
-        //     return $q->where('status', $request->status);
-        // }, function ($q) use ($status) {
-        //     return $q->where('status', $status);
-        // })->paginate(10);
-
-        // //filter by keyword
-        // $users->when($request->keyword, function ($query) use ($request) {
-        //     return $query->where('fname', 'LIKE', '%'.$request->keyword.'%')
-        //     ->orWhere('lname', 'LIKE', '%'.$request->keyword.'%')
-        //     ->orWhere('address', 'LIKE', '%'.$request->keyword.'%')
-        //     ->orWhere('workAddress', 'LIKE', '%'.$request->keyword.'%');
-        // });
-
-        // //filter by status
-        // $users->when($request->status, function ($query) use ($request) {
-        //     return $query->whereStatus($request->status);
-        // });
-
-        // return view('admin.anggota-edit', compact('users', 'request'));
     }
+
+    // public function exportData(Request $request) {
+    //     dd($request->input('action'));
+    //     switch ($request->input('action')) {
+    //         case 'pdf':
+    //             dd($request->input('status-export'));
+
+    //             $dataReport = User::orderBy('id', 'desc')->get();
+
+    //             $pdf = PDF::loadView('admin.report.anggota-report', compact('dataReport'));
+    //             $pdf->setOption('enable-local-file-access', true);
+
+	//             return $pdf->download('Laporan Anggota UBSP.pdf');
+    //             break;
+    //         case 'excel':
+    //             return Excel::download(new ExportUser, "Laporan Anggota UBSP.xlsx");
+    //             break;
+    //     }   
+    // }
 
     public function accData(Request $request, $id) {
         $now = date('Y-m-d H:i:s');
@@ -177,6 +174,8 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        //
+
         $validator = Validator::make(
             [
                 'fname' => $request->input('fname'),

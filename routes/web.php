@@ -10,6 +10,7 @@ use App\Http\Controllers\JournalController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -171,6 +172,8 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('/menu/angsuran', [AdminController::class, 'showAngsuranMenu']);
 
     //LAPORAN
+    Route::post('/user/export', [ReportController::class, 'exportData'])->name('export.user');
+
     Route::resource('/journal', JournalController::class);
 
     
