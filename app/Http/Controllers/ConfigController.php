@@ -42,14 +42,17 @@ class ConfigController extends Controller
         $validator = Validator::make(
             [
                 'name' => $request->input('name'),
+                'desc' => $request->input('desc'),
                 'value' => $request->input('value')
             ],
             [
                 'name' => 'nullable|exists:config,name',
+                'desc' => 'required',
                 'value' => 'required',
             ],
             [
                 'name.exists' => 'Nama konfigurasi tidak valid',
+                'desc.required' => 'Deskripsi konfigurasi belum diisi',
                 'value.required' => 'Nilai konfigurasi belum diisi'
             ],
             );

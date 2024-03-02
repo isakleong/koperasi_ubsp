@@ -13,15 +13,27 @@
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/administrator/assets/img/favicon/favicon.ico" />
+    {{-- <link rel="icon" type="image/x-icon" href="/administrator/assets/img/favicon/favicon.ico" /> --}}
+    <link rel="apple-touch-icon" sizes="57x57" href="/administrator/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/administrator/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/administrator/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/administrator/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/administrator/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/administrator/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/administrator/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/administrator/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/administrator/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/administrator/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/administrator/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/administrator/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/administrator/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/administrator/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/administrator/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-        rel="stylesheet" />
-
+    <link rel="stylesheet" href="/administrator/assets/vendor/fonts/fonts.css" />
     <link rel="stylesheet" href="/administrator/assets/vendor/fonts/boxicons.css" />
 
     <!-- Core CSS -->
@@ -46,7 +58,7 @@
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
             <div class="layout-page">
-                @yield('navbar')
+                @include('layout.admin.navbar')
 
                 <!-- Navbar -->
                 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
@@ -86,9 +98,11 @@
                     </div>
                 </nav>
 
-                @yield('content')
+                {{-- @yield('content') --}}
 
                 <div class="content-wrapper">
+                    @yield('content')
+
                     <!-- Footer -->
                     <footer class="content-footer footer bg-footer-theme">
                         <div
@@ -138,7 +152,7 @@
     <script src="/administrator/assets/js/dashboards-analytics.js"></script>
 
     <!-- Place this tag in your head or just before your close body tag. -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script async defer src="/administrator/js/buttons.js"></script>
 </body>
 
 </html>

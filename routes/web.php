@@ -1,20 +1,20 @@
 <?php
 
-use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\AccountCategoryController;
-use App\Http\Controllers\AccountController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ConfigController;
-use App\Http\Controllers\JournalController;
-use App\Http\Controllers\MainController;
-use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ReportController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MainController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Password;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\JournalController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\AccountCategoryController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 Route::get('/tes/aja', function () {
     return view('auth.mail-verification');
@@ -28,21 +28,29 @@ Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/register', [AuthController::class, 'registerProcess'])->name('register');
 Route::get('/email/verify', function(){
     return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice');
+})->middleware('auth.user')->name('verification.notice');
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
     $user = $request->user();
     // Update the joinDate column
     $user->update(['status' => 1]);
     return redirect('/');
-})->middleware(['auth', 'signed'])->name('verification.verify');
+})->middleware(['auth.user', 'signed'])->name('verification.verify');
 
 // Route::get('/email/verify/resend', [AuthController::class, 'resendVerificationEmail'])->name('verification.resend');
 Route::post('/email/verification-notification', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
- 
-    return back()->with('message', 'Verification link sent!');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+    $userId = $request->input('user_id');
+    if ($userId && $user = User::find($userId)) {
+        $user->sendEmailVerificationNotification();
+        return back()->with('message', 'Verification link sent!');
+    } else {
+        // return redirect('/login')->with('error', 'Please log in to resend verification email.');
+        return back()->with('message', 'Verification link error!');
+    }
+
+    // $request->user()->sendEmailVerificationNotification();
+    // return back()->with('message', 'Verification link sent!');
+})->middleware(['auth.admin', 'throttle:6,1'])->name('verification.send');
 //END OF USER AUTHENTICATION (LOGIN AND REGISTER)
 
 //RESET PASSWORD
@@ -125,48 +133,28 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     //GET REQUEST
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
-    // Route::get('/anggota', [AdminController::class, 'anggota'])->name('anggota');
-    // Route::get('/anggota/add', [AdminController::class, 'addAnggota'])->name('add.anggota');
-    // Route::get('/anggota/edit', [AdminController::class, 'editAnggota'])->name('edit.anggota');
-    // // Route::post('/anggota/edit', [AdminController::class, 'filterEditAnggota'])->name('filter.edit.anggota');
-    // Route::get('/anggota/edit/{users:memberId}', [AdminController::class, 'getAnggotaDetail'])->name('show.edit.detail');
-
-    // //POST REQUEST
-    // Route::post('/anggota/add', [AdminController::class, 'storeAnggota'])->name('store.anggota');
-    // Route::post('/anggota/edit', [AdminController::class, 'updateAnggota'])->name('update.anggota');
-
     Route::resource('/company', CompanyController::class);
     Route::resource('/config', ConfigController::class);
 
-    Route::get('/menu/user', [AdminController::class, 'showUserMenu']);
+    Route::get('/menu/user', [AdminController::class, 'showUserMenu'])->name('user');
     Route::resource('/user', UserController::class);
     Route::post('user/{id}/acc', [UserController::class, 'accData'])->name('acc.user');
     Route::post('user/{id}/reject', [UserController::class, 'rejectData'])->name('reject.user');
-
-    // Route::post('/email/verification-notification', function (Request $request) {
-    //     $request->user()->sendEmailVerificationNotification();
-     
-    //     return back()->with('message', 'Verification link sent!');
-    // })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
     Route::resource('/account_category', AccountCategoryController::class);
     Route::resource('/account', AccountController::class);
 
     //SIMPANAN
-    Route::get('/menu/simpanan', [AdminController::class, 'showSimpananMenu']);
+    Route::get('/menu/simpanan', [AdminController::class, 'showSimpananMenu'])->name('simpanan');
     Route::get('/simpanan/setoran', [AdminController::class, 'showFormData'])->name('add.simpanan.deposit');
     Route::get('/simpanan/setoran/review', [AdminController::class, 'showFormData'])->name('review.simpanan.deposit');
     Route::get('/simpanan/setoran/review/{transaction:docId}', [AdminController::class, 'showFormData'])->name('detail.review.simpanan.deposit');
     Route::get('/simpanan/penarikan', [AdminController::class, 'showFormData'])->name('add.simpanan.withdrawal');
     Route::post('/simpanan/setoran', [AdminController::class, 'storeSimpananDeposit'])->name('store.simpanan.deposit');
     Route::post('/simpanan/penarikan', [AdminController::class, 'storeSimpananWithdrawal'])->name('store.simpanan.withdrawal');
-
-    //TABUNGAN
-    // Route::get('/menu/tabungan', [AdminController::class, 'showTabunganMenu']);
     
-
     //KREDIT
-    Route::get('/menu/kredit', [AdminController::class, 'showKreditMenu']);
+    Route::get('/menu/kredit', [AdminController::class, 'showKreditMenu'])->name('kredit');
 
     //ANGSURAN
     Route::get('/menu/angsuran', [AdminController::class, 'showAngsuranMenu']);
@@ -176,10 +164,8 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
 
     Route::resource('/journal', JournalController::class);
 
-    
     //checker
     Route::get('/simpanan/check', [AdminController::class, 'checkSimpananWajib'])->name('checkSimpanan');
-    // Route::get('/coba', [AdminController::class, 'getReviewSimpananDeposit']);
     Route::get('/xxx', [AccountController::class, 'getAccountsByCategory']);
 });
 //END OF ADMIN

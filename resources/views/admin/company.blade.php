@@ -148,68 +148,35 @@
         <h4 class="py-3 mb-4">
             <span class="fw-light">Profile UBSP</span>
         </h4>
-        <div class="row">
-            <div class="col-xl">
-                <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Daftar Kategori Akun</h5>
-                        @if (count($company) == 0)
-                            <a href="/admin/company/create" class="btn btn-primary">Tambah Data</a>
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Data Profile UBSP</h5>
+                @if (count($company) == 0)
+                    <a href="/admin/company/create" class="btn btn-primary">Tambah Data</a>
+                @else
+                    <a class="btn btn-primary disabled" onclick="return false;" style="cursor: not-allowed; pointer-events: all !important;">Tambah Data</a>
+                @endif
+
+            </div>
+
+            <div class="card h-100 m-5">
+                <div class="card-body">
+                    @foreach ($company as $item)
+                        @if ($item->logo != "")
+                            <td><img class="img-fluid d-flex mx-auto my-4 rounded" src="/{{ $item->logo }}" width="30%"></td>    
                         @else
-                            <a class="btn btn-primary disabled" onclick="return false;" style="cursor: not-allowed; pointer-events: all !important;">Tambah Data</a>
+                            <td>-</td>
                         @endif
 
-                    </div>
-
-                    <div class="card-body">
-                        <table class="table table-striped" id="table1" style="width: 100%">
-                            <thead>
-                                <tr>
-                                    <th>Nama</th>
-                                    <th>Tentang</th>
-                                    <th>Logo</th>
-                                    <th>Alamat</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Whatsapp</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $i = 1;
-                                @endphp
-                                @foreach ($company as $item)
-                                    <tr>
-                                        <td>{{ $item->name }}</td>
-                                        <td>{{ $item->about }}</td>
-                                        @if ($item->logo != "")
-                                            <td><img src="/{{ $item->logo }}" alt="" class="img-fluid" width="100"></td>    
-                                        @else
-                                            <td>-</td>
-                                        @endif
-                                        <td>{{ $item->address }}</td>
-                                        <td>{{ $item->email }}</td>
-                                        <td>{{ $item->phone }}</td>
-                                        <td>{{ $item->whatsapp }}</td>
-                                        <td>
-                                            <a href="{{ route('admin.company.edit', $item->id) }}"
-                                                class="btn icon btn-sm btn-primary d-inline-block m-1"
-                                                data-bs-toggle="tooltip" title="Edit"><i class="bx bxs-pencil"></i></a>
-                                            {{-- <form action="{{ route('admin.company.destroy', $item->id) }}"
-                                                method="POST" class="d-inline-block m-1" data-bs-toggle="tooltip"
-                                                title="Hapus">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn icon btn-sm btn-danger show_confirm"><i
-                                                        class="bx bxs-trash"></i></button>
-                                            </form> --}}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                        <div class="d-grid col-lg-12 mx-auto text-center">
+                            <h5 class="card-title">{{ $item->name }}</h5>
+                            Alamat<p class="card-text">{{ $item->address }}</p>
+                            Email<p class="card-text">{{ $item->email }}</p>
+                            No Telepon<p class="card-text">{{ $item->phone }}</p>
+                            Whatsapp<p class="card-text">{{ $item->whatsapp }}</p>
+                            <a href="{{ route('admin.company.edit', $item->id) }}" class="btn btn-primary"><span class="tf-icons bx bxs-edit-alt me-1"></span>Edit Profile</a>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -218,7 +185,7 @@
 @endsection
 
 @section('vendorJS')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
 
     <script>

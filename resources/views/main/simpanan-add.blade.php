@@ -26,92 +26,98 @@
                         </div>
                         <div class="card-content">
                             <div class="card-body">
-                                <form action="{{ route('store.simpanan') }}" class="form form-vertical" method="post"
-                                    enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="form-body">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="form-group has-icon-left">
-                                                    <label for="first-name-icon">Jenis Simpanan</label>
-                                                    <div class="position-relative">
-                                                        <fieldset class="form-group">
-                                                            @php
-                                                                $options = $configuration[0]->value;
-                                                                $optionArray = explode('|', $options);
-                                                            @endphp
-                                                            <select class="form-select" id="basicSelect" name="kind">
-                                                                <option>-- Pilih Simpanan --</option>
-                                                                @foreach($optionArray as $option)
-                                                                    <option value="{{ $option }}">{{ $option }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </fieldset>
+                                @if (count($configuration) == 2)
+                                    <form action="{{ route('store.simpanan') }}" class="form form-vertical" method="post" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="form-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="form-group has-icon-left">
+                                                        <label for="first-name-icon">Jenis Simpanan</label>
+                                                        <div class="position-relative">
+                                                            <fieldset class="form-group">
+                                                                @php
+                                                                    $options = $configuration[0]->value;
+                                                                    $optionArray = explode('|', $options);
+                                                                @endphp
+                                                                <select class="form-select" id="basicSelect" name="kind">
+                                                                    <option>-- Pilih Simpanan --</option>
+                                                                    @foreach($optionArray as $option)
+                                                                        <option value="{{ $option }}">{{ $option }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </fieldset>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="form-group has-icon-left">
-                                                    <label for="nominal">Nominal</label>
-                                                    <div class="position-relative">
-                                                        <input type="text" class="form-control" placeholder="Nominal"
-                                                            id="nominal" name="nominal" required
-                                                            value="{{ old('nominal') }}" />
-                                                        <div class="form-control-icon"><i class="bi bi-cash"></i></div>
-                                                    </div>
-                                                    @error('nominal')
-                                                        <p style="color: red">{{ $message }}</p>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="form-group has-icon-left">
-                                                    <label for="notes">Keterangan (opsional)</label>
-                                                    <div class="position-relative">
-                                                        <textarea class="form-control" id="notes" rows="3" name="notes"></textarea>
-                                                        <div class="form-control-icon"><i
-                                                                class="bi bi-info-square-fill"></i></div>
+                                                <div class="col-12">
+                                                    <div class="form-group has-icon-left">
+                                                        <label for="nominal">Nominal</label>
+                                                        <div class="position-relative">
+                                                            <input type="text" class="form-control" placeholder="Nominal"
+                                                                id="nominal" name="nominal" required
+                                                                value="{{ old('nominal') }}" />
+                                                            <div class="form-control-icon"><i class="bi bi-cash"></i></div>
+                                                        </div>
+                                                        @error('nominal')
+                                                            <p style="color: red">{{ $message }}</p>
+                                                        @enderror
                                                     </div>
                                                 </div>
-                                            </div>
+                                                <div class="col-12">
+                                                    <div class="form-group has-icon-left">
+                                                        <label for="notes">Keterangan (opsional)</label>
+                                                        <div class="position-relative">
+                                                            <textarea class="form-control" id="notes" rows="3" name="notes"></textarea>
+                                                            <div class="form-control-icon"><i
+                                                                    class="bi bi-info-square-fill"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-                                            <div class="col-12">
-                                                <div class="form-group">
-                                                    <label for="method">Jenis Pembayaran</label>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="method"
-                                                            id="cash" value="cash" checked>
-                                                        <label class="form-check-label" for="cash">
-                                                            Cash
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="method"
-                                                            id="transfer" value="transfer">
-                                                        <label class="form-check-label" for="transfer">
-                                                            Transfer
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12" id="bukti-trf" style="display: none;">
-                                                <div class="form-group has-icon-left">
-                                                    <label for="mobile-id-icon">Bukti Pembayaran</label>
-                                                    <div class="position-relative">
-                                                        <input type="file" class="image-exif-filepond" name="image"
-                                                            accept="image/*" />
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <label for="method">Jenis Pembayaran</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="method"
+                                                                id="cash" value="cash" checked>
+                                                            <label class="form-check-label" for="cash">
+                                                                Cash
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="method"
+                                                                id="transfer" value="transfer">
+                                                            <label class="form-check-label" for="transfer">
+                                                                Transfer
+                                                            </label>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-12 d-flex justify-content-end">
-                                                <button type="submit"
-                                                    class="btn btn-primary me-1 mb-1 show_confirm">Ajukan</button>
-                                                <button
-                                                    type="reset"class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                                <div class="col-12" id="bukti-trf" style="display: none;">
+                                                    <div class="form-group has-icon-left">
+                                                        <label for="mobile-id-icon">Bukti Pembayaran</label>
+                                                        <div class="position-relative">
+                                                            <input type="file" class="image-exif-filepond" name="image"
+                                                                accept="image/*" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 d-flex justify-content-end">
+                                                    <button type="submit"
+                                                        class="btn btn-primary me-1 mb-1 show_confirm">Ajukan</button>
+                                                    <button
+                                                        type="reset"class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                                </div>
                                             </div>
                                         </div>
+                                    </form>
+                                @else
+                                    <div class="col-md-12 col-12 text-center">
+                                        <img src="/main/assets/compiled/png/system-warning.jpg" width="50%" alt="Logo">
                                     </div>
-                                </form>
+                                    <h6 class="text-center mt-3">Terjadi kesalahan sistem, mohon hubungi tim UBSP.</h6>
+                                @endif
                             </div>
                         </div>
                     </div>

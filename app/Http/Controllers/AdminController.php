@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transaction;
 use Carbon\Carbon;
 use App\Models\User;
 use Ramsey\Uuid\Uuid;
+use App\Models\Config;
+use App\Models\Transaction;
 use App\Models\UserAccount;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
 use Intervention\Image\Facades\Image;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
-use Yajra\DataTables\DataTables;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class AdminController extends Controller
 {
@@ -50,6 +51,9 @@ class AdminController extends Controller
         $parameter = Route::currentRouteName();
 
         if ($parameter == "admin.add.simpanan.deposit") {
+            $configName = ['JENIS SIMPANAN', 'SIMPANAN WAJIB'];
+            $configuration = Config::whereIn('name', $configName)->get();
+
             $member = User::where('status', 2)->get();
             return view('admin.simpanan-deposit-create', compact('member'));
 
