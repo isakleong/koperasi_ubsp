@@ -47,7 +47,14 @@ class Transaction extends Model
     protected static function generateCustomPrimaryKey($kind, $transactionDate, $accountId)
     {
         // Determine the prefix based on the kind
-        $prefix = ($kind === 'pokok' || $kind === 'wajib' || $kind === 'sukarela') ? 'TS' : (($kind === 'tabungan') ? 'TT' : 'TR');
+        $config = Config::where('name', 'JENIS SIMPANAN')->get();
+        if(Str::contains($kind, $config)) {
+            $prefix = 'TS';
+        } else {
+            $prefix = 'TK';
+        }
+
+        // $prefix = ($kind === 'pokok' || $kind === 'wajib' || $kind === 'sukarela') ? 'TS' : (($kind === 'tabungan') ? 'TT' : 'TR');
 
         // Get the memberId from the related userAccount
         $memberId = UserAccount::where('accountId', $accountId)->value('memberId');

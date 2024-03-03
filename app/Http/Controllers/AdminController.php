@@ -10,6 +10,7 @@ use App\Models\Transaction;
 use App\Models\UserAccount;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -51,11 +52,32 @@ class AdminController extends Controller
         $parameter = Route::currentRouteName();
 
         if ($parameter == "admin.add.simpanan.deposit") {
-            $configName = ['JENIS SIMPANAN', 'SIMPANAN WAJIB'];
+            $configName = ['JENIS SIMPANAN', 'SIMPANAN WAJIB', 'MIN SIMPANAN SUKARELA', 'MIN SIMPANAN SIBUHAR'];
             $configuration = Config::whereIn('name', $configName)->get();
 
+            $configStatus = false;
+            $kind = array();
+            $minWajib = "";
+            $minSibuhar = "";
+            $minSukarela = "";
+
+            if(count($configuration) == 4) {
+                $configStatus = true;
+                foreach($configuration as $item) {
+                    if(strtolower($item->name) == "jenis simpanan") {
+                        $kind =  explode('|', $item->value);
+                    } elseif(strtolower($item->name) == "simpanan wajib") {
+                        $minWajib = $item->value;
+                    } elseif(strtolower($item->name) == "min simpanan sukarela") {
+                        $minSukarela = $item->value;
+                    } elseif(strtolower($item->name) == "min simpanan sibuhar") {
+                        $minSibuhar = $item->value;
+                    }
+                }
+            }
+
             $member = User::where('status', 2)->get();
-            return view('admin.simpanan-deposit-create', compact('member'));
+            return view('admin.simpanan-deposit-create', compact('member', 'configStatus', 'kind', 'minWajib', 'minSukarela', 'minSibuhar'));
 
         } elseif ($parameter == "admin.review.simpanan.deposit") {
             $transaction = Transaction::join('user_account', 'transaction.accountId', '=', 'user_account.accountId')
@@ -110,20 +132,40 @@ class AdminController extends Controller
     }
 
     public function storeSimpananDeposit(Request $request) {
-        $request['nominal'] = str_replace(',', '', $request->input('nominal'));
+        $configName = ['JENIS SIMPANAN', 'SIMPANAN WAJIB', 'MIN SIMPANAN SUKARELA', 'MIN SIMPANAN SIBUHAR'];
+        $config = Config::whereIn('name', $configName)->pluck('value', 'name');
+
+        $allowedKind = explode('|', strtoupper($config['JENIS SIMPANAN']));
+        $selectedKind = strtoupper($request->input('kind'));
+        $nominalRule = "";
+        if (in_array($selectedKind, $allowedKind)) {
+            if (Str::contains("wajib", strtolower($selectedKind))) {
+                $nominalRule = 'required|numeric|min:' . $config['SIMPANAN WAJIB'];
+            } elseif (Str::contains("sukarela", strtolower($selectedKind))) {
+                $nominalRule = 'required|numeric|min:' . $config['MIN SIMPANAN SUKARELA'];
+            } elseif (Str::contains("sibuhar", strtolower($selectedKind))) {
+                $nominalRule = 'required|numeric|min:' . $config['MIN SIMPANAN SIBUHAR'];
+            }
+        } else {
+            return redirect()->back()->withWarning("Formulir setoran simpanan belum diisi secara lengkap (jenis simpanan tidak valid)")->withInput();
+        }
 
         $validator = Validator::make(
             [
-                'kind' => $request->input('kind'),
+                'kind' => $selectedKind,
                 'memberId' => $request->input('memberId'),
                 'nominal' => $request->input('nominal'),
                 'method' => $request->input('method'),
                 'image' => $request->file('image'),
             ],
             [
-                'kind' => 'required|not_in:-- Pilih Simpanan --|in:wajib,sukarela',
+                'kind' => [
+                    'required',
+                    Rule::notIn(['-- Pilih Simpanan --']),
+                    Rule::in($allowedKind)
+                ],
                 'memberId' => 'required',
-                'nominal' => 'required|numeric|min:50000',
+                'nominal' => $nominalRule,
                 'method' => 'required|in:cash,transfer',
                 'image' => 'required_if:method,transfer',
             ],
@@ -140,6 +182,8 @@ class AdminController extends Controller
             ],
         );
 
+        $request['nominal'] = intval(str_replace(['Rp', ','], '', $request->input('debit')));
+
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors())->withInput();
         }
@@ -147,18 +191,13 @@ class AdminController extends Controller
         try {
             $input = $request->all();
 
+            $input['kind'] = strtolower(str_replace("Simpanan ", "", $input['kind']));
+
             if(strtolower($input['method']) == "cash") {
                 $input['method'] = 2;
             } else {
                 $input['method'] = 1;
             }
-
-            //find user account data
-            // $checkUAC = DB::table('user_account as uac')
-            //     ->select(DB::raw('uac.*'))
-            //     ->where('memberId', $input['memberId'])
-            //     ->where('kind', $input['kind'])
-            //     ->get()->first();
 
             $user = User::with(['userAccount' => function ($query) use ($input) {
                 $query->where('kind', $input['kind']);

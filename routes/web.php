@@ -156,9 +156,10 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     //ANGSURAN
     Route::get('/menu/angsuran', [AdminController::class, 'showAngsuranMenu']);
 
-    //LAPORAN
+    //EXPORT DATA
     Route::post('/user/export', [ReportController::class, 'exportData'])->name('export.user');
 
+    //LAPORAN
     Route::resource('/journal', JournalController::class);
 
     //checker

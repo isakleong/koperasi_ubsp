@@ -18,7 +18,7 @@
 
             </div>
 
-            <div class="card h-100 m-5">
+            <div class="card shadow-lg h-100 m-5">
                 <div class="card-body">
                     @foreach ($company as $item)
                         @if ($item->logo != "")

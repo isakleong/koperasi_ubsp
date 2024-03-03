@@ -152,7 +152,7 @@
     <script src="/administrator/assets/js/dashboards-analytics.js"></script>
 
     <!-- Place this tag in your head or just before your close body tag. -->
-    <script async defer src="/administrator/js/buttons.js"></script>
+    {{-- <script async defer src="/administrator/js/buttons.js"></script> --}}
 </body>
 
 </html>

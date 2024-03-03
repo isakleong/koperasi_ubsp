@@ -10,6 +10,7 @@
         "barryvdh/laravel-snappy": "^1.0",
         "guzzlehttp/guzzle": "^7.2",
         "intervention/image": "^2.7",
+        "itsgoingd/clockwork": "^5.2",
         "kalnoy/nestedset": "^6.0",
         "knplabs/knp-snappy": "^1.5",
         "laravel/framework": "^10.10",
