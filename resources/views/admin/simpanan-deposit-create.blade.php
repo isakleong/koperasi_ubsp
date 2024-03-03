@@ -5,8 +5,8 @@
     <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
     <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <link rel="stylesheet" href="/administrator/libs/select2/select2.min.css" />
+    <link rel="stylesheet" href="/administrator/libs/select2/select2-bootstrap.min.css" />
 @endsection
 
 @section('content')
@@ -132,8 +132,8 @@
     <script src="/main/assets/extensions/toastify-js/src/toastify.js"></script>
     <script src="/main/assets/static/js/pages/filepond.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="/administrator/libs/select2/select2-bootstrap.bundle.min.js"></script>
+    <script src="/administrator/libs/select2/select2.min.js"></script>
 
     <script src="/vendor/sweetalert/sweetalert.all.js"></script>
 

@@ -92,9 +92,6 @@ Route::middleware(['auth.user', 'verified'])->group(function() {
     Route::get('/simpanan/pengajuan', [MainController::class, 'showFormData'])->name('add.simpanan');
     Route::get('/simpanan/rekap', [MainController::class, 'showFormData'])->name('recap.simpanan');
 
-    // Route::get('/tabungan/pengajuan', [MainController::class, 'showFormData'])->name('add.tabungan');
-    // Route::get('/tabungan/rekap', [MainController::class, 'showFormData'])->name('recap.tabungan');
-
     Route::get('/kredit/pengajuan', [MainController::class, 'showFormData'])->name('add.kredit');
     Route::get('/angsuran/pengajuan', [MainController::class, 'showFormData'])->name('add.angsuran');
     Route::get('/kredit/rekap', [MainController::class, 'showFormData'])->name('recap.kredit');
