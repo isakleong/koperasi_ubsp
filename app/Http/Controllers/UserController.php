@@ -32,58 +32,25 @@ class UserController extends Controller
         // Perform data filtering based on the provided parameters
         $users = $this->fetchDataFromDatabase($keyword, $status);
 
-        // $statusExport = [];
-        // if ($request->has('export-option-1')) {
-        //     //aktif
-        //     $statusExport[] = '2';
-        // }
-    
-        // if ($request->has('export-option-2')) {
-        //     //non aktif
-        //     $statusExport[] = '3';
-        // }
-    
-        // if ($request->has('export-option-3')) {
-        //     //belum verifikasi
-        //     $statusExport[] = '0';
-        // }
-    
-        // if ($request->has('export-option-4')) {
-        //     //belum disetujui
-        //     $statusExport[] = '1';
-        // }
+        // get all user
+        $data = User::all();
+        $cntActive = 0;
+        $cntTerminate = 0;
+        $cntNotverify = 0;
+        $cntNotacc = 0;
+        foreach ($data as $item) {
+            if ($item->status == 0) {
+                $cntNotverify++;
+            } elseif ($item->status == 1) {
+                $cntNotacc++;
+            } elseif ($item->status == 2) {
+                $cntActive++;
+            } elseif ($item->status == 3) {
+                $cntTerminate++;
+            }
+        }
 
-        // if ($request->has('export-option-5')) {
-        //     //belum disetujui
-        //     $statusExport[] = '4';
-        // }
-
-        // if($request->has('download'))
-	    // {
-        //     try {
-        //         dd($statusExport);
-        //         if (!empty($statusExport)) {
-        //             dd("hahh");
-        //             $dataReport = User::where('status', 'IN', $statusExport)->orderBy('id', 'desc')->get();
-        //         } else {
-        //             dd("hahheee");
-        //             $dataReport = User::orderBy('id', 'desc')->get();
-        //         }
-
-        //         $pdf = PDF::loadView('admin.report.anggota-report', compact('dataReport'));
-        //         $pdf->setOption('enable-local-file-access', true);
-
-	    //         return $pdf->download('test.pdf');
-        //     } catch (\Throwable $th) {
-        //         dd($th);
-        //     }
-	    // }
-
-        // if($request->has('export')){
-        //     return Excel::download(new ExportUser, "Laporan Anggota UBSP.xlsx");
-        // }
-
-        return view('admin.anggota-edit', compact('users'));
+        return view('admin.anggota-edit', compact('users','cntActive','cntTerminate','cntNotverify','cntNotacc'));
     }
 
     // public function exportData(Request $request) {

@@ -31,9 +31,9 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-3">
                             <div class="avatar me-2">
-                                <span class="avatar-initial rounded bg-label-success"><i class="bx bxs-user bx-sm"></i></span>
+                                <span class="avatar-initial rounded bg-label-success"><i class="bx bxs-user-check bx-sm"></i></span>
                             </div>
-                            <h4 class="ms-1 mb-0">42</h4>
+                            <h4 class="ms-1 mb-0">{{ $cntActive }}</h4>
                         </div>
                         <h5>Aktif</h5>
                     </div>
@@ -46,7 +46,7 @@
                             <div class="avatar me-2">
                                 <span class="avatar-initial rounded bg-label-danger"><i class="bx bxs-user-x bx-sm"></i></span>
                             </div>
-                            <h4 class="ms-1 mb-0">42</h4>
+                            <h4 class="ms-1 mb-0">{{ $cntTerminate }}</h4>
                         </div>
                         <h5>Non Aktif</h5>
                     </div>
@@ -58,65 +58,26 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-3">
                             <div class="avatar me-2">
-                                <span class="avatar-initial rounded bg-label-danger"><i class="bx bxs-user-x bx-sm"></i></span>
+                                <span class="avatar-initial rounded bg-label-info"><i class="bx bxs-user-detail bx-sm"></i></span>
                             </div>
-                            <h4 class="ms-1 mb-0">42</h4>
+                            <h4 class="ms-1 mb-0">{{ $cntNotverify }}</h4>
                         </div>
                         <h5>Belum Verifikasi</h5>
                     </div>
                 </div>
             </div>
 
-
             <div class="col-sm-6 col-lg-3 mb-4">
-                <div class="card card-border-shadow-danger h-100">
+                <div class="card card-border-shadow-warning h-100">
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-2 pb-1">
                             <div class="avatar me-2">
-                                <span class="avatar-initial rounded bg-label-danger"><i class="bx bxs-user-x bx-sm"></i></span>
+                                <span class="avatar-initial rounded bg-label-warning"><i
+                                        class='bx bxs-user bx-sm'></i></span>
                             </div>
-                            <h4 class="ms-1 mb-0">8</h4>
-                        </div>
-                        <h5 class="mb-1">Non Aktif</h5>
-                        <p class="mb-0">
-                            <span class="fw-medium me-1">-8.7%</span>
-                            <small class="text-muted">than last week</small>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-lg-3 mb-4">
-                <div class="card card-border-shadow-danger h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-2 pb-1">
-                            <div class="avatar me-2">
-                                <span class="avatar-initial rounded bg-label-danger"><i
-                                        class='bx bx-git-repo-forked'></i></span>
-                            </div>
-                            <h4 class="ms-1 mb-0">27</h4>
+                            <h4 class="ms-1 mb-0">{{ $cntNotacc }}</h4>
                         </div>
                         <h5 class="mb-1">Belum Disetujui</h5>
-                        <p class="mb-0">
-                            <span class="fw-medium me-1">+4.3%</span>
-                            <small class="text-muted">than last week</small>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-lg-3 mb-4">
-                <div class="card card-border-shadow-info h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-2 pb-1">
-                            <div class="avatar me-2">
-                                <span class="avatar-initial rounded bg-label-info"><i class='bx bx-time-five'></i></span>
-                            </div>
-                            <h4 class="ms-1 mb-0">13</h4>
-                        </div>
-                        <h5 class="mb-1">Belum Verifikasi</h5>
-                        <p class="mb-0">
-                            <span class="fw-medium me-1">-2.5%</span>
-                            <small class="text-muted">than last week</small>
-                        </p>
                     </div>
                 </div>
             </div>
