@@ -10,9 +10,10 @@
             display: flex;
             justify-content: center;
         }
+
         /* table tbody tr td:nth-child(2)::before {
-                    content: "  : ";
-                } */
+                        content: "  : ";
+                    } */
     </style>
 @endsection
 
@@ -23,6 +24,105 @@
         <h4 class="py-3 mb-4">
             <span class="text-muted fw-light">Beranda Anggota /</span> Edit Anggota
         </h4>
+
+        <div class="row">
+            <div class="col-sm-6 col-lg-3 mb-4">
+                <div class="card card-border-shadow-success">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="avatar me-2">
+                                <span class="avatar-initial rounded bg-label-success"><i class="bx bxs-user bx-sm"></i></span>
+                            </div>
+                            <h4 class="ms-1 mb-0">42</h4>
+                        </div>
+                        <h5>Aktif</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3 mb-4">
+                <div class="card card-border-shadow-danger">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="avatar me-2">
+                                <span class="avatar-initial rounded bg-label-danger"><i class="bx bxs-user-x bx-sm"></i></span>
+                            </div>
+                            <h4 class="ms-1 mb-0">42</h4>
+                        </div>
+                        <h5>Non Aktif</h5>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-3 mb-4">
+                <div class="card card-border-shadow-info">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="avatar me-2">
+                                <span class="avatar-initial rounded bg-label-danger"><i class="bx bxs-user-x bx-sm"></i></span>
+                            </div>
+                            <h4 class="ms-1 mb-0">42</h4>
+                        </div>
+                        <h5>Belum Verifikasi</h5>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-sm-6 col-lg-3 mb-4">
+                <div class="card card-border-shadow-danger h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2 pb-1">
+                            <div class="avatar me-2">
+                                <span class="avatar-initial rounded bg-label-danger"><i class="bx bxs-user-x bx-sm"></i></span>
+                            </div>
+                            <h4 class="ms-1 mb-0">8</h4>
+                        </div>
+                        <h5 class="mb-1">Non Aktif</h5>
+                        <p class="mb-0">
+                            <span class="fw-medium me-1">-8.7%</span>
+                            <small class="text-muted">than last week</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3 mb-4">
+                <div class="card card-border-shadow-danger h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2 pb-1">
+                            <div class="avatar me-2">
+                                <span class="avatar-initial rounded bg-label-danger"><i
+                                        class='bx bx-git-repo-forked'></i></span>
+                            </div>
+                            <h4 class="ms-1 mb-0">27</h4>
+                        </div>
+                        <h5 class="mb-1">Belum Disetujui</h5>
+                        <p class="mb-0">
+                            <span class="fw-medium me-1">+4.3%</span>
+                            <small class="text-muted">than last week</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3 mb-4">
+                <div class="card card-border-shadow-info h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2 pb-1">
+                            <div class="avatar me-2">
+                                <span class="avatar-initial rounded bg-label-info"><i class='bx bx-time-five'></i></span>
+                            </div>
+                            <h4 class="ms-1 mb-0">13</h4>
+                        </div>
+                        <h5 class="mb-1">Belum Verifikasi</h5>
+                        <p class="mb-0">
+                            <span class="fw-medium me-1">-2.5%</span>
+                            <small class="text-muted">than last week</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <div class="row">
             <div class="col-xl">
                 <div class="card mb-4">
@@ -50,30 +150,32 @@
                                                     <p class="fw-medium">Status Anggota</p>
                                                     <div class="form-check mt-3">
                                                         <input class="form-check-input" type="checkbox" value="2"
-                                                            id="export-option-1" name="status[]"/>
-                                                        <label class="form-check-label" for="export-option-1"> Aktif </label>
+                                                            id="export-option-1" name="status[]" />
+                                                        <label class="form-check-label" for="export-option-1"> Aktif
+                                                        </label>
                                                     </div>
                                                     <div class="form-check mt-1">
                                                         <input class="form-check-input" type="checkbox" value="3"
-                                                            id="export-option-2" name="status[]"/>
+                                                            id="export-option-2" name="status[]" />
                                                         <label class="form-check-label" for="export-option-2"> Non Aktif
                                                         </label>
                                                     </div>
                                                     <div class="form-check mt-1">
                                                         <input class="form-check-input" type="checkbox" value="0"
-                                                            id="export-option-3" name="status[]"/>
+                                                            id="export-option-3" name="status[]" />
                                                         <label class="form-check-label" for="export-option-3"> Belum
                                                             Verifikasi </label>
                                                     </div>
                                                     <div class="form-check mt-1">
                                                         <input class="form-check-input" type="checkbox" value="1"
                                                             id="export-option-4" name="status[]" />
-                                                        <label class="form-check-label" for="export-option-4"> Belum Disetujui
+                                                        <label class="form-check-label" for="export-option-4"> Belum
+                                                            Disetujui
                                                         </label>
                                                     </div>
                                                     <div class="form-check mt-1">
                                                         <input class="form-check-input" type="checkbox" value="4"
-                                                            id="export-option-5" name="status[]"/>
+                                                            id="export-option-5" name="status[]" />
                                                         <label class="form-check-label" for="export-option-4"> Ditolak
                                                         </label>
                                                     </div>
@@ -81,8 +183,10 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="submit" class="btn btn-outline-primary" name="action" value="excel">Excel</button>
-                                            <button type="submit" class="btn btn-outline-primary" name="action" value="pdf">PDF</button>
+                                            <button type="submit" class="btn btn-outline-primary" name="action"
+                                                value="excel">Excel</button>
+                                            <button type="submit" class="btn btn-outline-primary" name="action"
+                                                value="pdf">PDF</button>
 
                                             {{-- <a type="button" class="btn btn-outline-primary" href="{{ route('admin.user.index', ['export' => 'excel']) }}"><span class="tf-icons bx bxs-file me-1" style='color:#279a1b'></span>Excel</a>
                                             <a type="button" class="btn btn-outline-primary" href="{{ route('admin.user.index', ['download' => 'pdf']) }}"><span class="tf-icons bx bxs-file-pdf me-1" style='color:#ff0000'></span>PDF</a> --}}
@@ -227,14 +331,16 @@
                                                                 {{-- <button type="button" class="btn btn-primary">Terima</button> --}}
 
                                                                 @if ($item->status == 0)
-                                                                <form
-                                                                    action="{{ route('verification.send', $item->id) }}"
-                                                                    method="POST">
-                                                                    @csrf
-                                                                    <input type="hidden" name="user_id" value="{{ $item->id }}">
-                                                                    <button type="submit"
-                                                                        class="col-12 btn btn-primary">Verifikasi Ulang</button>
-                                                                </form>
+                                                                    <form
+                                                                        action="{{ route('verification.send', $item->id) }}"
+                                                                        method="POST">
+                                                                        @csrf
+                                                                        <input type="hidden" name="user_id"
+                                                                            value="{{ $item->id }}">
+                                                                        <button type="submit"
+                                                                            class="col-12 btn btn-primary">Verifikasi
+                                                                            Ulang</button>
+                                                                    </form>
                                                                 @elseif ($item->status == 1)
                                                                     <form
                                                                         action="{{ route('admin.reject.user', $item->id) }}"
@@ -301,7 +407,7 @@
 
 @section('vendorJS')
     <script src="/vendor/jquery/jquery.min.js"></script>
-    
+
     <script src="/main/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js">
     </script>
     <script src="/main/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js">
