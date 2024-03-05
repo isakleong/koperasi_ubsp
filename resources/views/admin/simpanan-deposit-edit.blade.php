@@ -12,6 +12,36 @@
             <span class="text-muted fw-light">Beranda Simpanan /</span> Review Pengajuan
         </h4>
         <div class="row">
+            <div class="col-lg-6">
+                <div class="card mb-4 bg-gradient-primary">
+                    <div class="card-body">
+                      <div class="row justify-content-between mb-3">
+                        <div class="col-md-12 col-lg-7 col-xl-12 col-xxl-7 text-center text-lg-start text-xl-center text-xxl-start order-1  order-lg-0 order-xl-1 order-xxl-0">
+                          <h4 class="card-title text-white text-nowrap">Data Per Anggota</h4>
+                          <p class="card-text text-white">Rekapitulasi data simpanan anggota UBSP</p>
+                        </div>
+                        <span class="col-md-12 col-lg-5 col-xl-12 col-xxl-5 text-center mx-auto mx-md-0 mb-2"><img src="/administrator/assets/img/illustrations/review-simpanan.png" class="w-75 m-2"></span>
+                      </div>
+                      <button class="btn btn-white text-primary w-100 fw-medium shadow-sm" data-bs-target="#upgradePlanModal" data-bs-toggle="modal">Lihat Rekap</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card mb-4 bg-gradient-warning">
+                    <div class="card-body">
+                      <div class="row justify-content-between mb-3">
+                        <div class="col-md-12 col-lg-7 col-xl-12 col-xxl-7 text-center text-lg-start text-xl-center text-xxl-start order-1  order-lg-0 order-xl-1 order-xxl-0">
+                          <h4 class="card-title text-white text-nowrap">Pengajuan Simpanan</h4>
+                          <p class="card-text text-white">Konfirmasi data simpanan anggota UBSP</p>
+                        </div>
+                        <span class="col-md-12 col-lg-5 col-xl-12 col-xxl-5 text-center mx-auto mx-md-0 mb-2"><img src="/administrator/assets/img/illustrations/approval.png" class="w-75 m-2"></span>
+                      </div>
+                      <button class="btn btn-white text-warning w-100 fw-medium shadow-sm" data-bs-target="#upgradePlanModal" data-bs-toggle="modal">Lihat Data</button>
+                    </div>
+                </div>
+            </div>
+            
             <div class="col-xl">
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
