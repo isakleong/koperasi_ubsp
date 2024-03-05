@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Transaction extends Model
 {
@@ -47,11 +48,11 @@ class Transaction extends Model
     protected static function generateCustomPrimaryKey($kind, $transactionDate, $accountId)
     {
         // Determine the prefix based on the kind
-        $config = Config::where('name', 'JENIS SIMPANAN')->get();
-        if(Str::contains($kind, $config)) {
+        $config = Config::where('name', 'JENIS SIMPANAN')->first();
+        if(Str::contains(strtolower($kind), strtolower($config->value))) {
             $prefix = 'TS';
         } else {
-            $prefix = 'TK';
+            $prefix = 'TR';
         }
 
         // $prefix = ($kind === 'pokok' || $kind === 'wajib' || $kind === 'sukarela') ? 'TS' : (($kind === 'tabungan') ? 'TT' : 'TR');

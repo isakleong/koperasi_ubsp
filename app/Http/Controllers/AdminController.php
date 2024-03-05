@@ -2,25 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use App\Models\User;
-use Ramsey\Uuid\Uuid;
 use App\Models\Config;
 use App\Models\Transaction;
 use App\Models\UserAccount;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Intervention\Image\Facades\Image;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class AdminController extends Controller
 {
@@ -79,15 +72,23 @@ class AdminController extends Controller
             $member = User::where('status', 2)->get();
             return view('admin.simpanan-deposit-create', compact('member', 'configStatus', 'kind', 'minWajib', 'minSukarela', 'minSibuhar'));
 
-        } elseif ($parameter == "admin.review.simpanan.deposit") {
+        } elseif ($parameter == "admin.review.simpanan") {
+
+            return view('admin.simpanan-deposit-review');
+
+        } elseif ($parameter == "admin.recap.simpanan") {
             $transaction = Transaction::join('user_account', 'transaction.accountId', '=', 'user_account.accountId')
                 ->join('users', 'user_account.memberId', '=', 'users.memberId')
                 ->select('transaction.docId as transactionDocId', 'transaction.kind', 'transaction.total', 'transaction.method', 'transaction.transactionDate', 'transaction.image', 'transaction.notes', 'transaction.status', 'transaction.approvedOn', 'users.fname', 'users.lname', 'users.memberId')
                 ->get();
 
-            return view('admin.simpanan-deposit-edit', compact('transaction'));
+            $user = User::all();
 
-        } elseif ($parameter == "admin.detail.review.simpanan.deposit") {
+            return view('admin.simpanan-deposit-recap', compact('user'));
+
+        } 
+        
+        elseif ($parameter == "admin.detail.review.simpanan.deposit") {
             $member = User::where('status', 2)->get();
             return view('admin.simpanan-deposit-edit-detail', compact('transaction', 'member'));
 
@@ -182,7 +183,7 @@ class AdminController extends Controller
             ],
         );
 
-        $request['nominal'] = intval(str_replace(['Rp', ','], '', $request->input('debit')));
+        $request['nominal'] = intval(str_replace(['Rp', ','], '', $request->input('nominal')));
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors())->withInput();
@@ -261,7 +262,6 @@ class AdminController extends Controller
                         return redirect()->back()->withSuccess('Data setoran simpanan berhasil disimpan!');
                     }
                 } else {
-                    dd($checkUAC);
                     $buktiSimpanan = "";
                     if($imageSimpanan = $request->file('image')) {
                         $destinationPath = 'image/upload/'.$input['memberId'].'/'.'simpanan/'.$input['kind'].'/';

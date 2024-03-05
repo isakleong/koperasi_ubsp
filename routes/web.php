@@ -133,18 +133,24 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     Route::resource('/company', CompanyController::class);
     Route::resource('/config', ConfigController::class);
 
+    //ANGGOTA
     Route::get('/menu/user', [AdminController::class, 'showUserMenu'])->name('user');
     Route::resource('/user', UserController::class);
     Route::post('user/{id}/acc', [UserController::class, 'accData'])->name('acc.user');
     Route::post('user/{id}/reject', [UserController::class, 'rejectData'])->name('reject.user');
 
+    //AKUN DAN KATEGORI
     Route::resource('/account_category', AccountCategoryController::class);
     Route::resource('/account', AccountController::class);
 
     //SIMPANAN
     Route::get('/menu/simpanan', [AdminController::class, 'showSimpananMenu'])->name('simpanan');
     Route::get('/simpanan/setoran', [AdminController::class, 'showFormData'])->name('add.simpanan.deposit');
-    Route::get('/simpanan/setoran/review', [AdminController::class, 'showFormData'])->name('review.simpanan.deposit');
+    Route::get('/simpanan/review', [AdminController::class, 'showFormData'])->name('review.simpanan');
+    Route::get('/simpanan/review/recap', [AdminController::class, 'showFormData'])->name('recap.simpanan');
+    Route::get('/simpanan/review/approval', [AdminController::class, 'showFormData'])->name('approval.simpanan');
+
+    // Route::get('/simpanan/setoran/review', [AdminController::class, 'showFormData'])->name('review.simpanan.deposit');
     Route::get('/simpanan/setoran/review/{transaction:docId}', [AdminController::class, 'showFormData'])->name('detail.review.simpanan.deposit');
     Route::get('/simpanan/penarikan', [AdminController::class, 'showFormData'])->name('add.simpanan.withdrawal');
     Route::post('/simpanan/setoran', [AdminController::class, 'storeSimpananDeposit'])->name('store.simpanan.deposit');

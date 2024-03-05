@@ -38,7 +38,7 @@
             <div class="col-lg-12 col-md-12">
                 <div class="row">
                     <div class="col-lg-6 mb-5 bgCard">
-                        <a href="/admin/simpanan/setoran">
+                        <a href="{{ route('admin.add.simpanan.deposit') }}">
                             <div class="container-fluid">
                                 <div class="p-3" id="customCard">
                                     <div class="d-flex justify-content-between align-items-center">
@@ -59,7 +59,7 @@
                     </div>
 
                     <div class="col-lg-6 mb-5 bgCard">
-                        <a href="/admin/simpanan/setoran/review">
+                        <a href="{{ route('admin.review.simpanan') }}">
                             <div class="container-fluid">
                                 <div class="p-3" id="customCard">
                                     <div class="d-flex justify-content-between align-items-center">
@@ -67,11 +67,11 @@
                                         <span><i class='bx bxs-message-square-edit' style="font-size: 3em;"></i></span>
                                     </div>
                                     <div class="px-2 number mt-3 d-flex justify-content-between align-items-center">
-                                        <span>Pengajuan Simpanan</span>
+                                        <span>Data Simpanan</span>
                                     </div>
                                     <div class="p-4 mt-4" id="customCardBorder">
                                         <div class="text-center">
-                                            <span class="cardholder">Review Pengajuan</span>
+                                            <span class="cardholder">Review Simpanan</span>
                                         </div>
                                     </div>
                                 </div>
@@ -88,11 +88,11 @@
                                         <span><i class='bx bxs-chevrons-left' style="font-size: 3em;"></i></span>
                                     </div>
                                     <div class="px-2 number mt-3 d-flex justify-content-between align-items-center">
-                                        <span>Penarikan Simpanan</span>
+                                        <span>Pengambilan Simpanan</span>
                                     </div>
                                     <div class="p-4 mt-4" id="customCardBorder">
                                         <div class="text-center">
-                                            <span class="cardholder">Tambah Penarikan</span>
+                                            <span class="cardholder">Tambah Pengambilan</span>
                                         </div>
                                     </div>
                                 </div>
@@ -109,11 +109,11 @@
                                         <span><i class='bx bxs-message-square-edit' style="font-size: 3em;"></i></span>
                                     </div>
                                     <div class="px-2 number mt-3 d-flex justify-content-between align-items-center">
-                                        <span>Penarikan Simpanan</span>
+                                        <span>Data Pengambilan</span>
                                     </div>
                                     <div class="p-4 mt-4" id="customCardBorder">
                                         <div class="text-center">
-                                            <span class="cardholder">Edit Penarikan</span>
+                                            <span class="cardholder">Review Pengambilan</span>
                                         </div>
                                     </div>
                                 </div>

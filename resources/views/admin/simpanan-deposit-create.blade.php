@@ -276,5 +276,13 @@
                 text: '{{ Session::get('warning') }}',
             })
         @endif
+
+        @if ($message = session('success'))
+            Swal.fire({
+                icon: 'success',
+                // title: 'Oops...',
+                text: '{{ Session::get('success') }}',
+            })
+        @endif
     </script>
 @endsection
