@@ -77,14 +77,48 @@ class AdminController extends Controller
             return view('admin.simpanan-deposit-review');
 
         } elseif ($parameter == "admin.recap.simpanan") {
-            $transaction = Transaction::join('user_account', 'transaction.accountId', '=', 'user_account.accountId')
-                ->join('users', 'user_account.memberId', '=', 'users.memberId')
-                ->select('transaction.docId as transactionDocId', 'transaction.kind', 'transaction.total', 'transaction.method', 'transaction.transactionDate', 'transaction.image', 'transaction.notes', 'transaction.status', 'transaction.approvedOn', 'users.fname', 'users.lname', 'users.memberId')
-                ->get();
+            // $transaction = Transaction::join('user_account', 'transaction.accountId', '=', 'user_account.accountId')
+            //     ->join('users', 'user_account.memberId', '=', 'users.memberId')
+            //     ->select('transaction.docId as transactionDocId', 'transaction.kind', 'transaction.total', 'transaction.method', 'transaction.transactionDate', 'transaction.image', 'transaction.notes', 'transaction.status', 'transaction.approvedOn', 'users.fname', 'users.lname', 'users.memberId')
+            //     ->get();
 
-            $user = User::all();
+            // $user = User::all();
 
-            return view('admin.simpanan-deposit-recap', compact('user'));
+            //////////////////////////////////////////////////////////////////
+            $userAccounts = UserAccount::with(['transaction' => function ($query) {
+                $query->select('accountId', DB::raw('SUM(total) as totalTransactions'))
+                    ->groupBy('accountId');
+            }])->get();
+            
+            foreach ($userAccounts as $userAccount) {
+                echo "User: {$userAccount->user->fname}<br>";
+                echo "Account Kind: {$userAccount->kind}<br>";
+                
+                $totalTransactions = $userAccount->transaction->first();
+                $totalTransactions = $totalTransactions ? $totalTransactions->totalTransactions : 0;
+            
+                echo "Total Transactions: {$totalTransactions}<br><br><br>";
+            }
+
+            //////////////////////////////////////////////////////////////////
+            // $users = User::with(['userAccounts.transactions' => function ($query) {
+            //     $query->select('kind', DB::raw('COUNT(*) as total'))
+            //         ->groupBy('kind');
+            // }])->get();
+            
+            // // Now, you can iterate through $users and access the total transactions for each kind
+            // foreach ($users as $user) {
+            //     echo "User: {$user->name}\n";
+            
+            //     foreach ($user->userAccounts as $userAccount) {
+            //         echo "Kind: {$userAccount->kind}\n";
+            //         echo "Total Transactions: " . ($userAccount->transactions->first() ? $userAccount->transactions->first()->total : 0) . "\n";
+            //     }
+            
+            //     echo "\n";
+            // }
+
+            return view('admin.simpanan-deposit-recap');
 
         } 
         
@@ -262,6 +296,7 @@ class AdminController extends Controller
                         return redirect()->back()->withSuccess('Data setoran simpanan berhasil disimpan!');
                     }
                 } else {
+                    dd($checkUAC->kind);
                     $buktiSimpanan = "";
                     if($imageSimpanan = $request->file('image')) {
                         $destinationPath = 'image/upload/'.$input['memberId'].'/'.'simpanan/'.$input['kind'].'/';

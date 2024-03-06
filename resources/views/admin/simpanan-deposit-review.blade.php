@@ -26,7 +26,7 @@
                                     class="w-75 m-2"></span>
                         </div>
 
-                        <a href="{{ route('admin.review.simpanan') }}" class="btn btn-white text-primary w-100 fw-medium shadow-sm">Lihat Rekap</a>
+                        <a href="{{ route('admin.recap.simpanan') }}" class="btn btn-white text-primary w-100 fw-medium shadow-sm">Lihat Rekap</a>
                     </div>
                 </div>
             </div>
