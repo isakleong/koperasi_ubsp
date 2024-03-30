@@ -89,7 +89,7 @@
 
 @section('vendorJS')
 <script src="/administrator/js/jquery.min.js"></script>
-<script src="/vendor/sweetalert/sweetalert.all.js"></script>
+<script src="/vendor/sweetalert/sweetalert2.js"></script>
 
 <script>
     @if ($message = session('success'))

@@ -165,7 +165,7 @@
 @section('vendorJS')
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/vendor/datatable/js/datatables.min.js"></script>
-    <script src="/vendor/sweetalert/sweetalert.all.js"></script>
+    <script src="/vendor/sweetalert/sweetalert2.js"></script>
     <script src="/vendor/autonumeric/autonumeric.min.js"></script>
 
     {{-- <script>
@@ -202,6 +202,10 @@
                     showDenyButton: true,
                     confirmButtonText: 'Ya, hapus',
                     denyButtonText: 'Batal',
+                    customClass: {
+                        confirmButton: "btn btn-primary",
+                        denyButton: "btn btn-danger"
+                    },
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit();

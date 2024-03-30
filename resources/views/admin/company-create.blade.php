@@ -129,7 +129,7 @@
     <script src="/main/assets/static/js/pages/filepond.js"></script>
 
     <script src="/vendor/jquery/jquery.min.js"></script>
-    <script src="/vendor/sweetalert/sweetalert.all.js"></script>
+    <script src="/vendor/sweetalert/sweetalert2.js"></script>
 
     <script>
         //capitalize input
@@ -154,6 +154,10 @@
                     showDenyButton: true,
                     confirmButtonText: 'Ya, simpan',
                     denyButtonText: 'Batal',
+                    customClass: {
+                        confirmButton: "btn btn-primary",
+                        denyButton: "btn btn-danger"
+                    },
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit();

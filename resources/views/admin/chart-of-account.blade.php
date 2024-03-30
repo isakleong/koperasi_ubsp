@@ -62,7 +62,7 @@
 @section('vendorJS')
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/vendor/datatable/js/datatables.min.js"></script>
-    <script src="/vendor/sweetalert/sweetalert.all.js"></script>
+    <script src="/vendor/sweetalert/sweetalert2.js"></script>
 
     <script>
         $(document).ready(function() {

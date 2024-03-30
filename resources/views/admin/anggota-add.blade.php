@@ -5,8 +5,6 @@
     <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
     <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
 
-    <link rel="stylesheet" href="/vendor/sweetalert/sweetalert2.css">
-
     <style>
         /* body, html {
             height: 100%;
@@ -231,7 +229,7 @@
                             </div>
 
                             <div class="text-end">
-                                <button type="submit" class="btn btn-lg btn-primary show_confirm">Tambah Anggota</button>
+                                <button type="submit" class="btn btn-primary show_confirm">Tambah Anggota</button>
                             </div>
                         </form>
                         @else

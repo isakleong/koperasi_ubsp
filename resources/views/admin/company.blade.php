@@ -45,7 +45,7 @@
 
 @section('vendorJS')
     <script src="/vendor/jquery/jquery.min.js"></script>
-    <script src="/vendor/sweetalert/sweetalert.all.js"></script>
+    <script src="/vendor/sweetalert/sweetalert2.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -61,6 +61,10 @@
                     showDenyButton: true,
                     confirmButtonText: 'Ya, hapus',
                     denyButtonText: 'Batal',
+                    customClass: {
+                        confirmButton: "btn btn-primary",
+                        denyButton: "btn btn-danger"
+                    },
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit();
