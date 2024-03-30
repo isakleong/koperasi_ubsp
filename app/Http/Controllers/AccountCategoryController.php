@@ -12,8 +12,9 @@ class AccountCategoryController extends Controller
 {
     public function index()
     {
-        //
-        $category = AccountCategory::all();
+        $category = AccountCategory::orderBy('active', 'desc')
+                    ->orderBy('orderNumber', 'asc')
+                    ->get();
         return view('admin.account-category', compact('category'));
     }
 
@@ -27,24 +28,25 @@ class AccountCategoryController extends Controller
         $validator = Validator::make(
             [
                 'name' => $request->input('name'),
-                'normalBalance' => $request->input('normalBalance'),
+                'orderNumber' => $request->input('orderNumber'),
             ],
             [
                 'name' => [
                     'required',
-                    Rule::unique('account_category')->where(function ($query) use ($request) {
-                        // Add conditions if needed to make the validation more specific
-                        // For example, if you have a user_id associated with the record:
-                        // $query->where('user_id', $request->user()->id);
-                    }),
+                    Rule::unique('account_category'),
                 ],
-                'normalBalance' =>'required|in:D,K',
+                'orderNumber' => [
+                    'required',
+                    'integer',
+                    'min:1',
+                    Rule::unique('account_category'),
+                ],
             ],
             [
                 'name.required' => 'Nama kategori belum diisi',
                 'name.unique' => 'Nama kategori sudah dipakai, mohon untuk pilih nama kategori yang lain',
-                'normalBalance.required' => 'Saldo normal belum dipilih',
-                'normalBalance.in' => 'Saldo normal belum dipilih',
+                'orderNumber.required' => 'Urutan prioritas belum diisi',
+                'orderNumber.unique' => 'Nomor urut sudah dipakai, mohon untuk pilih nomor urut yang lain',
             ],
         );
             
@@ -84,20 +86,25 @@ class AccountCategoryController extends Controller
         $validator = Validator::make(
             [
                 'name' => $request->input('name'),
-                'normalBalance' => $request->input('normalBalance'),
+                'orderNumber' => $request->input('orderNumber'),
             ],
             [
                 'name' => [
                     'required',
                     Rule::unique('account_category')->ignore($accountCategory->id),
                 ],
-                'normalBalance' =>'required|in:D,K',
+                'orderNumber' => [
+                    'required',
+                    'integer',
+                    'min:1',
+                    Rule::unique('account_category')->ignore($accountCategory->id),
+                ],
             ],
             [
                 'name.required' => 'Nama kategori belum diisi',
                 'name.unique' => 'Nama kategori sudah dipakai, mohon untuk pilih nama kategori yang lain',
-                'normalBalance.required' => 'Saldo normal belum dipilih',
-                'normalBalance.in' => 'Saldo normal belum dipilih',
+                'orderNumber.required' => 'Urutan prioritas belum diisi',
+                'orderNumber.unique' => 'Nomor urut sudah dipakai, mohon untuk pilih nomor urut yang lain',
             ],
         );
 

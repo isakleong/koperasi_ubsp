@@ -2,6 +2,12 @@
 
 @section('vendorCSS')
     <link rel="stylesheet" type="text/css" href="/vendor/datatable/css/datatables.min.css"/>
+    <style>
+        body.dt-print-view h1 {
+            text-align: center;
+            margin: 1em;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -14,8 +20,7 @@
         <div class="row">
             <div class="col-xl">
                 <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Daftar Kategori Akun</h5>
+                    <div class="card-header text-end">
                         <a href="/admin/account_category/create" class="btn btn-primary">Tambah Data</a>
                     </div>
 
@@ -32,13 +37,14 @@
                                     <h5 class="mb-4 mx-2">Tidak ada daftar kategori akun.</h5>
                                 </div>
                             </div>
-                        @else
-                            <table class="table table-sm table-bordered table-hover table-striped" id="table1" style="width: 100%">
+                        @else                            
+                            <table class="table caption-top table-sm table-bordered table-hover table-striped" id="table1" style="width: 100%">
+                                <caption><h5 class="text-center">Daftar Kategori Akun</h5></caption>
                                 <thead>
                                     <tr>
                                         <th>No</th>
                                         <th>Nama Kategori</th>
-                                        <th>Saldo Normal</th>
+                                        <th>Urutan Prioritas</th>
                                         <th>Status</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -51,11 +57,11 @@
                                         <tr>
                                             <td>{{ $i++ }}</td>
                                             <td>{{ $item->name }}</td>
-                                            <td>{{ $item->normalBalance }}</td>
+                                            <td>{{ $item->orderNumber }}</td>
                                             @if ($item->active == '1')
-                                                <td><span class="badge bg-success">Active</span></td>
+                                                <td><span class="badge bg-success">Aktif</span></td>
                                             @else
-                                                <td><span class="badge bg-danger">Inactive</span></td>
+                                                <td><span class="badge bg-danger">Tidak Aktif</span></td>
                                             @endif
                                             <td>
                                                 <a href="{{ route('admin.account_category.edit', $item->id) }}"
@@ -87,47 +93,133 @@
 
 @section('vendorJS')
     <script src="/vendor/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="/vendor/datatable/js/datatables.min.js"></script>
-    <script src="/vendor/sweetalert/sweetalert.all.js"></script>
+    <script src="/vendor/sweetalert/sweetalert2.js"></script>
+    <script src="/vendor/lottie/lottie.min.js"></script>
+
+    <script src="/vendor/datatable/js/datatables.min.js"></script>
+    <script src="/vendor/datatable/js/pdfmake.min.js"></script>
+    <script src="/vendor/datatable/js/vfs_fonts.js"></script>
 
     <script>
         $(document).ready(function() {
-            var table = $('#table1').DataTable({
+            var table = new DataTable('#table1', {
                 responsive: true
             });
+            new DataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export Data',
+                    className: 'custom-html-collection',
+                    buttons: [
+                        {
+                            extend: 'pdfHtml5',
+                            title: 'Laporan Daftar Kategori Akun\nSistem Akuntansi UBSP',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3],
+                            },
+                            customize: function(doc) {
+                                doc.content[2].table.widths =Array(doc.content[2].table.body[0].length + 1).join('*').split('');
+                                doc.defaultStyle.alignment = 'center';
+                                doc.styles.tableHeader.alignment = 'center';
+                            },
+                            pageSize: 'A4',
+                        },
+                        {
+                            extend: 'excel',
+                            autoFilter: true,
+                            title: 'Laporan Daftar Kategori Akun - Sistem Akuntansi UBSP',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3]
+                            },
+                            customize: function(xlsx) {
+                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                                var range = calculateRange(sheet); // Calculate the range of cells with values
+                                $('row:first c', sheet).attr('s', '22');
+                                $('row', sheet).each(function(index) {
+                                    if (index >= range.startRow && index <= range.endRow) {
+                                        $(this).find('c').each(function() {
+                                            var columnIndex = parseInt($(this).attr('r').replace(/\D/g, ''), 10);
+                                            if (columnIndex >= range.startColumn && columnIndex <= range.endColumn) {
+                                                // Exclude Cell A1 (merged to D1) and Cell A2 (merged to D2) from being bordered
+                                                var row = parseInt($(this).attr('r').match(/\d+/), 10);
+                                                if (!((row === 1 && columnIndex <= 3) || (row === 2 && columnIndex <= 3))) {
+                                                    $(this).attr('s', '25'); // Apply border style to other cells
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            title: 'Laporan Daftar Kategori Akun<br/>Sistem Akuntansi UBSP',
+                            messageTop: 'Daftar Kategori Akun',
+                            messageBottom: 'Daftar Kategori Akun',
+                            exportOptions: {
+                                columns: ':not(:last-child)'
+                            }
+                        }
+                    ]
+                }
+            ]
+            });
+            table
+                .buttons(0, null)
+                .container()
+                .prependTo(table.table().container());
 
-            // var table = $('#table1').DataTable({
-            //     responsive: true,
-            //     processing: true,
-            //     serverSide: true,
-            //     ajax: {
-            //         url: '/admin/coba', // Replace with your Laravel API endpoint
-            //         type: 'GET',
-            //     },
-            //     columns: [
-            //         { data: 'column1', name: 'column1' },
-            //         { data: 'column2', name: 'column2' },
-            //         // Add more columns as needed
-            //     ],
-            // });
+            
+            function calculateRange(sheet) {
+                var range = { startRow: 2, startColumn: 0, endRow: 0, endColumn: 0 }; // Start from A3
+                $('row', sheet).each(function(index) {
+                    var cellsWithData = $(this).find('c[r]');
+                    if (cellsWithData.length > 0) {
+                        range.endRow = index;
+                        cellsWithData.each(function() {
+                            var columnIndex = parseInt($(this).attr('r').replace(/\D/g, ''), 10);
+                            range.endColumn = Math.max(range.endColumn, columnIndex);
+                        });
+                    }
+                });
+                return range;
+            }
 
             const registerDeleteItemHandlers = () => {
                 $('.show_confirm').click(function(event) {
-                    var form =  $(this).closest("form");
-                    var name = $(this).data("name");
                     event.preventDefault();
+                    var form = $(this).closest("form");
+                    var item = $(this).closest("tr").find("td:eq(1)").text();
+
                     Swal.fire({
-                    title: 'Delete the data?',
-                    text: "If you delete this, it will be gone forever.",
-                    icon: 'question',
-                    showDenyButton: true,
-                    confirmButtonText: 'Yes, delete',
-                    denyButtonText: 'No',
+                        title: 'Konfirmasi',
+                        html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                            '<p class="mt-2">Apakah Anda yakin ingin menghapus kategori akun ' + item + '?</p>',
+                        confirmButtonText: 'Ya, Hapus',
+                        denyButtonText: 'Batal',
+                        customClass: {
+                            confirmButton: "btn btn-primary",
+                            denyButton: "btn btn-danger"
+                        },
+                        showDenyButton: true,
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        didOpen: () => {
+                            var animation = lottie.loadAnimation({
+                                container: document.getElementById('lottie-container'),
+                                renderer: 'svg',
+                                loop: true,
+                                autoplay: true,
+                                path: '/assets/animations/confirm.json',
+                                rendererSettings: {
+                                    preserveAspectRatio: 'xMidYMid slice'
+                                }
+                            });
+                        }
                     }).then((result) => {
                         if (result.isConfirmed) {
                             form.submit();
-                        } else if (result.isDenied) {
-                            // Swal.fire('Changes are not saved', '', 'info');
                         }
                     });
                 });
@@ -140,41 +232,38 @@
             });
 
             table.on( 'responsive-display', function ( e, datatable, row, showHide, update ) {
-                // console.log('Details for row '+row.index()+' '+(showHide ? 'shown' : 'hidden'));
                 registerDeleteItemHandlers();
             });
 
-            $('.show_confirm').click(function(event) {
-                event.preventDefault();
-
-                var form = $(this).closest("form");
-
+            function showResultDialog(type) {
                 Swal.fire({
-                    title: 'Hapus Data?',
-                    text: '',
-                    icon: 'question',
-                    showDenyButton: true,
-                    confirmButtonText: 'Ya, hapus',
-                    denyButtonText: 'Batal',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    } else if (result.isDenied) {
-                        // Swal.fire('Changes are not saved', '', 'info');
+                    title: type === 'success' ? 'Berhasil' : 'Error',
+                    html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                          '<p class="mt-2">' + (type === 'success' ? "{{ Session::get('success') }}" : "{{ Session::get('errorData') }}") + '</p>',
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    didOpen: () => {
+                        var animation = lottie.loadAnimation({
+                            container: document.getElementById('lottie-container'),
+                            renderer: 'svg',
+                            loop: true,
+                            autoplay: true,
+                            path: type === 'success' ? '/assets/animations/success.json' : '/assets/animations/error.json',
+                            rendererSettings: {
+                                preserveAspectRatio: 'xMidYMid slice'
+                            }
+                        });
                     }
                 });
-            });
-        });
-    </script>
+            }
 
-    <script>
-        @if ($message = session('errorData'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                // text: '',
-                text: '{{ Session::get('errorData') }}',
-            })
-        @endif
+            @if ($message = session('errorData'))
+                showResultDialog('error');
+            @endif
+
+            @if ($message = session('success'))
+                showResultDialog('success');
+            @endif
+        });
     </script>
 @endsection

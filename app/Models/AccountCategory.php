@@ -13,7 +13,7 @@ class AccountCategory extends Model
 
     protected $fillable = [
         'name',
-        'normalBalance',
+        'orderNumber',
         'active'
     ];
 

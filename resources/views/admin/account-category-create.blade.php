@@ -1,7 +1,6 @@
 @extends('layout.admin.main')
 
 @section('content')
-    {{-- @include('sweetalert::alert') --}}
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="py-3 mb-4">
@@ -20,7 +19,7 @@
                             <div class="mb-3">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="name"
-                                        name="name"placeholder="" oninput=capitalizeName(this) required
+                                        name="name"placeholder="" required
                                         value="{{ old('name') }}" />
                                     <label for="name">Nama Kategori</label>
                                 </div>
@@ -29,16 +28,11 @@
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="normalBalance" class="form-label">Saldo Normal</label>
-                                <select class="form-select" id="normalBalance" aria-label="normalBalance"
-                                    name="normalBalance">
-                                    <option selected>--- Pilih Saldo Normal ---</option>
-                                    <option value="D" {{ old('normalBalance') == 'D' ? 'selected' : '' }}>Debit
-                                    </option>
-                                    <option value="K" {{ old('normalBalance') == 'K' ? 'selected' : '' }}>Kredit
-                                    </option>
-                                </select>
-                                @error('normalBalance')
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" id="orderNumber" name="orderNumber" placeholder="" required value="{{ old('orderNumber') }}" min="0" />
+                                    <label for="name">Urutan Prioritas</label>
+                                </div>
+                                @error('orderNumber')
                                     <p class="mt-1" style="color: red">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -62,50 +56,72 @@
 
 @section('vendorJS')
     <script src="/vendor/jquery/jquery.min.js"></script>
-    <script src="/vendor/sweetalert/sweetalert.all.js"></script>
+    <script src="/vendor/sweetalert/sweetalert2.js"></script>
+    <script src="/vendor/lottie/lottie.min.js"></script>
 
     <script>
-        //capitalize input
-        function capitalizeName(input) {
-            const name = input.value.toLowerCase();
-            const words = name.split(' ');
-            const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
-            input.value = capitalizedWords.join(' ');
-        }
-        //end of capitalize input
-
         $(document).ready(function() {
             $('.show_confirm').click(function(event) {
                 event.preventDefault();
-
                 var form = $(this).closest("form");
+                var item = $('input[name="name"]').val();
+                if(item === "") {
+                    item = "(Nama Kategori Belum Diisi)";
+                }
 
                 Swal.fire({
-                    title: 'Simpan Data?',
-                    text: '',
-                    icon: 'question',
-                    showDenyButton: true,
-                    confirmButtonText: 'Ya, simpan',
+                    title: 'Konfirmasi',
+                    html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                        '<p class="mt-2">Apakah Anda yakin ingin menambahkan kategori akun ' + item + '?</p>',
+                    confirmButtonText: 'Ya, Tambah',
                     denyButtonText: 'Batal',
+                    customClass: {
+                        confirmButton: "btn btn-primary",
+                        denyButton: "btn btn-danger"
+                    },
+                    showDenyButton: true,
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    didOpen: () => {
+                        var animation = lottie.loadAnimation({
+                            container: document.getElementById('lottie-container'),
+                            renderer: 'svg',
+                            loop: true,
+                            autoplay: true,
+                            path: '/assets/animations/confirm.json',
+                            rendererSettings: {
+                                preserveAspectRatio: 'xMidYMid slice'
+                            }
+                        });
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit();
-                    } else if (result.isDenied) {
-                        // Swal.fire('Changes are not saved', '', 'info');
                     }
                 });
             });
         });
-    </script>
 
-    <script>
         @if ($message = session('errors'))
             Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Data kategori akun belum diisi secara lengkap. Silahkan dicek kembali.',
-                // text: '{{ Session::get('errors') }}',
-            })
+                title: 'Error',
+                html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                        '<p class="mt-2">Data kategori akun belum diisi secara lengkap. Silahkan dicek kembali.</p>',
+                showCloseButton: true,
+                focusConfirm: false,
+                didOpen: () => {
+                    var animation = lottie.loadAnimation({
+                        container: document.getElementById('lottie-container'),
+                        renderer: 'svg',
+                        loop: true,
+                        autoplay: true,
+                        path: '/assets/animations/error.json',
+                        rendererSettings: {
+                            preserveAspectRatio: 'xMidYMid slice'
+                        }
+                    });
+                }
+            });
         @endif
     </script>
 @endsection

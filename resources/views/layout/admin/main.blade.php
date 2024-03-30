@@ -45,6 +45,7 @@
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="/administrator/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
     <link rel="stylesheet" href="/administrator/assets/vendor/libs/apex-charts/apex-charts.css" />
+    <link rel="stylesheet" href="/vendor/sweetalert/sweetalert2.css">
 
     <!-- Page CSS -->
     @yield('vendorCSS')
