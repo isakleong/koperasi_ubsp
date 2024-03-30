@@ -353,7 +353,7 @@
                     renderer: 'svg',
                     loop: true,
                     autoplay: true,
-                    path: '/administrator/assets/lottie/loading.json',
+                    path: '/assets/animations/loading.json',
                     rendererSettings: {
                         preserveAspectRatio: 'xMidYMid meet'
                     }
