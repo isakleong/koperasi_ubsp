@@ -4,6 +4,31 @@
     <link rel="stylesheet" href="/main/assets/extensions/filepond/filepond.css">
     <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
     <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
+
+    <style>
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+
+
+        #lottie-loading {
+            position: absolute;
+            width: 25%;
+            height: 25%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -230,7 +255,9 @@
                                             @enderror
                                         </div>
                                     </div>
-
+                                </div>
+                                <div id="overlay">
+                                    <div id="lottie-loading"></div>
                                 </div>
                                 <div class="text-end">
                                     <button type="submit" class="btn btn-primary show_confirm">Update Data</button>
@@ -262,17 +289,9 @@
     <script src="/main/assets/static/js/pages/filepond.js"></script>
 
     <script src="/vendor/sweetalert/sweetalert2.js"></script>
+    <script src="/vendor/lottie/lottie.min.js"></script>
 
     <script>
-        //capitalize input
-        function capitalizeName(input) {
-            const name = input.value.toLowerCase();
-            const words = name.split(' ');
-            const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
-            input.value = capitalizedWords.join(' ');
-        }
-        //end of capitalize input
-
         $(document).ready(function() {
             var selectedValue = $('input[name="method"]:checked').val();
 
@@ -282,62 +301,58 @@
                 $('#bukti-trf').hide();
             }
 
-            $('ul.pagination').hide();
-            $(function() {
-                $('.scrolling-pagination').jscroll({
-                    autoTrigger: true,
-                    loadingHtml: '<img class="center-block" src="/administrator/assets/img/icons/loading.gif" alt="Loading..." />',
-                    padding: 0,
-                    nextSelector: '.pagination li.active + li a',
-                    contentSelector: 'div.scrolling-pagination',
-                    callback: function() {
-                        $('ul.pagination').remove();
-                    }
-                });
-            });
-
-            $('#openModalButton').on('click', function() {
-                // Perform AJAX request before opening the modal
-                var memberId = $('#memberId').val();
-                var urlPath = '/admin/anggota/edit/' + memberId;
-                alert(memberId);
-                $.ajax({
-                    url: urlPath,
-                    type: 'GET',
-                    success: function(response) {
-                        // Assuming the response is successful, you can open the modal here
-                        $('#modalData').modal('show');
-                    },
-                    error: function(xhr, status, error) {
-                        // Handle error if the AJAX request fails
-                        console.error(xhr.responseText);
-                    }
-                });
-            });
-
             $('.show_confirm').click(function(event) {
                 event.preventDefault();
-
                 var form = $(this).closest("form");
 
                 Swal.fire({
-                    title: 'Simpan Data?',
-                    text: '',
-                    icon: 'question',
-                    showDenyButton: true,
-                    confirmButtonText: 'Ya, simpan',
+                    title: 'Konfirmasi',
+                    html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                        '<p class="mt-2">Apakah Anda yakin ingin mengubah data anggota?</p>',
+                    confirmButtonText: 'Ya, Ubah',
                     denyButtonText: 'Batal',
                     customClass: {
                         confirmButton: "btn btn-primary",
                         denyButton: "btn btn-danger"
                     },
+                    showDenyButton: true,
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    didOpen: () => {
+                        var animation = lottie.loadAnimation({
+                            container: document.getElementById('lottie-container'),
+                            renderer: 'svg',
+                            loop: true,
+                            autoplay: true,
+                            path: '/assets/animations/confirm.json',
+                            rendererSettings: {
+                                preserveAspectRatio: 'xMidYMid slice'
+                            }
+                        });
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit();
-                    } else if (result.isDenied) {
-                        // Swal.fire('Changes are not saved', '', 'info');
                     }
                 });
+            });
+
+            $('form').submit(function() {
+                $(':submit', this).prop('disabled', true);
+
+                var animation = lottie.loadAnimation({
+                    container: document.getElementById('lottie-loading'),
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: '/assets/animations/loading.json',
+                    rendererSettings: {
+                        preserveAspectRatio: 'xMidYMid slice'
+                    }
+                });
+                $('#overlay').show();
+                $('body, html').css('overflow', 'hidden');
+                return true;
             });
 
             $('input[type="radio"]').on('change', function() {

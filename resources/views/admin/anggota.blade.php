@@ -90,15 +90,29 @@
 @section('vendorJS')
 <script src="/administrator/js/jquery.min.js"></script>
 <script src="/vendor/sweetalert/sweetalert2.js"></script>
+<script src="/vendor/lottie/lottie.min.js"></script>
 
 <script>
     @if ($message = session('success'))
         Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Success',
-            // text: '{{ Session::get('errors') }}',
-        })
+            title: 'Berhasil',
+            html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                    '<p class="mt-2">' + "{{ Session::get('success') }}" + '</p>',
+            showCloseButton: true,
+            focusConfirm: false,
+            didOpen: () => {
+                var animation = lottie.loadAnimation({
+                    container: document.getElementById('lottie-container'),
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: '/assets/animations/success.json',
+                    rendererSettings: {
+                        preserveAspectRatio: 'xMidYMid slice'
+                    }
+                });
+            }
+        });
     @endif
 </script>
     

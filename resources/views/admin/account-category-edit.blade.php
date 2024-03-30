@@ -1,5 +1,32 @@
 @extends('layout.admin.main')
 
+@section('vendorCSS')
+    <style>
+        #overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 9999;
+            }
+
+
+            #lottie-loading {
+                position: absolute;
+                width: 25%;
+                height: 25%;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+    </style>
+@endsection
+
 @section('content')
     @include('sweetalert::alert')
     <!-- Content -->
@@ -42,6 +69,9 @@
                                 <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
                                     name="active" {{ $accountCategory->active == '1' ? 'checked' : '' }} />
                                 <label class="form-check-label" for="flexSwitchCheckChecked">Active</label>
+                            </div>
+                            <div id="overlay">
+                                <div id="lottie-loading"></div>
                             </div>
                             <div class="text-end">
                                 <button type="submit" class="btn btn-primary show_confirm">Update
@@ -97,6 +127,24 @@
                         form.submit();
                     }
                 });
+            });
+
+            $('form').submit(function() {
+                $(':submit', this).prop('disabled', true);
+
+                var animation = lottie.loadAnimation({
+                    container: document.getElementById('lottie-loading'),
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: '/assets/animations/loading.json',
+                    rendererSettings: {
+                        preserveAspectRatio: 'xMidYMid slice'
+                    }
+                });
+                $('#overlay').show();
+                $('body, html').css('overflow', 'hidden');
+                return true;
             });
         });
     </script>

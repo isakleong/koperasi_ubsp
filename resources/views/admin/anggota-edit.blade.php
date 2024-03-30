@@ -386,37 +386,10 @@
     <script src="/main/assets/static/js/pages/filepond.js"></script>
 
     <script src="/vendor/sweetalert/sweetalert2.js"></script>
+    <script src="/vendor/lottie/lottie.min.js"></script>
 
     <script>
-        //capitalize input
-        function capitalizeName(input) {
-            const name = input.value.toLowerCase();
-            const words = name.split(' ');
-            const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
-            input.value = capitalizedWords.join(' ');
-        }
-        //end of capitalize input
-
         $(document).ready(function() {
-            // $('#openModalButton').on('click', function() {
-            //     // Perform AJAX request before opening the modal
-            //     var memberId = $('#memberId').val();
-            //     var urlPath = '/admin/anggota/edit/' + memberId;
-            //     alert(memberId);
-            //     $.ajax({
-            //         url: urlPath,
-            //         type: 'GET',
-            //         success: function(response) {
-            //             // Assuming the response is successful, you can open the modal here
-            //             $('#modalData').modal('show');
-            //         },
-            //         error: function(xhr, status, error) {
-            //             // Handle error if the AJAX request fails
-            //             console.error(xhr.responseText);
-            //         }
-            //     });
-            // });
-
             $('.show_option').click(function(event) {
                 event.preventDefault();
 
@@ -487,6 +460,36 @@
                     }
                 });
             });
+
+            function showResultDialog(type) {
+                Swal.fire({
+                    title: type === 'success' ? 'Berhasil' : 'Error',
+                    html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                          '<p class="mt-2">' + (type === 'success' ? "{{ Session::get('success') }}" : "{{ Session::get('errorData') }}") + '</p>',
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    didOpen: () => {
+                        var animation = lottie.loadAnimation({
+                            container: document.getElementById('lottie-container'),
+                            renderer: 'svg',
+                            loop: true,
+                            autoplay: true,
+                            path: type === 'success' ? '/assets/animations/success.json' : '/assets/animations/error.json',
+                            rendererSettings: {
+                                preserveAspectRatio: 'xMidYMid slice'
+                            }
+                        });
+                    }
+                });
+            }
+
+            @if ($message = session('errorData'))
+                showResultDialog('error');
+            @endif
+
+            @if ($message = session('success'))
+                showResultDialog('success');
+            @endif
         });
     </script>
 @endsection

@@ -7,6 +7,28 @@
             text-align: center;
             margin: 1em;
         }
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+
+
+        #lottie-loading {
+            position: absolute;
+            width: 25%;
+            height: 25%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
     </style>
 @endsection
 
@@ -63,6 +85,9 @@
                                             @else
                                                 <td><span class="badge bg-danger">Tidak Aktif</span></td>
                                             @endif
+                                            <div id="overlay">
+                                                <div id="lottie-loading"></div>
+                                            </div>
                                             <td>
                                                 <a href="{{ route('admin.account_category.edit', $item->id) }}"
                                                     class="btn icon btn-sm btn-primary d-inline-block m-1"
@@ -233,6 +258,24 @@
 
             table.on( 'responsive-display', function ( e, datatable, row, showHide, update ) {
                 registerDeleteItemHandlers();
+            });
+
+            $('form').submit(function() {
+                $(':submit', this).prop('disabled', true);
+
+                var animation = lottie.loadAnimation({
+                    container: document.getElementById('lottie-loading'),
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: '/assets/animations/loading.json',
+                    rendererSettings: {
+                        preserveAspectRatio: 'xMidYMid slice'
+                    }
+                });
+                $('#overlay').show();
+                $('body, html').css('overflow', 'hidden');
+                return true;
             });
 
             function showResultDialog(type) {

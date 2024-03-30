@@ -6,12 +6,6 @@
     <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
 
     <style>
-        /* body, html {
-            height: 100%;
-            margin: 0;
-            overflow: auto;
-        } */
-
         #overlay {
             display: none;
             position: fixed;
@@ -26,10 +20,8 @@
         }
 
 
-        #lottie-container {
+        #lottie-loading {
             position: absolute;
-            width: 25%;
-            height: 25%;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -59,8 +51,7 @@
                             @csrf
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="fname" name="fname" placeholder=""
-                                        oninput=capitalizeName(this) required value="{{ old('fname') }}" />
+                                    <input type="text" class="form-control" id="fname" name="fname" placeholder="" required value="{{ old('fname') }}" />
                                     <label for="fname">Nama Depan</label>
                                 </div>
                                 @error('fname')
@@ -70,8 +61,7 @@
 
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="lname" name="lname" placeholder=""
-                                        oninput=capitalizeName(this) required value="{{ old('lname') }}" />
+                                    <input type="text" class="form-control" id="lname" name="lname" placeholder="" required value="{{ old('lname') }}" />
                                     <label for="lname">Nama Belakang</label>
                                 </div>
                                 @error('lname')
@@ -82,7 +72,7 @@
                             <div class="mb-3">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="birthplace" name="birthplace"
-                                        placeholder="" oninput=capitalizeName(this) required
+                                        placeholder="" required
                                         value="{{ old('birthplace') }}" />
                                     <label for="birthplace">Tempat Lahir</label>
                                 </div>
@@ -105,7 +95,7 @@
                             <div class="mb-3">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="address" name="address"
-                                        placeholder="" oninput=capitalizeName(this) required
+                                        placeholder="" required
                                         value="{{ old('address') }}" />
                                     <label for="address">Alamat Tinggal</label>
                                 </div>
@@ -117,7 +107,7 @@
                             <div class="mb-3">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="workAddress" name="workAddress"
-                                        placeholder="" oninput=capitalizeName(this) required
+                                        placeholder="" required
                                         value="{{ old('workAddress') }}" />
                                     <label for="workAddress">Alamat Kerja</label>
                                 </div>
@@ -152,7 +142,7 @@
                             <div class="mb-3">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="mothername" name="mothername"
-                                        placeholder="" oninput=capitalizeName(this) required
+                                        placeholder="" required
                                         value="{{ old('mothername') }}" />
                                     <label for="mothername">Nama Ibu Kandung</label>
                                 </div>
@@ -225,7 +215,7 @@
                             </div>
 
                             <div id="overlay">
-                                <div id="lottie-container"></div>
+                                <div id="lottie-loading"></div>
                             </div>
 
                             <div class="text-end">
@@ -271,18 +261,9 @@
 
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/sweetalert/sweetalert2.js"></script>
-    <script src="/administrator/assets/lottie/lottie.min.js"></script>
+    <script src="/vendor/lottie/lottie.min.js"></script>
 
     <script>
-        //capitalize input
-        function capitalizeName(input) {
-            const name = input.value.toLowerCase();
-            const words = name.split(' ');
-            const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
-            input.value = capitalizedWords.join(' ');
-        }
-        //end of capitalize input
-
         function validateNumberInput(input) {
             input.value = input.value.replace(/[^0-9]/g, '');
         }
@@ -296,41 +277,44 @@
                 $('#bukti-trf').hide();
             }
 
-            
-
             $('.show_confirm').click(function(event) {
                 event.preventDefault();
-
                 var form = $(this).closest("form");
+                var item = $('input[name="fname"]').val() + ' ' +$('input[name="lname"]').val();
+                if(item.trim() === "") {
+                    item = "(Nama Anggota Belum Diisi)";
+                }
 
                 Swal.fire({
-                    title: 'Simpan Data?',
-                    text: '',
-                    icon: 'question',
-                    showDenyButton: true,
-                    confirmButtonText: 'Ya, simpan',
+                    title: 'Konfirmasi',
+                    html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                        '<p class="mt-2">Apakah Anda yakin ingin menambahkan anggota ' + item + '?</p>',
+                    confirmButtonText: 'Ya, Tambah',
                     denyButtonText: 'Batal',
                     customClass: {
                         confirmButton: "btn btn-primary",
                         denyButton: "btn btn-danger"
                     },
+                    showDenyButton: true,
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    didOpen: () => {
+                        var animation = lottie.loadAnimation({
+                            container: document.getElementById('lottie-container'),
+                            renderer: 'svg',
+                            loop: true,
+                            autoplay: true,
+                            path: '/assets/animations/confirm.json',
+                            rendererSettings: {
+                                preserveAspectRatio: 'xMidYMid slice'
+                            }
+                        });
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit();
-                    } else if (result.isDenied) {
-                        // Swal.fire('Changes are not saved', '', 'info');
                     }
                 });
-
-                // Swal.fire({
-                //     title: "Question!",
-                //     text: " You clicked the button!",
-                //     icon: "question",
-                //     customClass: {
-                //         confirmButton: "btn btn-primary"
-                //     },
-                //     buttonsStyling: !1
-                // });
             });
 
             $('input[type="radio"]').on('change', function() {
@@ -345,44 +329,45 @@
             });
 
             $('form').submit(function() {
-                // Disable the submit button
                 $(':submit', this).prop('disabled', true);
 
                 var animation = lottie.loadAnimation({
-                    container: document.getElementById('lottie-container'),
+                    container: document.getElementById('lottie-loading'),
                     renderer: 'svg',
                     loop: true,
                     autoplay: true,
                     path: '/assets/animations/loading.json',
                     rendererSettings: {
-                        preserveAspectRatio: 'xMidYMid meet'
+                        preserveAspectRatio: 'xMidYMid slice'
                     }
                 });
 
                 $('#overlay').show();
-
                 $('body, html').css('overflow', 'hidden');
-
-                // hideLoadingOverlay();
-
                 return true;
             });
 
-            // function hideLoadingOverlay() {
-            //     $('#overlay').hide();
-            //     $('body, html').css('overflow', 'auto');
-            // }
+            @if ($message = session('errors'))
+                Swal.fire({
+                    title: 'Error',
+                    html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                            '<p class="mt-2">Formulir anggota baru belum diisi secara lengkap. Silahkan dicek kembali.</p>',
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    didOpen: () => {
+                        var animation = lottie.loadAnimation({
+                            container: document.getElementById('lottie-container'),
+                            renderer: 'svg',
+                            loop: true,
+                            autoplay: true,
+                            path: '/assets/animations/error.json',
+                            rendererSettings: {
+                                preserveAspectRatio: 'xMidYMid slice'
+                            }
+                        });
+                    }
+                });
+            @endif
         });
-    </script>
-
-    <script>
-        @if ($message = session('errors'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Formulir anggota baru belum diisi secara lengkap. Silahkan dicek kembali.',
-                // text: '{{ Session::get('errors') }}',
-            })
-        @endif
     </script>
 @endsection
