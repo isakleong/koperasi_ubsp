@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
 use App\Models\User;
 use App\Models\Config;
 use App\Models\Transaction;
@@ -76,6 +77,9 @@ class AdminController extends Controller
             return view('admin.transaction');
         } elseif ($parameter == "admin.ubsp.transaction") {
             return view('admin.transaction-ubsp');
+        } elseif ($parameter == "admin.ubsp.transaction.store") {
+            $account = Account::where('parent_id', null)->get();
+            return view('admin.transaction-ubsp-create', compact('account'));
         }
         
         elseif ($parameter == "admin.review.simpanan") {

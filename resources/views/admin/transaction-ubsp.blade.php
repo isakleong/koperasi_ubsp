@@ -37,17 +37,17 @@
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="py-3 mb-4">
-            <span class="fw-light">Kategori Akun</span>
+            <span class="fw-light">Transaksi UBSP</span>
         </h4>
         <div class="row">
             <div class="col-xl">
                 <div class="card mb-4">
                     <div class="card-header text-end">
-                        <a href="/admin/account_category/create" class="btn btn-primary">Tambah Data</a>
+                        <a href="/admin/transaction/ubsp/create" class="btn btn-primary">Tambah Data</a>
                     </div>
 
                     <div class="card-body">
-                        @if (count($category) == 0)
+                        {{-- @if (count($category) == 0)
                             <div class="container-xxl container-p-y text-center">
                                 <div class="misc-wrapper">
                                     <div class="mb-4">
@@ -107,7 +107,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                        @endif
+                        @endif --}}
                     </div>
                 </div>
             </div>
