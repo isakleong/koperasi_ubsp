@@ -72,7 +72,13 @@ class AdminController extends Controller
             $member = User::where('status', 2)->get();
             return view('admin.simpanan-deposit-create', compact('member', 'configStatus', 'kind', 'minWajib', 'minSukarela', 'minSibuhar'));
 
-        } elseif ($parameter == "admin.review.simpanan") {
+        } elseif ($parameter == "admin.transaction") {
+            return view('admin.transaction');
+        } elseif ($parameter == "admin.ubsp.transaction") {
+            return view('admin.transaction-ubsp');
+        }
+        
+        elseif ($parameter == "admin.review.simpanan") {
 
             return view('admin.simpanan-deposit-review');
 

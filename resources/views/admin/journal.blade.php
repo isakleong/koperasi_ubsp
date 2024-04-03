@@ -24,7 +24,7 @@
                             @csrf
                             <div class="row d-flex justify-content-between align-items-end">
                                 <div class="col-md-3 col-12 mb-3">
-                                    <label for="startDate" class="form-label">Tanggal Awal</label>
+                                    <label for="startDate">Tanggal Awal</label>
                                     <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun" id="startDate" name="startDate" />
                                     @error('startDate')
                                         <p class="mt-1" style="color: red">{{ $message }}</p>
@@ -32,7 +32,7 @@
                                 </div>
 
                                 <div class="col-md-3 col-12 mb-3">
-                                    <label for="endDate" class="form-label">Tanggal Akhir</label>
+                                    <label for="endDate">Tanggal Akhir</label>
                                     <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun" id="endDate" name="endDate" />
                                     @error('endDate')
                                         <p class="mt-1" style="color: red">{{ $message }}</p>
@@ -40,7 +40,7 @@
                                 </div>
 
                                 <div class="col-md-3 col-12 mb-3">
-                                    <label for="normalBalance" class="form-label">Periode</label>
+                                    <label for="normalBalance">Periode</label>
                                     <select class="form-select" id="normalBalance" aria-label="normalBalance"
                                         name="normalBalance">
                                         <option selected>--- Pilih Periode ---</option>

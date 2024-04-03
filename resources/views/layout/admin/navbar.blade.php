@@ -67,6 +67,13 @@
 
         <!-- Transaction Data -->
         <li class="menu-header small text-uppercase"><span class="menu-header-text">transaksi</span></li>
+        <li class="menu-item {{ Str::contains(request()->route()->getName(), 'transaction') ? 'active' : '' }}">
+            <a href="/admin/menu/transaction" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-wallet"></i>
+                <div data-i18n="Basic">Transaksi</div>
+            </a>
+        </li>
+
         <li class="menu-item {{ Str::contains(request()->route()->getName(), 'simpanan') ? 'active' : '' }}">
             <a href="/admin/menu/simpanan" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-wallet"></i>

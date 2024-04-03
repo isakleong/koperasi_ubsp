@@ -9,6 +9,9 @@
     @endif --}}
     <td style="padding-left: {{ $account->depth * 20 }}px">{{ $account->name }}</td>
     <td>{{ $account->category->name }}</td>
+    <td>{{ $account->normalBalance }}</td>
+    <td>{{ $account->balance }}</td>
+    <td>{{ $account->description }}</td>
     @if ($account->active == '1')
         <td><span class="badge bg-success">Active</span></td>
     @else

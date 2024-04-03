@@ -23,8 +23,9 @@ class AccountController extends Controller
         // $account = Account::where('parent_id', null)->withDepth()->reversed()->with('ancestors')->get()->toFlatTree();
         
         // $account = Account::with('category')->withDepth()->with('ancestors')->get()->toTree();
-        $account = Account::with('category')->withDepth()->get()->toTree();
-        // dd($account);
+        
+        
+        $account = Account::with('category')->withDepth()->orderBy('categoryID')->get()->toTree();
         return view('admin.chart-of-account', compact('account'));
     }
 
@@ -49,6 +50,8 @@ class AccountController extends Controller
             [
                 'name' => $request->input('name'),
                 'accountNo' => $request->input('accountNo'),
+                'normalBalance' => $request->input('normalBalance'),
+                'balance' => $request->input('balance', 0),
                 'categoryID' => $request->input('categoryID'),
                 'parentID' => $request->input('parentID'),
                 'accountRelation' => $request->input('accountRelation'),
@@ -62,6 +65,8 @@ class AccountController extends Controller
                     'required',
                     Rule::unique('account')->where(function ($query) use ($request) {}),
                 ],
+                'normalBalance' => 'required|in:D,K',
+                'balance' => 'required|numeric',
                 'categoryID' => 'required',
                 'parentID' => 'nullable|exists:account,id',
                 'accountRelation' => 'required|in:none,header,child',
@@ -71,6 +76,10 @@ class AccountController extends Controller
                 'name.unique' => 'Nama akun sudah dipakai, mohon untuk pilih nama akun yang lain',
                 'accountNo.required' => 'Nomor akun belum diisi',
                 'accountNo.unique' => 'Nomor akun sudah dipakai, mohon untuk pilih nomor akun yang lain',
+                'normalBalance.required' => 'Saldo normal akun belum dipilih',
+                'normalBalance.in' => 'Saldo normal akun tidak valid',
+                'balance.required' => 'Saldo awal belum diisi',
+                'balance.numeric' => 'Saldo awal tidak valid',
                 'categoryID.required' => 'Kategori akun belum dipilih',
                 'parentID.exists' => 'XXXX',
                 'accountRelation.required' => 'Relasi akun belum dipilih',
@@ -96,6 +105,8 @@ class AccountController extends Controller
                 'name' => $input['name'],
                 'accountNo' => $input['accountNo'],
                 'categoryID' => $input['categoryID'],
+                'normalBalance' => $input['normalBalance'],
+                'balance' => $input['balance'],
                 'active' => $input['active'],
             ]);
 

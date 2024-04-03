@@ -1,7 +1,34 @@
 @extends('layout.admin.main')
 
+@section('vendorCSS')
+    <style>
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+
+
+        #lottie-loading {
+            position: absolute;
+            width: 25%;
+            height: 25%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+@endsection
+
 @section('content')
-    @include('sweetalert::alert')
+    {{-- @include('sweetalert::alert') --}}
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="py-3 mb-4">
@@ -19,8 +46,20 @@
                             @csrf
                             <div class="mb-3">
                                 <div class="form-floating">
+                                    <input type="text" class="form-control" id="accountNo" name="accountNo"
+                                        placeholder="" required
+                                        value="{{ old('accountNo') }}" />
+                                    <label for="accountNo">Nomor Akun</label>
+                                </div>
+                                @error('accountNo')
+                                    <p class="mt-1" style="color: red">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-floating">
                                     <input type="text" class="form-control" id="name" name="name"
-                                        placeholder="" oninput=capitalizeName(this) required
+                                        placeholder="" required
                                         value="{{ old('name') }}" />
                                     <label for="name">Nama Akun</label>
                                 </div>
@@ -30,13 +69,28 @@
                             </div>
 
                             <div class="mb-3">
+                                <label for="normalBalance">Saldo Normal</label>
+                                <select class="form-select" id="normalBalance" aria-label="normalBalance"
+                                    name="normalBalance">
+                                    <option selected>--- Pilih Saldo Normal ---</option>
+                                    <option value="D" {{ old('normalBalance') == 'D' ? 'selected' : '' }}>Debit
+                                    </option>
+                                    <option value="K" {{ old('normalBalance') == 'K' ? 'selected' : '' }}>Kredit
+                                    </option>
+                                </select>
+                                @error('normalBalance')
+                                    <p class="mt-1" style="color: red">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="accountNo" name="accountNo"
-                                        placeholder="" oninput=capitalizeName(this) required
-                                        value="{{ old('accountNo') }}" />
-                                    <label for="accountNo">Nomor Akun</label>
+                                    <input type="text" class="form-control" id="balance" name="balance"
+                                        placeholder="" required
+                                        value="{{ old('balance') }}" />
+                                    <label for="balance">Saldo Awal</label>
                                 </div>
-                                @error('accountNo')
+                                @error('balance')
                                     <p class="mt-1" style="color: red">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -79,8 +133,7 @@
                             <div class="mb-3">
                                 <div class="form-group">
                                     <label for="description">Deskripsi</label>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description" placeholder=""
-                                        oninput=capitalizeName(this) required value="{{ old('description') }}"></textarea>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description" placeholder="" required value="{{ old('description') }}"></textarea>
                                 </div>
                                 @error('description')
                                     <p class="mt-1" style="color: red">{{ $message }}</p>
@@ -91,6 +144,9 @@
                                 <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
                                     name="active" checked />
                                 <label class="form-check-label" for="flexSwitchCheckChecked">Aktif?</label>
+                            </div>
+                            <div id="overlay">
+                                <div id="lottie-loading"></div>
                             </div>
                             <div class="text-end">
                                 <button type="submit" class="btn btn-primary show_confirm">Tambah
@@ -108,17 +164,9 @@
 @section('vendorJS')
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/sweetalert/sweetalert2.js"></script>
+    <script src="/vendor/lottie/lottie.min.js"></script>
 
     <script>
-        //capitalize input
-        function capitalizeName(input) {
-            const name = input.value.toLowerCase();
-            const words = name.split(' ');
-            const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
-            input.value = capitalizedWords.join(' ');
-        }
-        //end of capitalize input
-
         $(document).ready(function() {
           var checkSelectedCategory = $("#categoryID").val();
           if(checkSelectedCategory != null) {
@@ -184,6 +232,86 @@
                     }
                 });
             });
+
+            $('.show_confirm').click(function(event) {
+                event.preventDefault();
+                var form = $(this).closest("form");
+                var item = $('input[name="name"]').val();
+                if(item === "") {
+                    item = "(Nama Akun Belum Diisi)";
+                }
+
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                        '<p class="mt-2">Apakah Anda yakin ingin menambahkan akun ' + item + '?</p>',
+                    confirmButtonText: 'Ya, Tambah',
+                    denyButtonText: 'Batal',
+                    customClass: {
+                        confirmButton: "btn btn-primary",
+                        denyButton: "btn btn-danger"
+                    },
+                    showDenyButton: true,
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    didOpen: () => {
+                        var animation = lottie.loadAnimation({
+                            container: document.getElementById('lottie-container'),
+                            renderer: 'svg',
+                            loop: true,
+                            autoplay: true,
+                            path: '/assets/animations/confirm.json',
+                            rendererSettings: {
+                                preserveAspectRatio: 'xMidYMid slice'
+                            }
+                        });
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+
+            $('form').submit(function() {
+                $(':submit', this).prop('disabled', true);
+
+                var animation = lottie.loadAnimation({
+                    container: document.getElementById('lottie-loading'),
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: '/assets/animations/loading.json',
+                    rendererSettings: {
+                        preserveAspectRatio: 'xMidYMid slice'
+                    }
+                });
+                $('#overlay').show();
+                $('body, html').css('overflow', 'hidden');
+                return true;
+            });
+
+            @if ($message = session('errors'))
+                Swal.fire({
+                    title: 'Error',
+                    html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                            '<p class="mt-2">Data kategori akun belum diisi secara lengkap. Silahkan dicek kembali.</p>',
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    didOpen: () => {
+                        var animation = lottie.loadAnimation({
+                            container: document.getElementById('lottie-container'),
+                            renderer: 'svg',
+                            loop: true,
+                            autoplay: true,
+                            path: '/assets/animations/error.json',
+                            rendererSettings: {
+                                preserveAspectRatio: 'xMidYMid slice'
+                            }
+                        });
+                    }
+                });
+            @endif
         });
     </script>
 @endsection

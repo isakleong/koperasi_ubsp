@@ -143,6 +143,12 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     Route::resource('/account_category', AccountCategoryController::class);
     Route::resource('/account', AccountController::class);
 
+    //TRANSAKSI
+    Route::get('/menu/transaction', [AdminController::class, 'showFormData'])->name('transaction');
+    Route::get('/transaction/ubsp', [AdminController::class, 'showFormData'])->name('ubsp.transaction');
+    Route::get('/transaction/member', [AdminController::class, 'showFormData'])->name('member.transaction');
+
+
     //SIMPANAN
     Route::get('/menu/simpanan', [AdminController::class, 'showSimpananMenu'])->name('simpanan');
     Route::get('/simpanan/setoran', [AdminController::class, 'showFormData'])->name('add.simpanan.deposit');

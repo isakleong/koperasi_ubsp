@@ -17,16 +17,10 @@ class Account extends Model
         'name',
         'accountNo',
         'categoryID',
+        'normalBalance',
+        'balance',
         'description',
-        'rates',
-        'monthlyRates',
-        'baseCicilan',
-        'monthlyCicilan',
-        'notes',
-        'status',
-        'active',
-        'requestDate',
-        'approvedOn',
+        'active'
     ];
 
     public function parent()
