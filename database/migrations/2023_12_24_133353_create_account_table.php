@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string("name")->unique();
             $table->unsignedBigInteger('categoryID')->required();
             $table->foreign('categoryID')->references('id')->on('account_category')->onDelete('restrict');
+            $table->string('normalBalance', 1)->required();
             $table->bigInteger("balance")->default(0);
             $table->string("description")->nullable();
             $table->string('active', 1)->required();

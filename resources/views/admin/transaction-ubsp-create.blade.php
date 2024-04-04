@@ -42,140 +42,117 @@
                     </div>
 
                     <div class="card-body">
-                        <form action="{{ route('admin.account_category.store') }}" method="post">
+                        <form action="{{ route('admin.ubsp.transaction.store') }}" method="post">
                             @csrf
                             <div class="mb-3">
                                 <label for="transactionDate">Tanggal Transaksi</label>
-                                <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun" id="transactionDate" name="transactionDate" />
+                                <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun" id="transactionDate" name="transactionDate" required value="{{ old('transactionDate') }}" />
                                 @error('transactionDate')
                                     <p class="mt-1" style="color: red">{{ $message }}</p>
                                 @enderror
                             </div>
 
-                            <div class="alert alert-primary mb-3" role="alert">
-                                <div>
-                                    <h6 class="mb-0">Akun Debit</h6>
-                                </div>
-                                <div id="rowDebit">
-                                    <div class="row m-2 p-2">
-                                        <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
-                                            <label class="form-label">Akun</label>
-                                            <select class="choices form-select" name="accountID[]"><option value="" selected disabled>---Pilih Akun---</option>  
-                                                @foreach ($account as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('accountID[]')
-                                                <p style="color: red">{{ $message }}</p>
-                                            @enderror
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="alert alert-primary mb-3" role="alert">
+                                        <div>
+                                            <h6>Akun Debit</h6>
                                         </div>
-                                        <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
-                                            <label class="form-label">D / K</label>
-                                            <select class="form-select" id="kind" aria-label="kind"
-                                                name="kind">
-                                                <option selected>--- Pilih D / K ---</option>
-                                                <option value="D" {{ old('kind') == 'D' ? 'selected' : '' }}>Debit
-                                                </option>
-                                                <option value="K" {{ old('kind') == 'K' ? 'selected' : '' }}>Kredit
-                                                </option>
-                                            </select>
-                                            @error('kind')
-                                                <p class="mt-1" style="color: red">{{ $message }}</p>
-                                            @enderror
+                                        <div id="rowDebit">
+                                            <div class="row m-2 p-2">
+                                                <div class="mb-3 col-lg-6 col-xl-4 col-12 mb-0">
+                                                    <label class="form-label">Akun</label>
+                                                    <select class="choices form-select" name="debitAccountID[]"><option value="" selected disabled>---Pilih Akun---</option>  
+                                                        @foreach ($account as $item)
+                                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('debitAccountID[]')
+                                                        <p style="color: red">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+                                                <div class="mb-3 col-lg-6 col-xl-4 col-12 mb-0">
+                                                    <label class="form-label">Total</label>
+                                                    <input type="text" class="form-control amountInputDebit" name="amountDebit[]" required value="{{ old('amountDebit[]') }}" />
+                                                    @error('amountDebit[]')
+                                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+                                                <div class="mb-3 col-lg-12 col-xl-4 col-12 d-flex align-items-center mb-0">
+                                                    <button class="btn btn-danger mt-4 deleteRowDebit" style="display: none;">
+                                                        <i class="bx bx-x me-1"></i>
+                                                        <span class="align-middle">Hapus</span>
+                                                    </button>
+                                                </div>
+                                                <hr style="border-top: dotted 1px;"/>
+                                            </div>
                                         </div>
+        
                                         <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
-                                            <label class="form-label">Total</label>
-                                            <input type="text" class="form-control amountInputDebit" name="amountDebit[]" required value="{{ old('amountDebit[]') }}" />
-                                            @error('amountDebit[]')
-                                                <p class="mt-1" style="color: red">{{ $message }}</p>
-                                            @enderror
+                                            <h6>Total Debit:</h6>
+                                            <h6 class="totalDebit" id="totalDebit">0.00</h6>
                                         </div>
-                                        <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
-                                            <button class="btn btn-danger mt-4 deleteRowDebit" style="display: none;">
-                                                <i class="bx bx-x me-1"></i>
-                                                <span class="align-middle">Hapus</span>
+                                        
+        
+                                        <div class="text-end">
+                                            <button class="btn btn-outline-primary" id="addRowDebit">
+                                                <i class="bx bx-plus me-1"></i>
+                                                <span class="align-middle">Tambah Akun Debit</span>
                                             </button>
                                         </div>
-                                        <hr style="border-top: dotted 1px;"/>
                                     </div>
                                 </div>
-
-                                <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
-                                    <h6>Total Debit:</h6>
-                                    <h6 class="totalDebit" id="totalDebit">0.00</h6>
-                                </div>
-                                
-
-                                <div class="text-end">
-                                    <button class="btn btn-primary" id="addRowDebit">
-                                        <i class="bx bx-plus me-1"></i>
-                                        <span class="align-middle">Tambah Akun Debit</span>
-                                    </button>
+                                <div class="col-lg-6">
+                                    <div class="alert alert-primary" role="alert">
+                                        <div>
+                                            <h6>Akun Kredit</h6>
+                                        </div>
+                                        <div id="rowKredit">
+                                            <div class="row m-2 p-2">
+                                                <div class="mb-3 col-lg-6 col-xl-4 col-12 mb-0">
+                                                    <label class="form-label">Akun</label>
+                                                    <select class="choices form-select" name="kreditAccountID[]"><option value="" selected disabled>---Pilih Akun---</option>  
+                                                        @foreach ($account as $item)
+                                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('kreditAccountID[]')
+                                                        <p style="color: red">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+                                                <div class="mb-3 col-lg-6 col-xl-4 col-12 mb-0">
+                                                    <label class="form-label">Total</label>
+                                                    <input type="text" class="form-control amountInputKredit" name="amountKredit[]" required value="{{ old('amountKredit[]') }}" />
+                                                    @error('amountKredit[]')
+                                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+                                                <div class="mb-3 col-lg-12 col-xl-4 col-12 d-flex align-items-center mb-0">
+                                                    <button class="btn btn-danger mt-4 deleteRowKredit" style="display: none;">
+                                                        <i class="bx bx-x me-1"></i>
+                                                        <span class="align-middle">Hapus</span>
+                                                    </button>
+                                                </div>
+                                                <hr style="border-top: dotted 1px;"/>
+                                            </div>
+                                        </div>
+        
+                                        <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
+                                            <h6>Total Kredit:</h6>
+                                            <h6 class="totalKredit" id="totalKredit">0.00</h6>
+                                        </div>
+                                        
+        
+                                        <div class="text-end">
+                                            <button class="btn btn-outline-primary" id="addRowKredit">
+                                                <i class="bx bx-plus me-1"></i>
+                                                <span class="align-middle">Tambah Akun Kredit</span>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="alert alert-primary" role="alert">
-                                <div>
-                                    <h6>Akun Kredit</h6>
-                                </div>
-                                <div id="rowKredit">
-                                    <div class="row m-2 p-2">
-                                        <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
-                                            <label class="form-label">Akun</label>
-                                            <select class="choices form-select" name="accountID[]"><option value="" selected disabled>---Pilih Akun---</option>  
-                                                @foreach ($account as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('accountID[]')
-                                                <p style="color: red">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
-                                            <label class="form-label">D / K</label>
-                                            <select class="form-select" id="kind" aria-label="kind"
-                                                name="kind">
-                                                <option selected>--- Pilih D / K ---</option>
-                                                <option value="D" {{ old('kind') == 'D' ? 'selected' : '' }}>Debit
-                                                </option>
-                                                <option value="K" {{ old('kind') == 'K' ? 'selected' : '' }}>Kredit
-                                                </option>
-                                            </select>
-                                            @error('kind')
-                                                <p class="mt-1" style="color: red">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
-                                            <label class="form-label">Total</label>
-                                            <input type="text" class="form-control amountInputKredit" name="amountKredit[]" required value="{{ old('amountKredit[]') }}" />
-                                            @error('amountKredit[]')
-                                                <p class="mt-1" style="color: red">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
-                                            <button class="btn btn-danger mt-4 deleteRowKredit" style="display: none;">
-                                                <i class="bx bx-x me-1"></i>
-                                                <span class="align-middle">Hapus</span>
-                                            </button>
-                                        </div>
-                                        <hr style="border-top: dotted 1px;"/>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
-                                    <h6>Total Kredit:</h6>
-                                    <h6 class="totalKredit" id="totalKredit">0.00</h6>
-                                </div>
-                                
-
-                                <div class="text-end">
-                                    <button class="btn btn-primary" id="addRowKredit">
-                                        <i class="bx bx-plus me-1"></i>
-                                        <span class="align-middle">Tambah Akun Kredit</span>
-                                    </button>
-                                </div>
-                            </div>
-                            
                             <div class="mb-3">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="description"
@@ -187,18 +164,12 @@
                                     <p class="mt-1" style="color: red">{{ $message }}</p>
                                 @enderror
                             </div>
-
-                            <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
-                                    name="active" checked />
-                                <label class="form-check-label" for="flexSwitchCheckChecked">Aktif?</label>
-                            </div>
                             <div id="overlay">
                                 <div id="lottie-loading"></div>
                             </div>
                             <div class="text-end">
                                 <button type="submit" class="btn btn-primary show_confirm">Tambah
-                                    Kategori</button>
+                                    Transaksi</button>
                             </div>
                         </form>
                     </div>
@@ -296,6 +267,73 @@
                 }
             });
 
+            //event handler (prevent duplicate accountID in debit and kredit)
+            $('select[name="debitAccountID[]"]').change(function() {
+                var selectedAccountId = $(this).val();
+                var isDuplicate = checkDuplicateAccount(selectedAccountId, 'select[name="kreditAccountID[]"]');
+                if (isDuplicate) {
+                    Swal.fire({
+                        title: 'Info',
+                        html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                                '<p class="mt-2">Nomor akun yang sama tidak dapat dipilih di bagian debit dan kredit.</p>',
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        didOpen: () => {
+                            var animation = lottie.loadAnimation({
+                                container: document.getElementById('lottie-container'),
+                                renderer: 'svg',
+                                loop: true,
+                                autoplay: true,
+                                path: '/assets/animations/info.json',
+                                rendererSettings: {
+                                    preserveAspectRatio: 'xMidYMid slice'
+                                }
+                            });
+                        }
+                    });
+                    $(this).val('');
+                }
+            });
+
+            $('select[name="kreditAccountID[]"]').change(function() {
+                var selectedAccountId = $(this).val();
+                var isDuplicate = checkDuplicateAccount(selectedAccountId, 'select[name="debitAccountID[]"]');
+                if (isDuplicate) {
+                    Swal.fire({
+                        title: 'Info',
+                        html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                                '<p class="mt-2">Nomor akun yang sama tidak dapat dipilih di bagian debit dan kredit.</p>',
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        didOpen: () => {
+                            var animation = lottie.loadAnimation({
+                                container: document.getElementById('lottie-container'),
+                                renderer: 'svg',
+                                loop: true,
+                                autoplay: true,
+                                path: '/assets/animations/info.json',
+                                rendererSettings: {
+                                    preserveAspectRatio: 'xMidYMid slice'
+                                }
+                            });
+                        }
+                    });
+                    $(this).val('');
+                }
+            });
+            
+            function checkDuplicateAccount(selectedAccountId, otherSectionSelector) {
+                var isDuplicate = false;
+                $(otherSectionSelector).each(function() {
+                    if ($(this).val() == selectedAccountId) {
+                        isDuplicate = true;
+                        return false;
+                    }
+                });
+                return isDuplicate;
+            }
+            //event handler (prevent duplicate accountID in debit and kredit)
+
             $("#addRowDebit").click(function(event) {
                 event.preventDefault();
 
@@ -363,7 +401,7 @@
                 Swal.fire({
                     title: 'Konfirmasi',
                     html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
-                        '<p class="mt-2">Apakah Anda yakin ingin menambahkan kategori akun ' + item + '?</p>',
+                        '<p class="mt-2">Apakah Anda yakin ingin menambahkan transaksi?</p>',
                     confirmButtonText: 'Ya, Tambah',
                     denyButtonText: 'Batal',
                     customClass: {
@@ -415,7 +453,7 @@
             Swal.fire({
                 title: 'Error',
                 html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
-                        '<p class="mt-2">Data kategori akun belum diisi secara lengkap. Silahkan dicek kembali.</p>',
+                        '<p class="mt-2">Data transaksi UBSP belum diisi secara lengkap. Silahkan dicek kembali.</p>',
                 showCloseButton: true,
                 focusConfirm: false,
                 didOpen: () => {

@@ -42,6 +42,40 @@ class AdminController extends Controller
         return view('admin.angsuran');
     }
 
+    public function saveTransactionUBSP(Request $request) {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'transactionDate' => 'required|date',
+                'debitAccountID.*' => 'required', // Each debit account must be present
+                'kreditAccountID.*' => 'required', // Each credit account must be present
+                'amountDebit.*' => 'required|numeric', // Each debit amount must be numeric
+                'amountKredit.*' => 'required|numeric', // Each credit amount must be numeric
+            ],
+            [
+                'transactionDate.required' => 'Tanggal transaksi belum dipilih',
+                'debitAccountID.*.required' => 'Setiap akun debit harus dipilih',
+                'kreditAccountID.*.required' => 'Setiap akun kredit harus dipilih',
+                'amountDebit.*.required' => 'Setiap total akun kredit harus diisi',
+                'amountKredit.*.required' => 'Setiap total akun kredit harus diisi',
+                'amountDebit.*.numeric' => 'Total akun debit harus berupa angka',
+                'amountKredit.*.numeric' => 'Total akun kredit harus berupa angka',
+            ],
+        );
+
+        foreach($request->debitAccountID as $item) {
+            echo "hmm";
+        }
+
+
+        if ($validator->fails()) {
+            // dd("not valid");
+            return redirect()->back()->withErrors($validator->errors())->withInput();
+        } else {
+            dd("valid");
+        }
+    }
+
     public function showFormData(Transaction $transaction) {
         $parameter = Route::currentRouteName();
 
