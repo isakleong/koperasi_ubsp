@@ -43,6 +43,15 @@ class AdminController extends Controller
     }
 
     public function saveTransactionUBSP(Request $request) {
+        $request->merge([
+            'amountDebit' => array_map(function ($value) {
+                return preg_replace('/[^0-9.]/', '', $value);
+            }, $request->input('amountDebit', [])),
+            'amountKredit' => array_map(function ($value) {
+                return preg_replace('/[^0-9.]/', '', $value);
+            }, $request->input('amountKredit', [])),
+        ]);
+        
         $validator = Validator::make(
             $request->all(),
             [
@@ -63,14 +72,15 @@ class AdminController extends Controller
             ],
         );
 
-        foreach($request->debitAccountID as $item) {
-            echo "hmm";
-        }
-
-
         if ($validator->fails()) {
             // dd("not valid");
-            return redirect()->back()->withErrors($validator->errors())->withInput();
+            // dd($validator->errors());
+            // return redirect()->back()->withErrors($validator->errors())->withInput();
+            // return response()->json( [ 'errors' => $validator->errors() ] );
+            return response()->json([
+                'errors' => $validator->errors(),
+                'oldInput' => $request->all()
+            ]);
         } else {
             dd("valid");
         }
