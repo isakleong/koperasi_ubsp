@@ -49,8 +49,8 @@
                     </div>
 
                     <div class="card-body">
-                        {{-- <form action="{{ route('admin.ubsp.transaction.store') }}" method="post"> --}}
-                        <form id="company_form" method="POST">
+                        <form action="{{ route('admin.ubsp.transaction.store') }}" method="post">
+                        {{-- <form id="company_form" method="POST"> --}}
                             @csrf
                             @if ($errors->any())
                             <div class="alert alert-danger" role="alert">
@@ -91,9 +91,6 @@
                                                     @error('debitAccountID[]')
                                                         <p style="color: red">{{ $message }}</p>
                                                     @enderror
-                                                    {{-- @foreach($errors->get('debitAccountID.0') as $error)
-                                                        <p style="color: red">{{ $error }}</p>
-                                                    @endforeach --}}
                                                 </div>
 
                                                 <div class="col-lg-6 col-xl-5 col-12 mb-2">
@@ -242,7 +239,8 @@
                     digitGroupSeparator: ',',
                     decimalCharacter: '.',
                     emptyInputBehavior: "zero",
-                    watchExternalChanges: true
+                    watchExternalChanges: true,
+                    modifyValueOnWheel: false
                 });
             });
 
@@ -252,7 +250,8 @@
                     digitGroupSeparator: ',',
                     decimalCharacter: '.',
                     emptyInputBehavior: "zero",
-                    watchExternalChanges: true
+                    watchExternalChanges: true,
+                    modifyValueOnWheel: false
                 });
             });
 
@@ -261,7 +260,8 @@
                 digitGroupSeparator: ',',
                 decimalCharacter: '.',
                 emptyInputBehavior: "zero",
-                watchExternalChanges: true
+                watchExternalChanges: true,
+                modifyValueOnWheel: false
             });
 
             new AutoNumeric('.totalKredit', {
@@ -269,7 +269,8 @@
                 digitGroupSeparator: ',',
                 decimalCharacter: '.',
                 emptyInputBehavior: "zero",
-                watchExternalChanges: true
+                watchExternalChanges: true,
+                modifyValueOnWheel: false
             });
 
             function updateTotal(kind) {
@@ -286,7 +287,8 @@
                         digitGroupSeparator: ',',
                         decimalCharacter: '.',
                         emptyInputBehavior: "zero",
-                        watchExternalChanges: true
+                        watchExternalChanges: true,
+                        modifyValueOnWheel: false
                     });
                 } else {
                     var totalKredit = 0;
@@ -301,7 +303,8 @@
                         digitGroupSeparator: ',',
                         decimalCharacter: '.',
                         emptyInputBehavior: "zero",
-                        watchExternalChanges: true
+                        watchExternalChanges: true,
+                        modifyValueOnWheel: false
                     });
                 }
             }
@@ -339,7 +342,8 @@
                             });
                         }
                     });
-                    $(this).val('');
+                    $(this).val("default");
+                    $(this).trigger("change");
                 }
             });
 
@@ -367,7 +371,8 @@
                             });
                         }
                     });
-                    $(this).val('');
+                    $(this).val("default");
+                    $(this).trigger("change");
                 }
             });
 
@@ -401,7 +406,8 @@
                         digitGroupSeparator: ',',
                         decimalCharacter: '.',
                         emptyInputBehavior: "zero",
-                        watchExternalChanges: true
+                        watchExternalChanges: true,
+                        modifyValueOnWheel: false
                     });
                 });
 
@@ -429,7 +435,8 @@
                         digitGroupSeparator: ',',
                         decimalCharacter: '.',
                         emptyInputBehavior: "zero",
-                        watchExternalChanges: true
+                        watchExternalChanges: true,
+                        modifyValueOnWheel: false
                     });
                 });
 
@@ -460,6 +467,10 @@
             $(".dob-picker").flatpickr({
                 monthSelectorType: "static",
                 dateFormat: "d-m-Y"
+            });
+
+            $('input[type=text]').on("scroll", function(){
+                $(this).scrollLeft(0);
             });
 
             $('.show_confirm').click(function(event) {
@@ -497,80 +508,42 @@
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // form.submit();
-                        let formz = $('#company_form')[0];
-                        let data = new FormData(formz);
+                        form.submit();
+                        // let formz = $('#company_form')[0];
+                        // let data = new FormData(formz);
 
-                        $.ajax({
-                            url: "{{ route('admin.ubsp.transaction.store') }}",
-                            type: "POST",
-                            data: data,
-                            dataType: "JSON",
-                            processData: false,
-                            contentType: false,
-                            success: function (response) {
-                                console.log('masuk success');
-                                if (response.errors) {
-                                    // Show validation errors
-                                    var errorMsg = '';
-                                    $.each(response.errors, function (field, errors) {
-                                        $.each(errors, function (index, error) {
-                                            errorMsg += error + '<br>';
-                                        });
-                                        // Show validation error messages next to corresponding input fields
-                                        $('[name="' + field + '"]').after('<p class="mt-1" style="color: red">' + errors[0] + '</p>');
-                                    });
-                                } else {
-                                    iziToast.success({
-                                        message: response.success,
-                                        position: 'topRight'
-                                    });
-                                }
-                            },
-                            error: function (xhr, status, error) {
-                                console.log('masuk error');
-                                iziToast.error({
-                                    message: 'An error occurred: ' + error,
-                                    position: 'topRight'
-                                });
-                            }
-                        });
-
-                        
                         // $.ajax({
-                        //     headers: {
-                        //         'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-                        //     },
                         //     url: "{{ route('admin.ubsp.transaction.store') }}",
                         //     type: "POST",
-                        //     data : data,
-                        //     dataType:"JSON",
-                        //     processData : false,
-                        //     contentType:false,
-                        //     success: function(response) {
+                        //     data: data,
+                        //     dataType: "JSON",
+                        //     processData: false,
+                        //     contentType: false,
+                        //     success: function (response) {
                         //         console.log('masuk success');
                         //         if (response.errors) {
+                        //             console.log('ini error');
+                        //             // Show validation errors
                         //             var errorMsg = '';
-                        //             $.each(response.errors, function(field, errors) {
-                        //                 $.each(errors, function(index, error) {
+                        //             $.each(response.errors, function (field, errors) {
+                        //                 console.log(field);
+                        //                 console.log(errors);
+                        //                 $.each(errors, function (index, error) {
                         //                     errorMsg += error + '<br>';
                         //                 });
+                        //                 // Show validation error messages next to corresponding input fields
+                        //                 $('[name="' + field + '"]').after('<p class="mt-1" style="color: blue">' + errors[0] + '</p>');
                         //             });
-                        //             iziToast.error({
-                        //                 message: errorMsg,
-                        //                 position: 'topRight'
-                        //             });
-                                    
                         //         } else {
+                        //             console.log('ini success');
                         //             iziToast.success({
                         //                 message: response.success,
                         //                 position: 'topRight'
                         //             });
-                        //         }           
+                        //         }
                         //     },
-                        //     error: function(xhr, status, error) {
+                        //     error: function (xhr, status, error) {
                         //         console.log('masuk error');
-                        //         console.log(error);
                         //         iziToast.error({
                         //             message: 'An error occurred: ' + error,
                         //             position: 'topRight'
@@ -599,6 +572,36 @@
                 return true;
             });
         });
+
+        function showResultDialog(type) {
+            Swal.fire({
+                title: type === 'success' ? 'Berhasil' : 'Error',
+                html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                        '<p class="mt-2">' + (type === 'success' ? "{{ Session::get('success') }}" : "{{ Session::get('errorData') }}") + '</p>',
+                showCloseButton: true,
+                focusConfirm: false,
+                didOpen: () => {
+                    var animation = lottie.loadAnimation({
+                        container: document.getElementById('lottie-container'),
+                        renderer: 'svg',
+                        loop: true,
+                        autoplay: true,
+                        path: type === 'success' ? '/assets/animations/success.json' : '/assets/animations/error.json',
+                        rendererSettings: {
+                            preserveAspectRatio: 'xMidYMid slice'
+                        }
+                    });
+                }
+            });
+        }
+
+        @if ($message = session('errorData'))
+            showResultDialog('error');
+        @endif
+
+        @if ($message = session('success'))
+            showResultDialog('success');
+        @endif
 
         @if ($message = session('errors'))
             Swal.fire({

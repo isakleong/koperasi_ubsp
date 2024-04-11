@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('memberId')->required();
             $table->foreign('memberId')->references('memberId')->on('users')->onDelete('restrict');
             $table->timestamp('transactionDate')->nullable();
-            $table->bigInteger('totalDebit');
-            $table->bigInteger('totalKredit');
+            $table->decimal('totalDebit', 10, 2);
+            $table->decimal('totalKredit', 10, 2);
             $table->tinyInteger('method');
             $table->string('notes')->nullable();
             $table->timestamps();

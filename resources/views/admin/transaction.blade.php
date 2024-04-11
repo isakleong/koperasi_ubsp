@@ -10,7 +10,7 @@
             <span class="fw-light">Beranda Transaksi</span>
         </h4>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-12 col-xl-6 col-12">
                 <div class="card mb-4 bg-gradient-primary">
                     <div class="card-body">
                         <div class="row justify-content-between mb-3">
@@ -29,7 +29,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-12">
+            <div class="col-lg-12 col-xl-6 col-12">
                 <div class="card mb-4 bg-gradient-warning">
                     <div class="card-body">
                         <div class="row justify-content-between mb-3">

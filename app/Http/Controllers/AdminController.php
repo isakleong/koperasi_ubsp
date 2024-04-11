@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use App\Models\AccountTransaction;
 use App\Models\User;
 use App\Models\Config;
 use App\Models\Transaction;
 use App\Models\UserAccount;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -45,10 +47,10 @@ class AdminController extends Controller
     public function saveTransactionUBSP(Request $request) {
         $request->merge([
             'amountDebit' => array_map(function ($value) {
-                return preg_replace('/[^0-9.]/', '', $value);
+                return str_replace(['Rp ', ','], '', $value);
             }, $request->input('amountDebit', [])),
             'amountKredit' => array_map(function ($value) {
-                return preg_replace('/[^0-9.]/', '', $value);
+                return str_replace(['Rp ', ','], '', $value);
             }, $request->input('amountKredit', [])),
         ]);
         
@@ -56,10 +58,10 @@ class AdminController extends Controller
             $request->all(),
             [
                 'transactionDate' => 'required|date',
-                'debitAccountID.*' => 'required', // Each debit account must be present
-                'kreditAccountID.*' => 'required', // Each credit account must be present
-                'amountDebit.*' => 'required|numeric', // Each debit amount must be numeric
-                'amountKredit.*' => 'required|numeric', // Each credit amount must be numeric
+                'debitAccountID.*' => 'required',
+                'kreditAccountID.*' => 'required',
+                'amountDebit.*' => 'required|decimal:0,2',
+                'amountKredit.*' => 'required|decimal:0,2',
             ],
             [
                 'transactionDate.required' => 'Tanggal transaksi belum dipilih',
@@ -67,22 +69,62 @@ class AdminController extends Controller
                 'kreditAccountID.*.required' => 'Setiap akun kredit harus dipilih',
                 'amountDebit.*.required' => 'Setiap total akun kredit harus diisi',
                 'amountKredit.*.required' => 'Setiap total akun kredit harus diisi',
-                'amountDebit.*.numeric' => 'Total akun debit harus berupa angka',
-                'amountKredit.*.numeric' => 'Total akun kredit harus berupa angka',
+                'amountDebit.*.decimal:0,2' => 'Total akun debit harus berupa angka',
+                'amountKredit.*.decimal:0,2' => 'Total akun kredit harus berupa angka',
             ],
         );
 
         if ($validator->fails()) {
-            // dd("not valid");
-            // dd($validator->errors());
-            // return redirect()->back()->withErrors($validator->errors())->withInput();
+            dd("catch 1");
+            return redirect()->back()->withErrors($validator->errors())->withInput();
+            
             // return response()->json( [ 'errors' => $validator->errors() ] );
-            return response()->json([
-                'errors' => $validator->errors(),
-                'oldInput' => $request->all()
-            ]);
+            // return response()->json([
+            //     'errors' => $validator->errors(),
+            //     'oldInput' => $request->all()
+            // ]);
         } else {
-            dd("valid");
+            DB::beginTransaction();
+            try {
+                $input = $request->all();
+
+                $totalDebit = 0;
+                $totalKredit = 0;
+                foreach ($input['amountDebit'] as $item) {
+                    $totalDebit += $item;
+                }
+
+                foreach ($input['amountKredit'] as $item) {
+                    $totalKredit += $item;
+                }
+
+                //insert into account transaction
+                $now = Carbon::now();
+                $timestamp = $now->format('ymdHi');
+
+                $totalData = AccountTransaction::where('transactionDate', 'LIKE', '%'.$input['transactionDate'].'%')->count();
+
+                $idx = "000".strval($totalData+1);
+                $cnt = substr($idx, -3);
+                $docId = 'TR-UBSP-'.$timestamp.'-'.$cnt;
+
+                $model = new AccountTransaction();
+                $model->fill($input);
+                $model->docId = $docId;
+                $model->totalDebit = $totalDebit;
+                $model->totalKredit = $totalKredit;
+                $model->method = 1;
+                dd($model);
+                $model->save();
+
+                dd("catch 2");
+
+                DB::commit();
+            } catch (\Exception $e) {
+                dd("catch 3 ".$e->getMessage());
+                DB::rollback();
+                return redirect('/admin/transaction/ubsp')->with('errorData', $e->getMessage());
+            }
         }
     }
 

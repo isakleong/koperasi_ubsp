@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('accountNo')->required();
             $table->foreign('accountNo')->references('accountNo')->on('account')->onDelete('restrict');
             $table->string('kind', 1)->required();
-            $table->bigInteger('total');
+            $table->decimal('total', 10, 2);
             $table->timestamps();
         });
     }
