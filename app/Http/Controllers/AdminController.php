@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Models\AccountTransaction;
+use App\Models\AccountTransactionDetail;
+use App\Models\AccountTransactionImage;
 use App\Models\User;
 use App\Models\Config;
 use App\Models\Transaction;
@@ -102,6 +104,7 @@ class AdminController extends Controller
                 $now = Carbon::now();
                 $timestamp = $now->format('ymdHi');
 
+                $input['transactionDate'] = date('Y-m-d', strtotime($input['transactionDate']));
                 $totalData = AccountTransaction::where('transactionDate', 'LIKE', '%'.$input['transactionDate'].'%')->count();
 
                 $idx = "000".strval($totalData+1);
@@ -111,13 +114,54 @@ class AdminController extends Controller
                 $model = new AccountTransaction();
                 $model->fill($input);
                 $model->docId = $docId;
+                $model->kind = 'others';
                 $model->totalDebit = $totalDebit;
                 $model->totalKredit = $totalKredit;
-                $model->method = 1;
-                dd($model);
                 $model->save();
 
-                dd("catch 2");
+                //insert account transaction detail
+                $cntIndex = 0;
+                foreach ($input['debitAccountID'] as $index => $accountNo) {
+                    $detail = new AccountTransactionDetail();
+                    $detail->docId = $docId;
+                    $detail->indexNo = $cntIndex;
+                    $detail->accountNo = $accountNo;
+                    $detail->kind = 'D';
+                    $detail->total = $input['amountDebit'][$index];
+                    $detail->save();
+                    $cntIndex++;
+                }
+
+                foreach ($input['kreditAccountID'] as $index => $accountNo) {
+                    $detail = new AccountTransactionDetail();
+                    $detail->docId = $docId;
+                    $detail->indexNo = $cntIndex;
+                    $detail->accountNo = $accountNo;
+                    $detail->kind = 'K';
+                    $detail->total = $input['amountKredit'][$index];
+                    $detail->save();
+                    $cntIndex++;
+                }
+
+                //insert account transaction image
+                if($imageData = $request->file('image')) {
+                    dd("hmm");
+                    foreach ($imageData as $index => $image) {
+                        $destinationPath = 'image/upload/ubsp/transaction/';
+                        File::makeDirectory($destinationPath, 0777, true, true);
+                        $imageName = $docId.'-'.$index.$imageData->getClientOriginalExtension();
+            
+                        AccountTransactionImage::create([
+                            'docId' => $docId,
+                            'indexNo' => $index,
+                            'image' => $destinationPath.$imageName,
+                        ]);
+
+                        $index++;
+                    }
+                } else {
+                    dd("wow");
+                }
 
                 DB::commit();
             } catch (\Exception $e) {

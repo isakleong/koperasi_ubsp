@@ -16,10 +16,11 @@ return new class extends Migration
             $table->string('docId')->unique();
             $table->string('memberId')->nullable();
             $table->foreign('memberId')->references('memberId')->on('users')->onDelete('restrict');
-            $table->timestamp('transactionDate');
+            $table->date('transactionDate');
             $table->decimal('totalDebit', 10, 2);
             $table->decimal('totalKredit', 10, 2);
-            $table->tinyInteger('method');
+            $table->string('kind', 10);
+            $table->tinyInteger('method')->nullable();
             $table->string('notes')->nullable();
             $table->timestamps();
         });

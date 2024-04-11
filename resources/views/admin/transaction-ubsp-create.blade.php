@@ -5,6 +5,12 @@
     <link rel="stylesheet" href="/administrator/libs/select2/select2.min.css" />
     <link rel="stylesheet" href="/administrator/libs/select2/select2-bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+    <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
+
+    <link rel='stylesheet'
+        href='https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'>
+    <link rel='stylesheet' href='https://unpkg.com/filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css'>
+
     <style>
         #overlay {
             display: none;
@@ -32,6 +38,32 @@
         .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
             color: #566a7f;
         }
+
+        .filepond--drop-label {
+            color: #4c4e53;
+        }
+
+        .filepond--label-action {
+            text-decoration-color: #babdc0;
+        }
+
+        .filepond--panel-root {
+            border-radius: 2em;
+            background-color: #edf0f4;
+            height: 1em;
+        }
+
+        .filepond--item-panel {
+            background-color: #595e68;
+        }
+
+        .filepond--drip-blob {
+            background-color: #7f8a9a;
+        }
+
+        .filepond--item {
+            width: calc(20% - 0.5em);
+        }
     </style>
 @endsection
 
@@ -49,7 +81,7 @@
                     </div>
 
                     <div class="card-body">
-                        <form action="{{ route('admin.ubsp.transaction.store') }}" method="post">
+                        <form action="{{ route('admin.ubsp.transaction.store') }}" method="post" enctype="multipart/form-data">
                         {{-- <form id="company_form" method="POST"> --}}
                             @csrf
                             @if ($errors->any())
@@ -85,7 +117,7 @@
                                                         name="debitAccountID[]">
                                                         <option></option>
                                                         @foreach ($account as $item)
-                                                            <option value="{{ $item }}">{{ $item->name }}</option>
+                                                            <option value="{{ $item->accountNo }}">{{ $item->name }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('debitAccountID[]')
@@ -135,7 +167,7 @@
                                                         name="kreditAccountID[]">
                                                         <option></option>
                                                         @foreach ($account as $item)
-                                                            <option value="{{ $item }}">{{ $item->name }}</option>
+                                                            <option value="{{ $item->accountNo }}">{{ $item->name }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('kreditAccountID[]')
@@ -188,6 +220,13 @@
                                     <p class="mt-1" style="color: red">{{ $message }}</p>
                                 @enderror
                             </div>
+                            <div class="divider divider-dashed">
+                                <div class="divider-text" style="font-size: 1rem;">Bukti Transaksi</div>
+                            </div>
+                            <div class="mb-3">
+                                <input type="file" name="image" id='image' class='p-5' multiple data-allow-reorder="true"
+                                data-max-file-size="3MB" data-max-files="4" accept="image/*">
+                            </div>
                             <div id="overlay">
                                 <div id="lottie-loading"></div>
                             </div>
@@ -212,6 +251,41 @@
     <script src="/administrator/libs/select2/select2-bootstrap.bundle.min.js"></script>
     <script src="/administrator/libs/select2/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+    
+    <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-poster/dist/filepond-plugin-file-poster.js"></script>
+
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src='https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.min.js'></script>
+    <script src='https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.min.js'>
+    </script>
+    <script
+        src='https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.min.js'>
+    </script>
+
+    <script>
+        FilePond.registerPlugin(
+            // encodes the file as base64 data
+            FilePondPluginFileEncode,
+                
+            // validates the size of the file
+            FilePondPluginFileValidateSize,
+            
+            // corrects mobile image orientation
+            FilePondPluginImageExifOrientation,
+            
+            FilePondPluginFilePoster,
+            
+            // previews dropped images
+            FilePondPluginImagePreview
+        );
+
+        const inputElement = document.querySelector('input[id="image"]');
+
+        FilePond.create(
+            inputElement
+        );
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
