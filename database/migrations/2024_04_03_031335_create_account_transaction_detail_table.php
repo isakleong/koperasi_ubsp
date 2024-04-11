@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('indexNo');
             $table->string('accountNo')->required();
             $table->foreign('accountNo')->references('accountNo')->on('account')->onDelete('restrict');
-            $table->string('kind', 1)->required();
+            $table->string('kind', 1);
             $table->decimal('total', 10, 2);
             $table->timestamps();
         });

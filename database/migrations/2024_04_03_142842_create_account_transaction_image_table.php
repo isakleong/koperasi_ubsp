@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('docId')->required();
             $table->foreign('docId')->references('docId')->on('account_transaction')->onDelete('restrict');
-            $table->integer('indexNo')->required();
-            $table->string('image')->required();
+            $table->integer('indexNo');
+            $table->string('image');
             $table->timestamps();
         });
     }
