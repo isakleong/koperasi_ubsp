@@ -24,7 +24,7 @@
                                     class="w-60 m-2" style="mix-blend-mode: multiply;filter: contrast(1);"></span>
                         </div>
 
-                        <a href="{{ route('admin.ubsp.transaction') }}" class="btn btn-white text-primary w-100 fw-medium shadow-sm">Tambah Transaksi</a>
+                        <a href="{{ route('admin.ubsp.transaction') }}" class="btn btn-white text-primary w-100 fw-medium shadow-sm">Transaksi UBSP</a>
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                                     src="/assets/images/member.jpg" class="w-75 m-2" style="mix-blend-mode: multiply;filter: contrast(1);"></span>
                         </div>
 
-                        <a href="{{ route('admin.member.transaction') }}" class="btn btn-white text-warning w-100 fw-medium shadow-sm">Tambah Transaksi</a>
+                        <a href="{{ route('admin.member.transaction') }}" class="btn btn-white text-warning w-100 fw-medium shadow-sm">Transaksi Anggota</a>
                     </div>
                 </div>
             </div>

@@ -25,4 +25,9 @@ class AccountTransactionDetail extends Model
     public function accountTransaction() {
         return $this->belongsTo(AccountTransaction::class, 'docId', 'docId');
     }
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 'accountNo', 'accountNo');
+    }
 }

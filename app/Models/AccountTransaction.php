@@ -16,6 +16,7 @@ class AccountTransaction extends Model
         'docId',
         'memberId',
         'transactionDate',
+        'kind',
         'totalDebit',
         'totalKredit',
         'method',
@@ -23,6 +24,16 @@ class AccountTransaction extends Model
     ];
 
     public function accountTransactionDetail(){
-        return $this->hasMany(AccountTransactionDetail::class, 'docId');
+        return $this->hasMany(AccountTransactionDetail::class, 'docId', 'docId');
+    }
+
+    public function debitDetail()
+    {
+        return $this->hasMany(AccountTransactionDetail::class, 'docId', 'docId')->where('kind', 'D');
+    }
+
+    public function creditDetail()
+    {
+        return $this->hasMany(AccountTransactionDetail::class, 'docId', 'docId')->where('kind', 'K');
     }
 }

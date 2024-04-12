@@ -47,7 +47,7 @@
                     </div>
 
                     <div class="card-body">
-                        {{-- @if (count($category) == 0)
+                        @if (count($transaction) == 0)
                             <div class="container-xxl container-p-y text-center">
                                 <div class="misc-wrapper">
                                     <div class="mb-4">
@@ -56,38 +56,51 @@
                                             data-app-dark-img="illustrations/page-misc-error-dark.png"
                                             data-app-light-img="illustrations/page-misc-error-light.png" />
                                     </div>
-                                    <h5 class="mb-4 mx-2">Tidak ada daftar kategori akun.</h5>
+                                    <h5 class="mb-4 mx-2">Tidak ada daftar transaksi UBSP.</h5>
                                 </div>
                             </div>
                         @else                            
                             <table class="table caption-top table-sm table-bordered table-hover table-striped" id="table1" style="width: 100%">
-                                <caption><h5 class="text-center">Daftar Kategori Akun</h5></caption>
+                                <caption><h5 class="text-center">Daftar Transaksi UBSP</h5></caption>
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>Nama Kategori</th>
-                                        <th>Urutan Prioritas</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
+                                        <th rowspan="2">No</th>
+                                        <th rowspan="2">#ID</th>
+                                        <th rowspan="3">Tanggal</th>
+                                        <th colspan="2">Akun</th>
+                                        <th colspan="2">Total</th>
+                                        <th rowspan="2">Keterangan</th>
+                                        <th rowspan="2">Aksi</th>
+                                      </tr>
+                                    <tr>
+                                        <th>Debit</th>
+                                        <th>Kredit</th>
+                                        <th>Debit</th>
+                                        <th>Kredit</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @php
                                         $i = 1;
                                     @endphp
-                                    @foreach ($category as $item)
+                                    @foreach ($transaction as $item)
                                         <tr>
                                             <td>{{ $i++ }}</td>
-                                            <td>{{ $item->name }}</td>
-                                            <td>{{ $item->orderNumber }}</td>
-                                            @if ($item->active == '1')
-                                                <td><span class="badge bg-success">Aktif</span></td>
-                                            @else
-                                                <td><span class="badge bg-danger">Tidak Aktif</span></td>
-                                            @endif
-                                            <div id="overlay">
-                                                <div id="lottie-loading"></div>
-                                            </div>
+                                            <td>{{ $item->docId }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($item->transactionDate)->format('d-m-Y') }}</td>
+                                            <td>
+                                                @foreach($item->debitDetail as $detail)
+                                                    {{ $detail->account->name }}
+                                                @endforeach
+                                            </td>
+                                            <td>
+                                                @foreach($item->creditDetail as $detail)
+                                                    {{ $detail->account->name }}
+                                                @endforeach
+                                            </td>
+                                            <td>{{ $item->totalDebit }}</td>
+                                            <td>{{ $item->totalKredit }}</td>
+                                            <td>{{ $item->notes }}</td>
                                             <td>
                                                 <a href="{{ route('admin.account_category.edit', $item->id) }}"
                                                     class="btn icon btn-sm btn-primary d-inline-block m-1"
@@ -104,10 +117,13 @@
                                                 </form>
                                             </td>
                                         </tr>
+                                        <div id="overlay">
+                                            <div id="lottie-loading"></div>
+                                        </div>
                                     @endforeach
                                 </tbody>
                             </table>
-                        @endif --}}
+                        @endif
                     </div>
                 </div>
             </div>

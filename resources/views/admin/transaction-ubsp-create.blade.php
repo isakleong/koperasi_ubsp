@@ -5,11 +5,15 @@
     <link rel="stylesheet" href="/administrator/libs/select2/select2.min.css" />
     <link rel="stylesheet" href="/administrator/libs/select2/select2-bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
-    <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
 
-    <link rel='stylesheet'
-        href='https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'>
-    <link rel='stylesheet' href='https://unpkg.com/filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css'>
+    {{-- <link href="/vendor/filepond/css/filepond.css" rel="stylesheet" />
+    <link rel='stylesheet' href='/vendor/filepond/css/filepond-plugin-image-preview.min.css'>
+    <link rel='stylesheet' href='/vendor/filepond/css/filepond-plugin-file-poster.css'> --}}
+
+    {{-- alternatif 2 --}}
+    <link rel="stylesheet" href="/main/assets/extensions/filepond/filepond.css">
+    <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
+    <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
 
     <style>
         #overlay {
@@ -38,7 +42,9 @@
         .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
             color: #566a7f;
         }
+    </style>
 
+    <style>
         .filepond--drop-label {
             color: #4c4e53;
         }
@@ -49,8 +55,7 @@
 
         .filepond--panel-root {
             border-radius: 2em;
-            background-color: #edf0f4;
-            height: 1em;
+            background-color: #f3e9fa;
         }
 
         .filepond--item-panel {
@@ -59,10 +64,6 @@
 
         .filepond--drip-blob {
             background-color: #7f8a9a;
-        }
-
-        .filepond--item {
-            width: calc(20% - 0.5em);
         }
     </style>
 @endsection
@@ -81,17 +82,18 @@
                     </div>
 
                     <div class="card-body">
-                        <form action="{{ route('admin.ubsp.transaction.store') }}" method="post" enctype="multipart/form-data">
-                        {{-- <form id="company_form" method="POST"> --}}
+                        <form action="{{ route('admin.ubsp.transaction.store') }}" method="post"
+                            enctype="multipart/form-data">
+                            {{-- <form id="company_form" method="POST"> --}}
                             @csrf
                             @if ($errors->any())
-                            <div class="alert alert-danger" role="alert">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
+                                <div class="alert alert-danger" role="alert">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             @endif
                             <div class="mb-3">
                                 <label>Tanggal Transaksi</label>
@@ -110,11 +112,11 @@
                                             <h6>Akun Debit</h6>
                                         </div>
                                         <div id="rowDebit">
-                                            <div class="row mb-3 mx-1 p-1" style="background-color: #f8f8ff; border-radius: 16px;">
+                                            <div class="row mb-3 mx-1 p-1"
+                                                style="background-color: #f8f8ff; border-radius: 16px;">
                                                 <div class="col-lg-6 col-xl-5 col-12 mb-2">
                                                     <label>Akun</label>
-                                                    <select class="choices form-select select2 debitAccount"
-                                                        name="debitAccountID[]">
+                                                    <select class="choices form-select select2 debitAccount" name="debitAccountID[]">
                                                         <option></option>
                                                         @foreach ($account as $item)
                                                             <option value="{{ $item->accountNo }}">{{ $item->name }}</option>
@@ -160,14 +162,16 @@
                                             <h6>Akun Kredit</h6>
                                         </div>
                                         <div id="rowKredit">
-                                            <div class="row mb-3 mx-1 p-1" style="background-color: #f8f8ff; border-radius: 16px;">
+                                            <div class="row mb-3 mx-1 p-1"
+                                                style="background-color: #f8f8ff; border-radius: 16px;">
                                                 <div class="col-lg-6 col-xl-5 col-12 mb-2">
                                                     <label>Akun</label>
                                                     <select class="choices form-select select2 kreditAccount"
                                                         name="kreditAccountID[]">
                                                         <option></option>
                                                         @foreach ($account as $item)
-                                                            <option value="{{ $item->accountNo }}">{{ $item->name }}</option>
+                                                            <option value="{{ $item->accountNo }}">{{ $item->name }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                     @error('kreditAccountID[]')
@@ -223,15 +227,27 @@
                             <div class="divider divider-dashed">
                                 <div class="divider-text" style="font-size: 1rem;">Bukti Transaksi</div>
                             </div>
-                            <div class="mb-3">
+                            {{-- <div class="mb-3">
                                 <input type="file" name="image" id='image' class='p-5' multiple data-allow-reorder="true"
                                 data-max-file-size="3MB" data-max-files="4" accept="image/*">
+                            </div> --}}
+
+                            <div class="mb-3">
+                                <input type="file" class="image-resize-filepond" name="image[]" id="image" accept="image/*" multiple >
+
+                                {{-- <input type="file" class="multiple-files-filepond" multiple name="image[]" id="image"> --}}
+
+                                @error('image')
+                                    <p class="mt-1" style="color: red">{{ $message }}</p>
+                                @enderror
                             </div>
+
                             <div id="overlay">
                                 <div id="lottie-loading"></div>
                             </div>
                             <div class="text-end">
-                                <button type="submit" class="btn btn-primary show_confirm" id="company_form_btn">Tambah Transaksi</button>
+                                <button type="submit" class="btn btn-primary show_confirm" id="company_form_btn">Tambah
+                                    Transaksi</button>
                             </div>
                         </form>
                     </div>
@@ -251,407 +267,64 @@
     <script src="/administrator/libs/select2/select2-bootstrap.bundle.min.js"></script>
     <script src="/administrator/libs/select2/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+    <script src="/administrator/assets/js/account-transaction.js"></script>
     
-    <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-file-poster/dist/filepond-plugin-file-poster.js"></script>
+    {{-- <script src="/vendor/filepond/js/filepond.js"></script>
+    <script src="/vendor/filepond/js/filepond-plugin-file-poster.js"></script>
+    <script src="/vendor/filepond/js/filepond-plugin-image-preview.js"></script>
+    <script src='/vendor/filepond/js/filepond-plugin-file-encode.min.js'></script>
+    <script src='/vendor/filepond/js/filepond-plugin-file-validate-size.min.js'></script>
+    <script src="/vendor/filepond/js/filepond-plugin-file-validate-type.js"></script>
+    <script src='/vendor/filepond/js/filepond-plugin-image-exif-orientation.min.js'></script> --}}
 
-    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
-    <script src='https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.min.js'></script>
-    <script src='https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.min.js'>
+    {{-- alternatif 2 --}}
+    <script src="/main/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js">
     </script>
-    <script
-        src='https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.min.js'>
+    <script src="/main/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js">
     </script>
+    <script src="/main/assets/extensions/filepond-plugin-image-crop/filepond-plugin-image-crop.min.js"></script>
+    <script src="/main/assets/extensions/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js">
+    </script>
+    <script src="/main/assets/extensions/filepond-plugin-image-filter/filepond-plugin-image-filter.min.js"></script>
+    <script src="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js"></script>
+    <script src="/main/assets/extensions/filepond-plugin-image-resize/filepond-plugin-image-resize.min.js"></script>
+    <script src="/main/assets/extensions/filepond/filepond.js"></script>
+    <script src="/main/assets/static/js/pages/filepond.js"></script>
 
-    <script>
+    {{-- <script>
         FilePond.registerPlugin(
             // encodes the file as base64 data
             FilePondPluginFileEncode,
-                
+
             // validates the size of the file
             FilePondPluginFileValidateSize,
-            
+
+            FilePondPluginFileValidateType,
+
             // corrects mobile image orientation
             FilePondPluginImageExifOrientation,
-            
+
             FilePondPluginFilePoster,
-            
+
             // previews dropped images
             FilePondPluginImagePreview
-        );
-
-        const inputElement = document.querySelector('input[id="image"]');
-
-        FilePond.create(
-            inputElement
-        );
-    </script>
+        )
+        // Get a reference to the file input element
+        const inputElement = document.querySelector('input[type="file"]');
+    
+        // Create a FilePond instance
+        const pond = FilePond.create(inputElement, {
+            acceptedFileTypes: ['image/*']
+        });
+    </script> --}}
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.debitAccount').forEach(function(input) {
-                $(input).select2({
-                    placeholder: 'Pilih Akun Debit',
-                    allowClear: true,
-                    theme: 'bootstrap-5',
-                    width: '100%',
-                });
-            });
-
-            document.querySelectorAll('.kreditAccount').forEach(function(input) {
-                $(input).select2({
-                    placeholder: 'Pilih Akun Kredit',
-                    allowClear: true,
-                    theme: 'bootstrap-5',
-                    width: '100%',
-                });
-            });
-
-            document.querySelectorAll('.amountInputDebit').forEach(function(input) {
-                new AutoNumeric(input, {
-                    currencySymbol: 'Rp ',
-                    digitGroupSeparator: ',',
-                    decimalCharacter: '.',
-                    emptyInputBehavior: "zero",
-                    watchExternalChanges: true,
-                    modifyValueOnWheel: false
-                });
-            });
-
-            document.querySelectorAll('.amountInputKredit').forEach(function(input) {
-                new AutoNumeric(input, {
-                    currencySymbol: 'Rp ',
-                    digitGroupSeparator: ',',
-                    decimalCharacter: '.',
-                    emptyInputBehavior: "zero",
-                    watchExternalChanges: true,
-                    modifyValueOnWheel: false
-                });
-            });
-
-            new AutoNumeric('.totalDebit', {
-                currencySymbol: 'Rp ',
-                digitGroupSeparator: ',',
-                decimalCharacter: '.',
-                emptyInputBehavior: "zero",
-                watchExternalChanges: true,
-                modifyValueOnWheel: false
-            });
-
-            new AutoNumeric('.totalKredit', {
-                currencySymbol: 'Rp ',
-                digitGroupSeparator: ',',
-                decimalCharacter: '.',
-                emptyInputBehavior: "zero",
-                watchExternalChanges: true,
-                modifyValueOnWheel: false
-            });
-
-            function updateTotal(kind) {
-                if (kind == 'debit') {
-                    var totalDebit = 0;
-                    var debitInput = document.querySelectorAll('.amountInputDebit');
-                    debitInput.forEach(function(item) {
-                        var val = AutoNumeric.getNumericString(item);
-                        totalDebit += parseFloat(val);
-                    });
-                    document.getElementById("totalDebit").textContent = totalDebit;
-                    new AutoNumeric('.totalDebit', {
-                        currencySymbol: 'Rp ',
-                        digitGroupSeparator: ',',
-                        decimalCharacter: '.',
-                        emptyInputBehavior: "zero",
-                        watchExternalChanges: true,
-                        modifyValueOnWheel: false
-                    });
-                } else {
-                    var totalKredit = 0;
-                    var kreditInput = document.querySelectorAll('.amountInputKredit');
-                    kreditInput.forEach(function(item) {
-                        var val = AutoNumeric.getNumericString(item);
-                        totalKredit += parseFloat(val);
-                    });
-                    document.getElementById("totalKredit").textContent = totalKredit;
-                    new AutoNumeric('.totalKredit', {
-                        currencySymbol: 'Rp ',
-                        digitGroupSeparator: ',',
-                        decimalCharacter: '.',
-                        emptyInputBehavior: "zero",
-                        watchExternalChanges: true,
-                        modifyValueOnWheel: false
-                    });
-                }
-            }
-
-            document.addEventListener('input', function(event) {
-                if (event.target.classList.contains('amountInputDebit')) {
-                    updateTotal('debit');
-                } else if (event.target.classList.contains('amountInputKredit')) {
-                    updateTotal('kredit');
-                }
-            });
-
-            //event handler (prevent duplicate accountID in debit and kredit)
-            $('select[name="debitAccountID[]"]').change(function() {
-                var selectedAccountId = $(this).val();
-                var isDuplicate = checkDuplicateAccount(selectedAccountId,
-                    'select[name="kreditAccountID[]"]');
-                if (isDuplicate) {
-                    Swal.fire({
-                        title: 'Info',
-                        html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
-                            '<p class="mt-2">Nomor akun yang sama tidak dapat dipilih di bagian debit dan kredit.</p>',
-                        showCloseButton: true,
-                        focusConfirm: false,
-                        didOpen: () => {
-                            var animation = lottie.loadAnimation({
-                                container: document.getElementById('lottie-container'),
-                                renderer: 'svg',
-                                loop: true,
-                                autoplay: true,
-                                path: '/assets/animations/info.json',
-                                rendererSettings: {
-                                    preserveAspectRatio: 'xMidYMid slice'
-                                }
-                            });
-                        }
-                    });
-                    $(this).val("default");
-                    $(this).trigger("change");
-                }
-            });
-
-            $('select[name="kreditAccountID[]"]').change(function() {
-                var selectedAccountId = $(this).val();
-                var isDuplicate = checkDuplicateAccount(selectedAccountId,
-                    'select[name="debitAccountID[]"]');
-                if (isDuplicate) {
-                    Swal.fire({
-                        title: 'Info',
-                        html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
-                            '<p class="mt-2">Nomor akun yang sama tidak dapat dipilih di bagian debit dan kredit.</p>',
-                        showCloseButton: true,
-                        focusConfirm: false,
-                        didOpen: () => {
-                            var animation = lottie.loadAnimation({
-                                container: document.getElementById('lottie-container'),
-                                renderer: 'svg',
-                                loop: true,
-                                autoplay: true,
-                                path: '/assets/animations/info.json',
-                                rendererSettings: {
-                                    preserveAspectRatio: 'xMidYMid slice'
-                                }
-                            });
-                        }
-                    });
-                    $(this).val("default");
-                    $(this).trigger("change");
-                }
-            });
-
-            function checkDuplicateAccount(selectedAccountId, otherSectionSelector) {
-                var isDuplicate = false;
-                $(otherSectionSelector).each(function() {
-                    if($(this).val() != '') {
-                        if ($(this).val() == selectedAccountId) {
-                            isDuplicate = true;
-                            return false;
-                        }
-                    }
-                });
-                return isDuplicate;
-            }
-            //event handler (prevent duplicate accountID in debit and kredit)
-
-            $("#addRowDebit").click(function(event) {
-                event.preventDefault();
-
-                //destroy select2
-                // https://stackoverflow.com/questions/39142484/multiple-clone-not-working-when-append-in-select-2
-                $("#rowDebit .row:first").find('.debitAccount').select2('destroy');
-
-                const newRow = $("#rowDebit .row:first").clone();
-                newRow.find(".deleteRowDebit").show();
-                newRow.find('.amountInputDebit').val('').removeAttr('id');
-                newRow.find('.amountInputDebit').each(function() {
-                    new AutoNumeric(this, {
-                        currencySymbol: 'Rp ',
-                        digitGroupSeparator: ',',
-                        decimalCharacter: '.',
-                        emptyInputBehavior: "zero",
-                        watchExternalChanges: true,
-                        modifyValueOnWheel: false
-                    });
-                });
-
-                $("#rowDebit").append(newRow);
-
-                $('.debitAccount').select2({
-                    placeholder: 'Pilih Akun Debit',
-                    allowClear: true,
-                    theme: 'bootstrap-5',
-                    width: '100%',
-                });
-            });
-
-            $("#addRowKredit").click(function(event) {
-                event.preventDefault();
-
-                $("#rowKredit .row:first").find('.kreditAccount').select2('destroy');
-
-                const newRow = $("#rowKredit .row:first").clone();
-                newRow.find(".deleteRowKredit").show();
-                newRow.find('.amountInputKredit').val('').removeAttr('id');
-                newRow.find('.amountInputKredit').each(function() {
-                    new AutoNumeric(this, {
-                        currencySymbol: 'Rp ',
-                        digitGroupSeparator: ',',
-                        decimalCharacter: '.',
-                        emptyInputBehavior: "zero",
-                        watchExternalChanges: true,
-                        modifyValueOnWheel: false
-                    });
-                });
-
-                $("#rowKredit").append(newRow);
-
-                $('.kreditAccount').select2({
-                    placeholder: 'Pilih Akun Kredit',
-                    allowClear: true,
-                    theme: 'bootstrap-5',
-                    width: '100%',
-                });
-            });
-
-            $("#rowDebit").on("click", ".deleteRowDebit", function(event) {
-                const row = $(this).closest(".row");
-                row.remove();
-                updateTotal('debit');
-            });
-
-            $("#rowKredit").on("click", ".deleteRowKredit", function(event) {
-                const row = $(this).closest(".row");
-                row.remove();
-                updateTotal('kredit');
-            });
-        });
-
-        $(document).ready(function() {
-            $(".dob-picker").flatpickr({
-                monthSelectorType: "static",
-                dateFormat: "d-m-Y"
-            });
-
-            $('input[type=text]').on("scroll", function(){
-                $(this).scrollLeft(0);
-            });
-
-            $('.show_confirm').click(function(event) {
-                event.preventDefault();
-                var form = $(this).closest("form");
-                var item = $('input[name="name"]').val();
-                if (item === "") {
-                    item = "(Nama Kategori Belum Diisi)";
-                }
-
-                Swal.fire({
-                    title: 'Konfirmasi',
-                    html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
-                        '<p class="mt-2">Apakah Anda yakin ingin menambahkan transaksi?</p>',
-                    confirmButtonText: 'Ya, Tambah',
-                    denyButtonText: 'Batal',
-                    customClass: {
-                        confirmButton: "btn btn-primary",
-                        denyButton: "btn btn-danger"
-                    },
-                    showDenyButton: true,
-                    showCloseButton: true,
-                    focusConfirm: false,
-                    didOpen: () => {
-                        var animation = lottie.loadAnimation({
-                            container: document.getElementById('lottie-container'),
-                            renderer: 'svg',
-                            loop: true,
-                            autoplay: true,
-                            path: '/assets/animations/confirm.json',
-                            rendererSettings: {
-                                preserveAspectRatio: 'xMidYMid slice'
-                            }
-                        });
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                        // let formz = $('#company_form')[0];
-                        // let data = new FormData(formz);
-
-                        // $.ajax({
-                        //     url: "{{ route('admin.ubsp.transaction.store') }}",
-                        //     type: "POST",
-                        //     data: data,
-                        //     dataType: "JSON",
-                        //     processData: false,
-                        //     contentType: false,
-                        //     success: function (response) {
-                        //         console.log('masuk success');
-                        //         if (response.errors) {
-                        //             console.log('ini error');
-                        //             // Show validation errors
-                        //             var errorMsg = '';
-                        //             $.each(response.errors, function (field, errors) {
-                        //                 console.log(field);
-                        //                 console.log(errors);
-                        //                 $.each(errors, function (index, error) {
-                        //                     errorMsg += error + '<br>';
-                        //                 });
-                        //                 // Show validation error messages next to corresponding input fields
-                        //                 $('[name="' + field + '"]').after('<p class="mt-1" style="color: blue">' + errors[0] + '</p>');
-                        //             });
-                        //         } else {
-                        //             console.log('ini success');
-                        //             iziToast.success({
-                        //                 message: response.success,
-                        //                 position: 'topRight'
-                        //             });
-                        //         }
-                        //     },
-                        //     error: function (xhr, status, error) {
-                        //         console.log('masuk error');
-                        //         iziToast.error({
-                        //             message: 'An error occurred: ' + error,
-                        //             position: 'topRight'
-                        //         });
-                        //     }
-                        // });
-                    }
-                });
-            });
-
-            $('form').submit(function() {
-                $(':submit', this).prop('disabled', true);
-
-                var animation = lottie.loadAnimation({
-                    container: document.getElementById('lottie-loading'),
-                    renderer: 'svg',
-                    loop: true,
-                    autoplay: true,
-                    path: '/assets/animations/loading.json',
-                    rendererSettings: {
-                        preserveAspectRatio: 'xMidYMid slice'
-                    }
-                });
-                $('#overlay').show();
-                $('body, html').css('overflow', 'hidden');
-                return true;
-            });
-        });
-
         function showResultDialog(type) {
             Swal.fire({
                 title: type === 'success' ? 'Berhasil' : 'Error',
                 html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
-                        '<p class="mt-2">' + (type === 'success' ? "{{ Session::get('success') }}" : "{{ Session::get('errorData') }}") + '</p>',
+                    '<p class="mt-2">' + (type === 'success' ? "{{ Session::get('success') }}" :
+                        "{{ Session::get('errorData') }}") + '</p>',
                 showCloseButton: true,
                 focusConfirm: false,
                 didOpen: () => {
@@ -660,7 +333,8 @@
                         renderer: 'svg',
                         loop: true,
                         autoplay: true,
-                        path: type === 'success' ? '/assets/animations/success.json' : '/assets/animations/error.json',
+                        path: type === 'success' ? '/assets/animations/success.json' :
+                            '/assets/animations/error.json',
                         rendererSettings: {
                             preserveAspectRatio: 'xMidYMid slice'
                         }

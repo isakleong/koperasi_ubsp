@@ -145,25 +145,31 @@ class AdminController extends Controller
 
                 //insert account transaction image
                 if($imageData = $request->file('image')) {
-                    dd("hmm");
                     foreach ($imageData as $index => $image) {
-                        $destinationPath = 'image/upload/ubsp/transaction/';
-                        File::makeDirectory($destinationPath, 0777, true, true);
-                        $imageName = $docId.'-'.$index.$imageData->getClientOriginalExtension();
-            
+                        $imgTime = Carbon::now()->format('ymd');
+
+                        $imgName = $docId.'-'.$index.'.'.$image->getClientOriginalExtension();
+                        $tempDir = 'image/upload/ubsp/transaction/'.$imgTime;
+                        $imgPath = $tempDir.'/'.$imgName;
+
+                        File::makeDirectory($tempDir, 0777, true, true);
+                        Image::make($image)->resize(800, 600, function ($constraint) {
+                            $constraint->aspectRatio();
+                        })->save($imgPath);
+
                         AccountTransactionImage::create([
                             'docId' => $docId,
                             'indexNo' => $index,
-                            'image' => $destinationPath.$imageName,
+                            'image' => $imgPath,
                         ]);
 
                         $index++;
-                    }
-                } else {
-                    dd("wow");
+                    }   
                 }
 
                 DB::commit();
+
+                return redirect('/admin/transaction/ubsp')->withSuccess('Data transaksi UBSP berhasil ditambahkan!');
             } catch (\Exception $e) {
                 dd("catch 3 ".$e->getMessage());
                 DB::rollback();
@@ -206,7 +212,9 @@ class AdminController extends Controller
         } elseif ($parameter == "admin.transaction") {
             return view('admin.transaction');
         } elseif ($parameter == "admin.ubsp.transaction") {
-            return view('admin.transaction-ubsp');
+            $transaction = AccountTransaction::with('debitDetail.account', 'creditDetail.account')->orderBy('transactionDate', 'desc')->get();
+            // dd($transaction);
+            return view('admin.transaction-ubsp', compact('transaction'));
         } elseif ($parameter == "admin.ubsp.transaction.store") {
             $account = Account::where('parent_id', null)->get();
             return view('admin.transaction-ubsp-create', compact('account'));
