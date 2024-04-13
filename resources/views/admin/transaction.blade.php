@@ -20,8 +20,8 @@
                                 <p class="card-text text-white">Transaksi internal koperasi UBSP</p>
                             </div>
                             <span class="col-md-12 col-lg-5 col-xl-12 col-xxl-5 text-center mx-auto mx-md-0 mb-2"><img
-                                    src="/assets/images/company.jpg"
-                                    class="w-60 m-2" style="mix-blend-mode: multiply;filter: contrast(1);"></span>
+                                    src="/assets/images/company.svg"
+                                    class="w-75 m-2" style="mix-blend-mode: multiply;filter: contrast(1);"></span>
                         </div>
 
                         <a href="{{ route('admin.ubsp.transaction') }}" class="btn btn-white text-primary w-100 fw-medium shadow-sm">Transaksi UBSP</a>
@@ -39,7 +39,7 @@
                                 <p class="card-text text-white">Transaksi anggota koperasi UBSP</p>
                             </div>
                             <span class="col-md-12 col-lg-5 col-xl-12 col-xxl-5 text-center mx-auto mx-md-0 mb-2"><img
-                                    src="/assets/images/member.jpg" class="w-75 m-2" style="mix-blend-mode: multiply;filter: contrast(1);"></span>
+                                    src="/assets/images/member1.svg" class="w-75 m-2" style="mix-blend-mode: multiply;filter: contrast(1);"></span>
                         </div>
 
                         <a href="{{ route('admin.member.transaction') }}" class="btn btn-white text-warning w-100 fw-medium shadow-sm">Transaksi Anggota</a>
