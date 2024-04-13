@@ -16,4 +16,8 @@ class AccountTransactionImage extends Model
         'indexNo',
         'image'
     ];
+
+    public function accountTransaction() {
+        return $this->belongsTo(AccountTransaction::class, 'docId', 'docId');
+    }
 }

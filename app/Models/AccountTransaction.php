@@ -36,4 +36,9 @@ class AccountTransaction extends Model
     {
         return $this->hasMany(AccountTransactionDetail::class, 'docId', 'docId')->where('kind', 'K');
     }
+
+    public function transactionImage()
+    {
+        return $this->hasMany(AccountTransactionImage::class, 'docId', 'docId');
+    }
 }

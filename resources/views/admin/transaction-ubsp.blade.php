@@ -2,7 +2,9 @@
 
 @section('vendorCSS')
     <link rel="stylesheet" type="text/css" href="/vendor/datatable/css/datatables.min.css" />
-    <link rel="stylesheet" type="text/css" href="/vendor/flatpickr/flatpickr.css"/>
+    <link rel="stylesheet" type="text/css" href="/vendor/flatpickr/flatpickr.css" />
+    <link rel="stylesheet" type="text/css" href="/vendor/swiper/swiper.css" />
+    <link rel="stylesheet" type="text/css" href="/vendor/swiper/ui-carousel.css" />
     <style>
         body.dt-print-view h1 {
             text-align: center;
@@ -67,25 +69,28 @@
                     </div>
 
                     <div class="card-body p-0">
-                        <form action="{{ route('admin.search.transaction.ubsp') }}" method="GET" onsubmit="return validateForm()">
+                        <form action="{{ route('admin.search.transaction.ubsp') }}" method="GET"
+                            onsubmit="return validateForm()">
                             @csrf
                             <div class="row align-items-end mx-3 mb-3">
                                 <div class="col-xl-4 col-12 mb-3">
                                     <label for="startDate">Tanggal Awal</label>
-                                    <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun" id="startDate" name="startDate" />
+                                    <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun"
+                                        id="startDate" name="startDate" />
                                     @error('startDate')
                                         <p class="mt-1" style="color: red">{{ $message }}</p>
                                     @enderror
                                 </div>
-    
+
                                 <div class="col-xl-4 col-12 mb-3">
                                     <label for="endDate">Tanggal Akhir</label>
-                                    <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun" id="endDate" name="endDate" />
+                                    <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun"
+                                        id="endDate" name="endDate" />
                                     @error('endDate')
                                         <p class="mt-1" style="color: red">{{ $message }}</p>
                                     @enderror
                                 </div>
-    
+
                                 <div class="col-xl-3 col-12 mb-3">
                                     <label>Periode</label>
                                     <select class="form-select" id="period" aria-label="period" name="period">
@@ -102,7 +107,8 @@
                                     </select>
                                 </div>
                                 <div class="col-xl-1 col-12 mb-3 text-end">
-                                    <button class="btn rounded-pill btn-icon btn-outline-dark" type="submit"><span class="tf-icons bx bx-search"></span></button>
+                                    <button class="btn rounded-pill btn-icon btn-outline-dark" type="submit"><span
+                                            class="tf-icons bx bx-search"></span></button>
                                 </div>
                             </div>
                         </form>
@@ -145,20 +151,25 @@
                                                         <div class="card-body">
                                                             <ul class="timeline">
                                                                 @php
-                                                                    $tempTotalDebit = 0.00;
+                                                                    $tempTotalDebit = 0.0;
                                                                 @endphp
                                                                 @foreach ($item->debitDetail as $detail)
                                                                     @php
                                                                         $tempTotalDebit += $detail->total;
                                                                     @endphp
-                                                                    <li class="timeline-item pb-4 timeline-item-info border-left-dashed">
-                                                                        <span class="timeline-indicator-advanced timeline-indicator-primary">
+                                                                    <li
+                                                                        class="timeline-item pb-4 timeline-item-info border-left-dashed">
+                                                                        <span
+                                                                            class="timeline-indicator-advanced timeline-indicator-primary">
                                                                             <i class='bx bxs-card'></i>
                                                                         </span>
                                                                         <div class="timeline-event">
                                                                             <div class="timeline-header mb-3">
-                                                                                <h6 class="mb-0">{{ $detail->account->accountNo }} - {{ $detail->account->name }}</h6>
-                                                                                <span>Rp {{ number_format($detail->total, 2, '.', ',') }}</span>
+                                                                                <h6 class="mb-0">
+                                                                                    {{ $detail->account->accountNo }} -
+                                                                                    {{ $detail->account->name }}</h6>
+                                                                                <span>Rp
+                                                                                    {{ number_format($detail->total, 2, '.', ',') }}</span>
                                                                             </div>
                                                                         </div>
                                                                     </li>
@@ -166,7 +177,8 @@
                                                                 <li class="timeline-end-indicator">
                                                                     <span>
                                                                         <i class="bx bx-check-circle"></i>
-                                                                        Total Debit : <span>Rp {{ number_format($tempTotalDebit, 2, '.', ',') }}</span>
+                                                                        Total Debit : <span>Rp
+                                                                            {{ number_format($tempTotalDebit, 2, '.', ',') }}</span>
                                                                     </span>
                                                                 </li>
                                                             </ul>
@@ -180,20 +192,25 @@
                                                         <div class="card-body">
                                                             <ul class="timeline">
                                                                 @php
-                                                                    $tempTotalKredit = 0.00;
+                                                                    $tempTotalKredit = 0.0;
                                                                 @endphp
                                                                 @foreach ($item->creditDetail as $detail)
                                                                     @php
                                                                         $tempTotalKredit += $detail->total;
                                                                     @endphp
-                                                                    <li class="timeline-item pb-4 timeline-item-info border-left-dashed">
-                                                                        <span class="timeline-indicator-advanced timeline-indicator-primary">
+                                                                    <li
+                                                                        class="timeline-item pb-4 timeline-item-info border-left-dashed">
+                                                                        <span
+                                                                            class="timeline-indicator-advanced timeline-indicator-primary">
                                                                             <i class='bx bxs-card'></i>
                                                                         </span>
                                                                         <div class="timeline-event">
                                                                             <div class="timeline-header mb-3">
-                                                                                <h6 class="mb-0">{{ $detail->account->accountNo }} - {{ $detail->account->name }}</h6>
-                                                                                <span>Rp {{ number_format($detail->total, 2, '.', ',') }}</span>
+                                                                                <h6 class="mb-0">
+                                                                                    {{ $detail->account->accountNo }} -
+                                                                                    {{ $detail->account->name }}</h6>
+                                                                                <span>Rp
+                                                                                    {{ number_format($detail->total, 2, '.', ',') }}</span>
                                                                             </div>
                                                                         </div>
                                                                     </li>
@@ -201,7 +218,8 @@
                                                                 <li class="timeline-end-indicator">
                                                                     <span>
                                                                         <i class="bx bx-check-circle"></i>
-                                                                        Total Kredit : <span>Rp {{ number_format($tempTotalKredit, 2, '.', ',') }}</span>
+                                                                        Total Kredit : <span>Rp
+                                                                            {{ number_format($tempTotalKredit, 2, '.', ',') }}</span>
                                                                     </span>
                                                                 </li>
                                                             </ul>
@@ -210,10 +228,50 @@
                                                 </div>
                                             </div>
 
+                                            @if (count($item->transactionImage) > 0)
+                                                <div class="d-grid col-lg-6 mx-auto">
+                                                    <button type="button" class="btn rounded-pill btn-light text-black btn-lg" data-bs-toggle="modal" data-bs-target="#modalTransactionImage">
+                                                        <span class="tf-icons bx bxs-image-alt me-1"></span>Lihat Bukti
+                                                    </button>
+                                                </div>
+                                                <div class="modal fade" id="modalTransactionImage" tabindex="-1"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="modalScrollableTitle">Bukti Transaksi</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="col mb-3">
+                                                                    <div class="col-md-12 mb-4">
+                                                                        <div class="swiper" id="swiper-3d-cube-effect">
+                                                                            <div class="swiper-wrapper">
+                                                                              @foreach ($item->transactionImage as $img)
+                                                                                  <div class="swiper-slide" style="background-image:url(/{{ $img->image }})"></div>    
+                                                                              @endforeach
+                                                                            </div>
+                                                                            <div class="swiper-pagination"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-outline-secondary"
+                                                                    data-bs-dismiss="modal">
+                                                                    Tutup
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+
                                             <div class="p-4 mt-4" id="customCardBorder">
                                                 <div class="text-center">
-                                                    @if (($tempTotalDebit == $tempTotalKredit) && ($item->totalDebit == $item->totalKredit))
-                                                        <h4 class="cardholder text-white m-0">Rp {{ number_format($item->totalDebit, 2, '.', ',') }}</h4>
+                                                    @if ($tempTotalDebit == $tempTotalKredit && $item->totalDebit == $item->totalKredit)
+                                                        <h4 class="cardholder text-white m-0">Rp
+                                                            {{ number_format($item->totalDebit, 2, '.', ',') }}</h4>
                                                     @else
                                                         <h4 class="cardholder text-white m-0">ERROR (Tidak Seimbang)</h4>
                                                     @endif
@@ -308,10 +366,29 @@
     <script src="/vendor/lottie/lottie.min.js"></script>
     <script src="/vendor/flatpickr/flatpickr.js"></script>
     <script src="/vendor/moment/moment.min.js"></script>
+    <script src="/vendor/swiper/swiper.js"></script>
 
     <script src="/vendor/datatable/js/datatables.min.js"></script>
     <script src="/vendor/datatable/js/pdfmake.min.js"></script>
     <script src="/vendor/datatable/js/vfs_fonts.js"></script>
+
+    <script>
+        $('#modalTransactionImage').on('shown.bs.modal', function () {
+            const swiper = new Swiper('.swiper', {
+                effect: "cube",
+                grabCursor: !0, 
+                cubeEffect: {
+                    shadow: !0,
+                    slideShadows: !0,
+                    shadowScale: .94,
+                    shadowOffset: 20
+                },
+                pagination: {
+                    el: ".swiper-pagination"
+                }
+            });
+        });
+    </script>
 
     <script>
         function validateForm() {
@@ -371,7 +448,8 @@
                             focusConfirm: false,
                             didOpen: () => {
                                 var animation = lottie.loadAnimation({
-                                    container: document.getElementById('lottie-container'),
+                                    container: document.getElementById(
+                                        'lottie-container'),
                                     renderer: 'svg',
                                     loop: true,
                                     autoplay: true,
@@ -404,7 +482,7 @@
                 var startOfWeek = moment().startOf('week');
                 var endOfWeek = moment().endOf('week');
 
-                switch(period) {
+                switch (period) {
                     case 'date':
                         startDatePicker.setDate('');
                         endDatePicker.setDate('');

@@ -223,7 +223,7 @@ class AdminController extends Controller
         } elseif ($parameter == "admin.transaction") {
             return view('admin.transaction');
         } elseif ($parameter == "admin.transaction.ubsp") {
-            $transaction = AccountTransaction::with('debitDetail.account', 'creditDetail.account')->orderBy('transactionDate', 'desc')->get();
+            $transaction = AccountTransaction::with('debitDetail.account', 'creditDetail.account', 'transactionImage')->orderBy('transactionDate', 'desc')->get();
             // dd($transaction);
             return view('admin.transaction-ubsp', compact('transaction'));
         } elseif ($parameter == "admin.transaction.ubsp.store") {
