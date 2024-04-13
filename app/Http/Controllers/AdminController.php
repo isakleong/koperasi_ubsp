@@ -46,6 +46,7 @@ class AdminController extends Controller
         return view('admin.angsuran');
     }
 
+    //TRANSACTION UBSP
     public function saveTransactionUBSP(Request $request) {
         $request->merge([
             'amountDebit' => array_map(function ($value) {
@@ -178,6 +179,16 @@ class AdminController extends Controller
         }
     }
 
+    public function searchTransactionUBSP(Request $request) {
+        $startDate = Carbon::createFromFormat('d-m-Y', $request->input('startDate'))->format('Y-m-d');
+        $endDate = Carbon::createFromFormat('d-m-Y', $request->input('endDate'))->format('Y-m-d');
+
+        $transaction = AccountTransaction::with('debitDetail.account', 'creditDetail.account')->whereBetween('transactionDate', [$startDate, $endDate])->orderBy('transactionDate', 'desc')->get();
+
+        return view('admin.transaction-ubsp', compact('transaction'));
+    }
+    //TRANSACTION UBSP
+
     public function showFormData(Transaction $transaction) {
         $parameter = Route::currentRouteName();
 
@@ -211,11 +222,11 @@ class AdminController extends Controller
 
         } elseif ($parameter == "admin.transaction") {
             return view('admin.transaction');
-        } elseif ($parameter == "admin.ubsp.transaction") {
+        } elseif ($parameter == "admin.transaction.ubsp") {
             $transaction = AccountTransaction::with('debitDetail.account', 'creditDetail.account')->orderBy('transactionDate', 'desc')->get();
             // dd($transaction);
             return view('admin.transaction-ubsp', compact('transaction'));
-        } elseif ($parameter == "admin.ubsp.transaction.store") {
+        } elseif ($parameter == "admin.transaction.ubsp.store") {
             $account = Account::where('parent_id', null)->get();
             return view('admin.transaction-ubsp-create', compact('account'));
         }

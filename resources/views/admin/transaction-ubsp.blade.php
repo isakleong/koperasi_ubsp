@@ -1,12 +1,14 @@
 @extends('layout.admin.main')
 
 @section('vendorCSS')
-    <link rel="stylesheet" type="text/css" href="/vendor/datatable/css/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/vendor/datatable/css/datatables.min.css" />
+    <link rel="stylesheet" type="text/css" href="/vendor/flatpickr/flatpickr.css"/>
     <style>
         body.dt-print-view h1 {
             text-align: center;
             margin: 1em;
         }
+
         #overlay {
             display: none;
             position: fixed;
@@ -30,6 +32,24 @@
             transform: translate(-50%, -50%);
         }
     </style>
+    <style>
+        #customCard {
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            background-image: linear-gradient(to right top, #0D41E1, #0C63E7, #0A85ED, #09A6F3, #07C8F9);
+        }
+
+        #customCardBorder {
+            border-top-left-radius: 30px !important;
+            border-top-right-radius: 30px !important;
+            border: none;
+            border-radius: 6px;
+            background-color: blue;
+            color: #fff;
+            background-image: linear-gradient(to right top, #0a33b1, #094eb7, #086abc, #0784c2, #05a1c8);
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -46,7 +66,47 @@
                         <a href="/admin/transaction/ubsp/create" class="btn btn-primary">Tambah Data</a>
                     </div>
 
-                    <div class="card-body">
+                    <div class="card-body p-0">
+                        <form action="{{ route('admin.search.transaction.ubsp') }}" method="GET" onsubmit="return validateForm()">
+                            @csrf
+                            <div class="row align-items-end mx-3 mb-3">
+                                <div class="col-xl-4 col-12 mb-3">
+                                    <label for="startDate">Tanggal Awal</label>
+                                    <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun" id="startDate" name="startDate" />
+                                    @error('startDate')
+                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                    @enderror
+                                </div>
+    
+                                <div class="col-xl-4 col-12 mb-3">
+                                    <label for="endDate">Tanggal Akhir</label>
+                                    <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun" id="endDate" name="endDate" />
+                                    @error('endDate')
+                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                    @enderror
+                                </div>
+    
+                                <div class="col-xl-3 col-12 mb-3">
+                                    <label>Periode</label>
+                                    <select class="form-select" id="period" aria-label="period" name="period">
+                                        <option selected>--- Pilih Periode ---</option>
+                                        <option value="date">Tanggal</option>
+                                        <option value="today">Hari ini</option>
+                                        <option value="week">Minggu ini</option>
+                                        <option value="month">Bulan ini</option>
+                                        <option value="year">Tahun ini</option>
+                                        <option value="yesterday">Kemarin</option>
+                                        <option value="lastweek">Minggu Lalu</option>
+                                        <option value="lastmonth">Bulan Lalu</option>
+                                        <option value="lastyear">Tahun Lalu</option>
+                                    </select>
+                                </div>
+                                <div class="col-xl-1 col-12 mb-3 text-end">
+                                    <button class="btn rounded-pill btn-icon btn-outline-dark" type="submit"><span class="tf-icons bx bx-search"></span></button>
+                                </div>
+                            </div>
+                        </form>
+
                         @if (count($transaction) == 0)
                             <div class="container-xxl container-p-y text-center">
                                 <div class="misc-wrapper">
@@ -59,9 +119,119 @@
                                     <h5 class="mb-4 mx-2">Tidak ada daftar transaksi UBSP.</h5>
                                 </div>
                             </div>
-                        @else                            
-                            <table class="table caption-top table-sm table-bordered table-hover table-striped" id="table1" style="width: 100%">
-                                <caption><h5 class="text-center">Daftar Transaksi UBSP</h5></caption>
+                        @else
+                            <h5 class="text-center">Daftar Transaksi UBSP</h5>
+                            @php
+                                $i = 1;
+                            @endphp
+                            @foreach ($transaction as $item)
+                                <div class="mb-4">
+                                    <div class="container-fluid">
+                                        <div class="p-3" id="customCard">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h4><span
+                                                        class="badge badge-center rounded-pill bg-white text-black p-3">{{ $i++ }}</span>
+                                                </h4>
+                                                <h5 class="text-white">
+                                                    {{ \Carbon\Carbon::parse($item->transactionDate)->format('d-m-Y') }}
+                                                </h5>
+                                            </div>
+                                            <h5 class="text-white px-2 mt-3">{{ $item->docId }}</h5>
+
+                                            <div class="row">
+                                                <div class="col-xl-6 mb-3">
+                                                    <div class="card">
+                                                        <h5 class="card-header">Debit</h5>
+                                                        <div class="card-body">
+                                                            <ul class="timeline">
+                                                                @php
+                                                                    $tempTotalDebit = 0.00;
+                                                                @endphp
+                                                                @foreach ($item->debitDetail as $detail)
+                                                                    @php
+                                                                        $tempTotalDebit += $detail->total;
+                                                                    @endphp
+                                                                    <li class="timeline-item pb-4 timeline-item-info border-left-dashed">
+                                                                        <span class="timeline-indicator-advanced timeline-indicator-primary">
+                                                                            <i class='bx bxs-card'></i>
+                                                                        </span>
+                                                                        <div class="timeline-event">
+                                                                            <div class="timeline-header mb-3">
+                                                                                <h6 class="mb-0">{{ $detail->account->accountNo }} - {{ $detail->account->name }}</h6>
+                                                                                <span>Rp {{ number_format($detail->total, 2, '.', ',') }}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                @endforeach
+                                                                <li class="timeline-end-indicator">
+                                                                    <span>
+                                                                        <i class="bx bx-check-circle"></i>
+                                                                        Total Debit : <span>Rp {{ number_format($tempTotalDebit, 2, '.', ',') }}</span>
+                                                                    </span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xl-6 mb-3">
+                                                    <div class="card">
+                                                        <h5 class="card-header">Kredit</h5>
+                                                        <div class="card-body">
+                                                            <ul class="timeline">
+                                                                @php
+                                                                    $tempTotalKredit = 0.00;
+                                                                @endphp
+                                                                @foreach ($item->creditDetail as $detail)
+                                                                    @php
+                                                                        $tempTotalKredit += $detail->total;
+                                                                    @endphp
+                                                                    <li class="timeline-item pb-4 timeline-item-info border-left-dashed">
+                                                                        <span class="timeline-indicator-advanced timeline-indicator-primary">
+                                                                            <i class='bx bxs-card'></i>
+                                                                        </span>
+                                                                        <div class="timeline-event">
+                                                                            <div class="timeline-header mb-3">
+                                                                                <h6 class="mb-0">{{ $detail->account->accountNo }} - {{ $detail->account->name }}</h6>
+                                                                                <span>Rp {{ number_format($detail->total, 2, '.', ',') }}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                @endforeach
+                                                                <li class="timeline-end-indicator">
+                                                                    <span>
+                                                                        <i class="bx bx-check-circle"></i>
+                                                                        Total Kredit : <span>Rp {{ number_format($tempTotalKredit, 2, '.', ',') }}</span>
+                                                                    </span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="p-4 mt-4" id="customCardBorder">
+                                                <div class="text-center">
+                                                    @if (($tempTotalDebit == $tempTotalKredit) && ($item->totalDebit == $item->totalKredit))
+                                                        <h4 class="cardholder text-white m-0">Rp {{ number_format($item->totalDebit, 2, '.', ',') }}</h4>
+                                                    @else
+                                                        <h4 class="cardholder text-white m-0">ERROR (Tidak Seimbang)</h4>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- <div id="overlay">
+                                    <div id="lottie-loading"></div>
+                                </div> --}}
+                            @endforeach
+
+                            {{-- <table class="table caption-top table-sm table-bordered table-hover table-striped"
+                                id="table1" style="width: 100%">
+                                <caption>
+                                    <h5 class="text-center">Daftar Transaksi UBSP</h5>
+                                </caption>
                                 <thead>
                                     <tr>
                                         <th rowspan="2">No</th>
@@ -71,7 +241,7 @@
                                         <th colspan="2">Total</th>
                                         <th rowspan="2">Keterangan</th>
                                         <th rowspan="2">Aksi</th>
-                                      </tr>
+                                    </tr>
                                     <tr>
                                         <th>Debit</th>
                                         <th>Kredit</th>
@@ -89,12 +259,12 @@
                                             <td>{{ $item->docId }}</td>
                                             <td>{{ \Carbon\Carbon::parse($item->transactionDate)->format('d-m-Y') }}</td>
                                             <td>
-                                                @foreach($item->debitDetail as $detail)
+                                                @foreach ($item->debitDetail as $detail)
                                                     {{ $detail->account->name }}
                                                 @endforeach
                                             </td>
                                             <td>
-                                                @foreach($item->creditDetail as $detail)
+                                                @foreach ($item->creditDetail as $detail)
                                                     {{ $detail->account->name }}
                                                 @endforeach
                                             </td>
@@ -122,7 +292,7 @@
                                         </div>
                                     @endforeach
                                 </tbody>
-                            </table>
+                            </table> --}}
                         @endif
                     </div>
                 </div>
@@ -136,145 +306,144 @@
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/sweetalert/sweetalert2.js"></script>
     <script src="/vendor/lottie/lottie.min.js"></script>
+    <script src="/vendor/flatpickr/flatpickr.js"></script>
+    <script src="/vendor/moment/moment.min.js"></script>
 
     <script src="/vendor/datatable/js/datatables.min.js"></script>
     <script src="/vendor/datatable/js/pdfmake.min.js"></script>
     <script src="/vendor/datatable/js/vfs_fonts.js"></script>
 
     <script>
+        function validateForm() {
+            var startDate = document.getElementById('startDate').value;
+            var endDate = document.getElementById('endDate').value;
+
+            if (startDate.trim() === '' || endDate.trim() === '') {
+                Swal.fire({
+                    title: '',
+                    html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                        '<p class="mt-2">Tanggal Akhir tidak boleh sebelum Tanggal Awal</p>',
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    didOpen: () => {
+                        var animation = lottie.loadAnimation({
+                            container: document.getElementById('lottie-container'),
+                            renderer: 'svg',
+                            loop: true,
+                            autoplay: true,
+                            path: '/assets/animations/info.json',
+                            rendererSettings: {
+                                preserveAspectRatio: 'xMidYMid slice'
+                            }
+                        });
+                    },
+                    didClose: () => {
+                        // Scroll the page back to its original position
+                        // window.scrollTo(0, document.documentElement.dataset.scrollY || 0);
+                    }
+                });
+                return false;
+            }
+            return true;
+        }
+
+
         $(document).ready(function() {
-            var table = new DataTable('#table1', {
-                responsive: true
+            $(".dob-picker").flatpickr({
+                monthSelectorType: "static",
+                dateFormat: "d-m-Y"
             });
-            new DataTable.Buttons(table, {
-                buttons: [
-                {
-                    extend: 'collection',
-                    text: 'Export Data',
-                    className: 'custom-html-collection',
-                    buttons: [
-                        {
-                            extend: 'pdfHtml5',
-                            title: 'Laporan Daftar Kategori Akun \nSistem Akuntansi UBSP',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3],
-                            },
-                            customize: function(doc) {
-                                doc.content[2].table.widths =Array(doc.content[2].table.body[0].length + 1).join('*').split('');
-                                doc.defaultStyle.alignment = 'center';
-                                doc.styles.tableHeader.alignment = 'center';
-                            },
-                            pageSize: 'A4',
-                        },
-                        {
-                            extend: 'excel',
-                            autoFilter: true,
-                            title: 'Laporan Daftar Kategori Akun - Sistem Akuntansi UBSP',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3]
-                            },
-                            customize: function(xlsx) {
-                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                                var range = calculateRange(sheet); // Calculate the range of cells with values
-                                $('row:first c', sheet).attr('s', '22');
-                                $('row', sheet).each(function(index) {
-                                    if (index >= range.startRow && index <= range.endRow) {
-                                        $(this).find('c').each(function() {
-                                            var columnIndex = parseInt($(this).attr('r').replace(/\D/g, ''), 10);
-                                            if (columnIndex >= range.startColumn && columnIndex <= range.endColumn) {
-                                                // Exclude Cell A1 (merged to D1) and Cell A2 (merged to D2) from being bordered
-                                                var row = parseInt($(this).attr('r').match(/\d+/), 10);
-                                                if (!((row === 1 && columnIndex <= 3) || (row === 2 && columnIndex <= 3))) {
-                                                    $(this).attr('s', '25'); // Apply border style to other cells
-                                                }
-                                            }
-                                        });
+
+            $('.dob-picker').change(function() {
+                var startDate = $('#startDate').val();
+                var endDate = $('#endDate').val();
+
+                if (startDate && endDate) {
+                    var parsedStartDate = moment(startDate, 'DD-MM-YYYY');
+                    var parsedEndDate = moment(endDate, 'DD-MM-YYYY');
+
+                    if (parsedEndDate.isBefore(parsedStartDate)) {
+                        Swal.fire({
+                            title: '',
+                            html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                                '<p class="mt-2">Tanggal Akhir tidak boleh sebelum Tanggal Awal</p>',
+                            showCloseButton: true,
+                            focusConfirm: false,
+                            didOpen: () => {
+                                var animation = lottie.loadAnimation({
+                                    container: document.getElementById('lottie-container'),
+                                    renderer: 'svg',
+                                    loop: true,
+                                    autoplay: true,
+                                    path: '/assets/animations/info.json',
+                                    rendererSettings: {
+                                        preserveAspectRatio: 'xMidYMid slice'
                                     }
                                 });
                             }
-                        },
-                        {
-                            extend: 'print',
-                            title: 'Laporan Daftar Kategori Akun<br/>Sistem Akuntansi UBSP',
-                            messageTop: 'Daftar Kategori Akun',
-                            messageBottom: 'Daftar Kategori Akun',
-                            exportOptions: {
-                                columns: ':not(:last-child)'
-                            }
-                        }
-                    ]
-                }
-            ]
-            });
-            table
-                .buttons(0, null)
-                .container()
-                .prependTo(table.table().container());
-
-            
-            function calculateRange(sheet) {
-                var range = { startRow: 2, startColumn: 0, endRow: 0, endColumn: 0 }; // Start from A3
-                $('row', sheet).each(function(index) {
-                    var cellsWithData = $(this).find('c[r]');
-                    if (cellsWithData.length > 0) {
-                        range.endRow = index;
-                        cellsWithData.each(function() {
-                            var columnIndex = parseInt($(this).attr('r').replace(/\D/g, ''), 10);
-                            range.endColumn = Math.max(range.endColumn, columnIndex);
                         });
+
+                        $('#startDate').val('');
+                        $('#endDate').val('');
+                        return;
                     }
-                });
-                return range;
-            }
 
-            const registerDeleteItemHandlers = () => {
-                $('.show_confirm').click(function(event) {
-                    event.preventDefault();
-                    var form = $(this).closest("form");
-                    var item = $(this).closest("tr").find("td:eq(1)").text();
-
-                    Swal.fire({
-                        title: 'Konfirmasi',
-                        html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
-                            '<p class="mt-2">Apakah Anda yakin ingin menghapus kategori akun ' + item + '?</p>',
-                        confirmButtonText: 'Ya, Hapus',
-                        denyButtonText: 'Batal',
-                        customClass: {
-                            confirmButton: "btn btn-primary",
-                            denyButton: "btn btn-danger"
-                        },
-                        showDenyButton: true,
-                        showCloseButton: true,
-                        focusConfirm: false,
-                        didOpen: () => {
-                            var animation = lottie.loadAnimation({
-                                container: document.getElementById('lottie-container'),
-                                renderer: 'svg',
-                                loop: true,
-                                autoplay: true,
-                                path: '/assets/animations/confirm.json',
-                                rendererSettings: {
-                                    preserveAspectRatio: 'xMidYMid slice'
-                                }
-                            });
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
-                    });
-                });
-            };
-
-            registerDeleteItemHandlers();
-
-            $("#table1").on("draw.dt", function () {
-                registerDeleteItemHandlers();
+                    $('#period').val('date');
+                }
             });
 
-            table.on( 'responsive-display', function ( e, datatable, row, showHide, update ) {
-                registerDeleteItemHandlers();
+            $('#period').change(function() {
+                var period = $(this).val();
+                var startDatePicker = flatpickr('#startDate', {
+                    dateFormat: "d-m-Y"
+                });
+                var endDatePicker = flatpickr('#endDate', {
+                    dateFormat: "d-m-Y"
+                });
+                var today = moment();
+                var startOfWeek = moment().startOf('week');
+                var endOfWeek = moment().endOf('week');
+
+                switch(period) {
+                    case 'date':
+                        startDatePicker.setDate('');
+                        endDatePicker.setDate('');
+                        break;
+                    case 'today':
+                        startDatePicker.setDate(today.toDate());
+                        endDatePicker.setDate(today.toDate());
+                        break;
+                    case 'week':
+                        startDatePicker.setDate(startOfWeek.toDate());
+                        endDatePicker.setDate(endOfWeek.toDate());
+                        break;
+                    case 'month':
+                        startDatePicker.setDate(today.startOf('month').toDate());
+                        endDatePicker.setDate(today.endOf('month').toDate());
+                        break;
+                    case 'year':
+                        startDatePicker.setDate(today.startOf('year').toDate());
+                        endDatePicker.setDate(today.endOf('year').toDate());
+                        break;
+                    case 'yesterday':
+                        startDatePicker.setDate(today.subtract(1, 'days').toDate());
+                        endDatePicker.setDate(today.toDate());
+                        break;
+                    case 'lastweek':
+                        startDatePicker.setDate(startOfWeek.subtract(1, 'week').toDate());
+                        endDatePicker.setDate(endOfWeek.subtract(1, 'week').toDate());
+                        break;
+                    case 'lastmonth':
+                        startDatePicker.setDate(today.startOf('month').subtract(1, 'month').toDate());
+                        endDatePicker.setDate(today.endOf('month').subtract(1, 'month').toDate());
+                        break;
+                    case 'lastyear':
+                        startDatePicker.setDate(today.startOf('year').subtract(1, 'year').toDate());
+                        endDatePicker.setDate(today.endOf('year').subtract(1, 'millisecond').toDate());
+                        break;
+                }
             });
+
 
             $('form').submit(function() {
                 $(':submit', this).prop('disabled', true);
@@ -298,7 +467,8 @@
                 Swal.fire({
                     title: type === 'success' ? 'Berhasil' : 'Error',
                     html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
-                          '<p class="mt-2">' + (type === 'success' ? "{{ Session::get('success') }}" : "{{ Session::get('errorData') }}") + '</p>',
+                        '<p class="mt-2">' + (type === 'success' ? "{{ Session::get('success') }}" :
+                            "{{ Session::get('errorData') }}") + '</p>',
                     showCloseButton: true,
                     focusConfirm: false,
                     didOpen: () => {
@@ -307,7 +477,8 @@
                             renderer: 'svg',
                             loop: true,
                             autoplay: true,
-                            path: type === 'success' ? '/assets/animations/success.json' : '/assets/animations/error.json',
+                            path: type === 'success' ? '/assets/animations/success.json' :
+                                '/assets/animations/error.json',
                             rendererSettings: {
                                 preserveAspectRatio: 'xMidYMid slice'
                             }

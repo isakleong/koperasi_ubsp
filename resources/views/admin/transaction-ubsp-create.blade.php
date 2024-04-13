@@ -82,7 +82,7 @@
                     </div>
 
                     <div class="card-body">
-                        <form action="{{ route('admin.ubsp.transaction.store') }}" method="post"
+                        <form action="{{ route('admin.transaction.ubsp.store') }}" method="post"
                             enctype="multipart/form-data">
                             {{-- <form id="company_form" method="POST"> --}}
                             @csrf
