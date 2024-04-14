@@ -147,9 +147,14 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('/menu/transaction', [AdminController::class, 'showFormData'])->name('transaction');
     Route::get('/transaction/ubsp', [AdminController::class, 'showFormData'])->name('transaction.ubsp');
     Route::get('/transaction/ubsp/search', [AdminController::class, 'searchTransactionUBSP'])->name('search.transaction.ubsp');
-    Route::get('/transaction/member', [AdminController::class, 'showFormData'])->name('transaction.member');
     Route::get('/transaction/ubsp/create', [AdminController::class, 'showFormData'])->name('transaction.ubsp.store');
     Route::post('/transaction/ubsp/create', [AdminController::class, 'saveTransactionUBSP'])->name('transaction.ubsp.store');
+    Route::get('/transaction/member', [AdminController::class, 'showFormData'])->name('transaction.member');
+
+    //POSTING
+    Route::get('/menu/posting', [AdminController::class, 'showFormData'])->name('posting');
+    
+    
 
 
     //SIMPANAN

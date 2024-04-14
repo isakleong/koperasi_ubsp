@@ -229,6 +229,12 @@ class AdminController extends Controller
         } elseif ($parameter == "admin.transaction.ubsp.store") {
             $account = Account::where('parent_id', null)->get();
             return view('admin.transaction-ubsp-create', compact('account'));
+        } elseif ($parameter == "admin.transaction.member") {
+            return view('admin.transaction-member');
+        } elseif ($parameter == "admin.posting") {
+            $transaction = AccountTransaction::with('debitDetail.account', 'creditDetail.account', 'transactionImage')->orderBy('transactionDate', 'desc')->get();
+
+            return view('admin.posting', compact('transaction'));
         }
         
         elseif ($parameter == "admin.review.simpanan") {

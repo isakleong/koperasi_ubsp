@@ -74,6 +74,13 @@
             </a>
         </li>
 
+        <li class="menu-item {{ Str::contains(request()->route()->getName(), 'posting') ? 'active' : '' }}">
+            <a href="/admin/menu/posting" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-send"></i>
+                <div data-i18n="Basic">Posting Jurnal</div>
+            </a>
+        </li>
+
         <li class="menu-item {{ Str::contains(request()->route()->getName(), 'simpanan') ? 'active' : '' }}">
             <a href="/admin/menu/simpanan" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-wallet"></i>
@@ -81,7 +88,7 @@
             </a>
         </li>
 
-        <li class="menu-item {{ Str::contains(request()->route()->getName(), 'kredit') ? 'active' : '' }}">
+        {{-- <li class="menu-item {{ Str::contains(request()->route()->getName(), 'kredit') ? 'active' : '' }}">
             <a href="/admin/menu/kredit" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-credit-card-front"></i>
                 <div data-i18n="Basic">Kredit</div>
@@ -92,7 +99,7 @@
                 <i class="menu-icon tf-icons bx bx-money"></i>
                 <div data-i18n="Basic">Angsuran</div>
             </a>
-        </li>
+        </li> --}}
 
         <!-- End of Transaction Data -->
 
