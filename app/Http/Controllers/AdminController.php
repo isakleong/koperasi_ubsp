@@ -179,7 +179,7 @@ class AdminController extends Controller
         }
     }
 
-    public function searchTransactionUBSP(Request $request) {
+    public function filterTransactionUBSP(Request $request) {
         $startDate = Carbon::createFromFormat('d-m-Y', $request->input('startDate'))->format('Y-m-d');
         $endDate = Carbon::createFromFormat('d-m-Y', $request->input('endDate'))->format('Y-m-d');
 
@@ -188,6 +188,28 @@ class AdminController extends Controller
         return view('admin.transaction-ubsp', compact('transaction'));
     }
     //TRANSACTION UBSP
+    
+    //REPORT
+    public function filterJournal(Request $request) {
+        $startDate = Carbon::createFromFormat('d-m-Y', $request->input('startDate'))->format('Y-m-d');
+        $endDate = Carbon::createFromFormat('d-m-Y', $request->input('endDate'))->format('Y-m-d');
+
+        // $transaction = AccountTransaction::with('debitDetail.account', 'creditDetail.account')->whereBetween('transactionDate', [$startDate, $endDate])->orderBy('transactionDate', 'desc')->get();
+
+        $transaction = AccountTransaction::with('debitDetail.account', 'creditDetail.account')->whereBetween('transactionDate', [$startDate, $endDate])->orderBy('transactionDate', 'desc')->get();
+
+        $totalDebit = $transaction->sum(function ($item) {
+            return $item->debitDetail->sum('total');
+        });
+        $totalCredit = $transaction->sum(function ($item) {
+            return $item->creditDetail->sum('total');
+        });
+
+        return view('admin.journal', compact('transaction', 'totalDebit', 'totalCredit', 'startDate', 'endDate'));
+
+        return view('admin.journal', compact('transaction'));
+    }
+    //REPORT
 
     public function showFormData(Transaction $transaction) {
         $parameter = Route::currentRouteName();
@@ -218,23 +240,87 @@ class AdminController extends Controller
             }
 
             $member = User::where('status', 2)->get();
-            return view('admin.simpanan-deposit-create', compact('member', 'configStatus', 'kind', 'minWajib', 'minSukarela', 'minSibuhar'));
 
+            return view('admin.simpanan-deposit-create', compact('member', 'configStatus', 'kind', 'minWajib', 'minSukarela', 'minSibuhar'));
         } elseif ($parameter == "admin.transaction") {
+
             return view('admin.transaction');
         } elseif ($parameter == "admin.transaction.ubsp") {
             $transaction = AccountTransaction::with('debitDetail.account', 'creditDetail.account', 'transactionImage')->orderBy('transactionDate', 'desc')->get();
-            // dd($transaction);
+
             return view('admin.transaction-ubsp', compact('transaction'));
         } elseif ($parameter == "admin.transaction.ubsp.store") {
             $account = Account::where('parent_id', null)->get();
+
             return view('admin.transaction-ubsp-create', compact('account'));
         } elseif ($parameter == "admin.transaction.member") {
+
             return view('admin.transaction-member');
         } elseif ($parameter == "admin.posting") {
             $transaction = AccountTransaction::with('debitDetail.account', 'creditDetail.account', 'transactionImage')->orderBy('transactionDate', 'desc')->get();
 
             return view('admin.posting', compact('transaction'));
+        } elseif ($parameter == "admin.journal") {
+            $startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
+            $endDate = Carbon::now()->format('Y-m-d');
+
+            $transaction = AccountTransaction::with('debitDetail', 'creditDetail')->whereBetween('transactionDate', [$startDate, $endDate])->orderBy('transactionDate', 'desc')->get();
+            // $transaction = AccountTransaction::with('debitDetail', 'creditDetail')->get();
+            $totalDebit = $transaction->sum(function ($item) {
+                return $item->debitDetail->sum('total');
+            });
+            $totalCredit = $transaction->sum(function ($item) {
+                return $item->creditDetail->sum('total');
+            });
+
+            return view('admin.journal', compact('transaction', 'totalDebit', 'totalCredit', 'startDate', 'endDate'));
+        } elseif ($parameter == "admin.general-ledger") {
+            $startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
+            $endDate = Carbon::now()->format('Y-m-d');
+            
+            $journalEntry = AccountTransaction::with(['debitDetail.account', 'creditDetail.account'])->whereBetween('transactionDate', [$startDate, $endDate])->get();
+
+            $ledgerEntry = [];
+            foreach ($journalEntry as $entry) {
+                foreach ($entry->debitDetail as $detail) {
+                    $accountNo = $detail->account->accountNo;
+                    $accountName = $detail->account->name;
+                    $ledgerEntry[$accountNo][] = [
+                        'accountName' => $accountName,
+                        'docId' => $entry->docId,
+                        'date' => Carbon::parse($entry->transactionDate)->format('d-m-Y'),
+                        'description' => $entry->notes,
+                        'debit' => $detail->total,
+                        'credit' => 0,
+                    ];
+                }
+                
+                foreach ($entry->creditDetail as $detail) {
+                    $accountNo = $detail->account->accountNo;
+                    $accountName = $detail->account->name;
+                    $ledgerEntry[$accountNo][] = [
+                        'accountName' => $accountName,
+                        'docId' => $entry->docId,
+                        'date' => Carbon::parse($entry->transactionDate)->format('d-m-Y'),
+                        'description' => $entry->notes,
+                        'debit' => 0,
+                        'credit' => $detail->total,
+                    ];
+                }
+            }
+
+            $ledgerTotal = [];
+            foreach ($ledgerEntry as $accountNo => $entry) {
+                $debitTotal = collect($entry)->sum('debit');
+                $creditTotal = collect($entry)->sum('credit');
+                
+                $ledgerTotal[$accountNo] = [
+                    'debitTotal' => $debitTotal,
+                    'creditTotal' => $creditTotal,
+                ];
+            }
+
+            return view('admin.general-ledger', compact('ledgerEntry', 'ledgerTotal', 'startDate', 'endDate'));
         }
         
         elseif ($parameter == "admin.review.simpanan") {

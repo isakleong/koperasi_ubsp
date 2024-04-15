@@ -111,8 +111,8 @@
                 <div data-i18n="Basic">Jurnal Harian</div>
             </a>
         </li>
-        <li class="menu-item">
-            <a href="/admin/menu/user" class="menu-link">
+        <li class="menu-item {{ Str::contains(request()->route()->getName(), 'general-ledger') ? 'active' : '' }}">
+            <a href="/admin/general-ledger" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-book-bookmark"></i>
                 <div data-i18n="Basic">Buku Besar</div>
             </a>

@@ -69,7 +69,7 @@
                     </div>
 
                     <div class="card-body p-0">
-                        <form action="{{ route('admin.search.transaction.ubsp') }}" method="GET"
+                        <form action="{{ route('admin.filter.transaction.ubsp') }}" method="GET"
                             onsubmit="return validateForm()">
                             @csrf
                             <div class="row align-items-end mx-3 mb-3">

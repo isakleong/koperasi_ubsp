@@ -17,7 +17,7 @@
                             </div>
                             <span class="col-md-12 col-lg-5 col-xl-12 col-xxl-5 text-center mx-auto mx-md-0 mb-2"><img
                                     src="/assets/images/simpanan.svg"
-                                    class="w-75 m-2" style="mix-blend-mode: multiply;filter: contrast(1);"></span>
+                                    class="w-85 m-2" style="mix-blend-mode: multiply;filter: contrast(1);"></span>
                         </div>
                         <button type="button" class="btn btn-warning text-white w-100 fw-medium shadow-sm" data-bs-toggle="modal" data-bs-target="#simpanan">Transaksi Simpanan</button>
                     </div>
@@ -34,7 +34,7 @@
                                 <p class="card-text">Pinjaman anggota koperasi UBSP</p>
                             </div>
                             <span class="col-md-12 col-lg-5 col-xl-12 col-xxl-5 text-center mx-auto mx-md-0 mb-2"><img
-                                    src="/assets/images/pinjaman.svg" class="w-75 m-2" style="mix-blend-mode: multiply;filter: contrast(1);"></span>
+                                    src="/assets/images/pinjaman.svg" class="w-85 m-2" style="mix-blend-mode: multiply;filter: contrast(1);"></span>
                         </div>
 
                         <a href="{{ route('admin.transaction.member') }}" class="btn btn-warning text-white w-100 fw-medium shadow-sm">Transaksi Pinjaman</a>
@@ -52,7 +52,7 @@
                                 <p class="card-text">Angsuran anggota koperasi UBSP</p>
                             </div>
                             <span class="col-md-12 col-lg-5 col-xl-12 col-xxl-5 text-center mx-auto mx-md-0 mb-2"><img
-                                    src="/assets/images/angsuran.svg" class="w-75 m-2" style="mix-blend-mode: multiply;filter: contrast(1);"></span>
+                                    src="/assets/images/angsuran.svg" class="w-85 m-2" style="mix-blend-mode: multiply;filter: contrast(1);"></span>
                         </div>
 
                         <a href="{{ route('admin.transaction.member') }}" class="btn btn-warning text-white w-100 fw-medium shadow-sm">Transaksi Angsuran</a>

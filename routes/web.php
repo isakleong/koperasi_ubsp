@@ -146,16 +146,13 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     //TRANSAKSI
     Route::get('/menu/transaction', [AdminController::class, 'showFormData'])->name('transaction');
     Route::get('/transaction/ubsp', [AdminController::class, 'showFormData'])->name('transaction.ubsp');
-    Route::get('/transaction/ubsp/search', [AdminController::class, 'searchTransactionUBSP'])->name('search.transaction.ubsp');
+    Route::get('/transaction/ubsp/filter', [AdminController::class, 'filterTransactionUBSP'])->name('filter.transaction.ubsp');
     Route::get('/transaction/ubsp/create', [AdminController::class, 'showFormData'])->name('transaction.ubsp.store');
     Route::post('/transaction/ubsp/create', [AdminController::class, 'saveTransactionUBSP'])->name('transaction.ubsp.store');
     Route::get('/transaction/member', [AdminController::class, 'showFormData'])->name('transaction.member');
 
     //POSTING
     Route::get('/menu/posting', [AdminController::class, 'showFormData'])->name('posting');
-    
-    
-
 
     //SIMPANAN
     Route::get('/menu/simpanan', [AdminController::class, 'showSimpananMenu'])->name('simpanan');
@@ -179,8 +176,14 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     //EXPORT DATA
     Route::post('/user/export', [ReportController::class, 'exportData'])->name('export.user');
 
-    //LAPORAN
-    Route::resource('/journal', JournalController::class);
+    //REPORT
+    // Route::resource('/journal', JournalController::class);
+    Route::get('/journal', [AdminController::class, 'showFormData'])->name('journal');
+    Route::get('/journal/filter', [AdminController::class, 'filterJournal'])->name('filter.journal');
+    Route::post('/journal/export', [ReportController::class, 'exportJournal'])->name('export.journal');
+
+    Route::get('/general-ledger', [AdminController::class, 'showFormData'])->name('general-ledger');
+    //END OF REPORT
 
     //checker
     Route::get('/simpanan/check', [AdminController::class, 'checkSimpananWajib'])->name('checkSimpanan');
