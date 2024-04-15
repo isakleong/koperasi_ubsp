@@ -1,7 +1,7 @@
 @extends('layout.admin.main')
 
 @section('vendorCSS')
-    <link rel="stylesheet" type="text/css" href="/vendor/flatpickr/flatpickr.css"/>
+    <link rel="stylesheet" type="text/css" href="/vendor/flatpickr/flatpickr.css" />
 @endsection
 
 @section('content')
@@ -25,7 +25,8 @@
                             <div class="row d-flex justify-content-between align-items-end">
                                 <div class="col-md-3 col-12 mb-3">
                                     <label for="startDate">Tanggal Awal</label>
-                                    <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun" id="startDate" name="startDate" />
+                                    <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun"
+                                        id="startDate" name="startDate" />
                                     @error('startDate')
                                         <p class="mt-1" style="color: red">{{ $message }}</p>
                                     @enderror
@@ -33,7 +34,8 @@
 
                                 <div class="col-md-3 col-12 mb-3">
                                     <label for="endDate">Tanggal Akhir</label>
-                                    <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun" id="endDate" name="endDate" />
+                                    <input type="text" class="form-control dob-picker" placeholder="Hari-Bulan-Tahun"
+                                        id="endDate" name="endDate" />
                                     @error('endDate')
                                         <p class="mt-1" style="color: red">{{ $message }}</p>
                                     @enderror
@@ -64,6 +66,44 @@
                                 </div>
                             </div>
                         </form>
+
+                        <table class="table table-sm table-hover" id="table1" style="width: 100%">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Akun</th>
+                                    <th>Debit</th>
+                                    <th>Credit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($transaction as $item)
+                                    <tr>
+                                        <td colspan="4" style="background-color: #e9ecef;">
+                                            <strong>{{ $item->kind }} - {{ \Carbon\Carbon::parse($item->transactionDate)->format('d-m-Y') }} - {{ $item->notes }}</strong>
+                                        </td>
+                                    </tr>
+                                    @foreach ($item->debitDetail as $detail)
+                                        <tr>
+                                            <td>({{ $detail->account->accountNo }}) - {{ $detail->account->name }}</td>
+                                            <td class="text-end">Rp {{ number_format($detail->total, 2, '.', ',') }}</td>
+                                            <td></td>
+                                        </tr>
+                                    @endforeach
+                                    @foreach ($item->creditDetail as $detail)
+                                        <tr>
+                                            <td>({{ $detail->account->accountNo }}) - {{ $detail->account->name }}</td>
+                                            <td></td>
+                                            <td class="text-end">Rp {{ number_format($detail->total, 2, '.', ',') }}</td>
+                                        </tr>
+                                    @endforeach
+                                    <tr>
+                                        <td>Total</td>
+                                        <td class="text-end">Rp {{ number_format($item->totalDebit, 2, '.', ',') }}</td>
+                                        <td class="text-end">Rp {{ number_format($item->totalKredit, 2, '.', ',') }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
 
                     </div>
                 </div>

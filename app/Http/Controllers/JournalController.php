@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use App\Models\AccountTransaction;
 use App\Models\Journal;
 use App\Models\JournalDetail;
 use Illuminate\Http\Request;
@@ -12,7 +13,21 @@ class JournalController extends Controller
 {
     public function index()
     {
-        return (view('admin.journal'));
+        // $transaction = AccountTransaction::with('debitDetail', 'creditDetail')->get();
+        // return view('admin.journal', compact('transaction'));
+
+        $transaction = AccountTransaction::with('debitDetail', 'creditDetail')->get();
+
+        // Calculate total debit amount
+        $totalDebit = $transaction->sum(function ($item) {
+            return $item->debitDetail->sum('total');
+        });
+
+        $totalCredit = $transaction->sum(function ($item) {
+            return $item->creditDetail->sum('total');
+        });
+
+        return view('admin.journal', compact('transaction', 'totalDebit', 'totalCredit'));
     }
 
     public function create()
