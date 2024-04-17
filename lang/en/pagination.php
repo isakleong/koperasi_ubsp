@@ -13,7 +13,9 @@ return [
     |
     */
 
-    'previous' => '&laquo; Previous',
-    'next' => 'Next &raquo;',
+    'previous' => '&laquo; Sebelumnya',
+    'next' => 'Berikutnya &raquo;',
+    'pagination' => 'Menampilkan :from hingga :to dari :total hasil',
+
 
 ];

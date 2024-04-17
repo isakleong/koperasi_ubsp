@@ -23,7 +23,7 @@ class AccountTransaction extends Model
         'notes'
     ];
 
-    public function accountTransactionDetail(){
+    public function transactionDetail(){
         return $this->hasMany(AccountTransactionDetail::class, 'docId', 'docId');
     }
 

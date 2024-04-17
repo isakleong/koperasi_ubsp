@@ -19,6 +19,7 @@ class AccountTransactionDetail extends Model
         'indexNo',
         'accountNo',
         'kind',
+        'notes',
         'total'
     ];
 

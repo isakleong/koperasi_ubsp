@@ -114,7 +114,7 @@
                                         <div id="rowDebit">
                                             <div class="row mb-3 mx-1 p-1"
                                                 style="background-color: #f8f8ff; border-radius: 16px;">
-                                                <div class="col-lg-6 col-xl-5 col-12 mb-2">
+                                                <div class="col-lg-4 col-xl-4 col-12 mb-2">
                                                     <label>Akun</label>
                                                     <select class="choices form-select select2 debitAccount" name="debitAccountID[]">
                                                         <option></option>
@@ -127,7 +127,7 @@
                                                     @enderror
                                                 </div>
 
-                                                <div class="col-lg-6 col-xl-5 col-12 mb-2">
+                                                <div class="col-lg-4 col-xl-4 col-12 mb-2">
                                                     <label>Total</label>
                                                     <input type="text" class="form-control amountInputDebit"
                                                         name="amountDebit[]" required value="{{ old('amountDebit[]') }}" />
@@ -135,10 +135,20 @@
                                                         <p class="mt-1" style="color: red">{{ $message }}</p>
                                                     @enderror
                                                 </div>
-                                                <div class="col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-2">
+
+                                                <div class="col-lg-4 col-xl-3 col-12 mb-2">
+                                                    <label>Keterangan</label>
+                                                    <input type="text" class="form-control notesInputDebit"
+                                                        name="notesDebit[]" value="{{ old('notesDebit[]') }}" />
+                                                    @error('notesDebit[]')
+                                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+
+                                                <div class="col-lg-12 col-xl-1 col-12 d-flex align-items-center mb-2">
                                                     <button class="btn btn-label-danger mt-4 deleteRowDebit"
                                                         style="display: none;">
-                                                        <i class="bx bx-x me-1"></i>
+                                                        {{-- <i class="bx bx-x me-1"></i> --}}
                                                         <span class="align-middle">Hapus</span>
                                                     </button>
                                                 </div>
@@ -164,7 +174,7 @@
                                         <div id="rowKredit">
                                             <div class="row mb-3 mx-1 p-1"
                                                 style="background-color: #f8f8ff; border-radius: 16px;">
-                                                <div class="col-lg-6 col-xl-5 col-12 mb-2">
+                                                <div class="col-lg-4 col-xl-4 col-12 mb-2">
                                                     <label>Akun</label>
                                                     <select class="choices form-select select2 kreditAccount"
                                                         name="kreditAccountID[]">
@@ -179,8 +189,7 @@
                                                     @enderror
                                                 </div>
 
-
-                                                <div class="col-lg-6 col-xl-5 col-12 mb-2">
+                                                <div class="col-lg-4 col-xl-4 col-12 mb-2">
                                                     <label>Total</label>
                                                     <input type="text" class="form-control amountInputKredit"
                                                         name="amountKredit[]" required
@@ -189,10 +198,20 @@
                                                         <p class="mt-1" style="color: red">{{ $message }}</p>
                                                     @enderror
                                                 </div>
-                                                <div class="col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-2">
+
+                                                <div class="col-lg-4 col-xl-3 col-12 mb-2">
+                                                    <label>Keterangan</label>
+                                                    <input type="text" class="form-control notesInputKredit"
+                                                        name="notesKredit[]" value="{{ old('notesKredit[]') }}" />
+                                                    @error('notesKredit[]')
+                                                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+
+                                                <div class="col-lg-12 col-xl-1 col-12 d-flex align-items-center mb-2">
                                                     <button class="btn btn-label-danger mt-4 deleteRowKredit"
                                                         style="display: none;">
-                                                        <i class="bx bx-x me-1"></i>
+                                                        {{-- <i class="bx bx-x me-1"></i> --}}
                                                         <span class="align-middle">Hapus</span>
                                                     </button>
                                                 </div>
@@ -217,7 +236,7 @@
                             <div class="mb-3">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="description"
-                                        name="description"placeholder="" required value="{{ old('description') }}" />
+                                        name="description"placeholder="" value="{{ old('description') }}" />
                                     <label>Keterangan</label>
                                 </div>
                                 @error('description')

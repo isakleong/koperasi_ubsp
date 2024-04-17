@@ -128,8 +128,18 @@
                         @else
                             <h5 class="text-center">Daftar Transaksi UBSP</h5>
                             @php
-                                $i = 1;
+                                $i = ($transaction->currentPage() - 1) * $transaction->perPage() + 1;
                             @endphp
+
+                            <div class="container-xxl container-p-y">
+                                <form action="" method="GET">
+                                    <div class="input-group">
+                                        <input type="text" name="search" class="form-control" placeholder="Cari..." aria-label="Cari..." aria-describedby="button-addon2" />
+                                        <button class="btn btn-outline-primary" type="button" id="button-addon2">Cari</button>
+                                      </div>
+                                </form>
+                            </div>
+                            
                             @foreach ($transaction as $item)
                                 <div class="mb-4">
                                     <div class="container-fluid">
@@ -143,6 +153,7 @@
                                                 </h5>
                                             </div>
                                             <h5 class="text-white px-2 mt-3">{{ $item->docId }}</h5>
+                                            <h5 class="text-white px-2 mt-3">{{ $item->notes }}</h5>
 
                                             <div class="row">
                                                 <div class="col-xl-6 mb-3">
@@ -164,12 +175,16 @@
                                                                             <i class='bx bxs-card'></i>
                                                                         </span>
                                                                         <div class="timeline-event">
-                                                                            <div class="timeline-header mb-3">
+                                                                            <div class="timeline-header">
                                                                                 <h6 class="mb-0">
                                                                                     {{ $detail->account->accountNo }} -
                                                                                     {{ $detail->account->name }}</h6>
                                                                                 <span>Rp
                                                                                     {{ number_format($detail->total, 2, '.', ',') }}</span>
+                                                                            </div>
+                                                                            <div class="timeline-header">
+                                                                                <h6 class="mb-2">
+                                                                                    {{ $detail->notes }}</h6>
                                                                             </div>
                                                                         </div>
                                                                     </li>
@@ -205,12 +220,16 @@
                                                                             <i class='bx bxs-card'></i>
                                                                         </span>
                                                                         <div class="timeline-event">
-                                                                            <div class="timeline-header mb-3">
+                                                                            <div class="timeline-header">
                                                                                 <h6 class="mb-0">
                                                                                     {{ $detail->account->accountNo }} -
                                                                                     {{ $detail->account->name }}</h6>
                                                                                 <span>Rp
                                                                                     {{ number_format($detail->total, 2, '.', ',') }}</span>
+                                                                            </div>
+                                                                            <div class="timeline-header">
+                                                                                <h6 class="mb-2">
+                                                                                    {{ $detail->notes }}</h6>
                                                                             </div>
                                                                         </div>
                                                                     </li>
@@ -284,6 +303,10 @@
                                     <div id="lottie-loading"></div>
                                 </div> --}}
                             @endforeach
+
+                            <div class="container-xxl container-p-y">
+                                {{$transaction->links()}}
+                            </div>
 
                             {{-- <table class="table caption-top table-sm table-bordered table-hover table-striped"
                                 id="table1" style="width: 100%">
@@ -426,6 +449,7 @@
 
 
         $(document).ready(function() {
+
             $(".dob-picker").flatpickr({
                 monthSelectorType: "static",
                 dateFormat: "d-m-Y"

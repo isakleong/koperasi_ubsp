@@ -145,7 +145,8 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
 
     //TRANSAKSI
     Route::get('/menu/transaction', [AdminController::class, 'showFormData'])->name('transaction');
-    Route::get('/transaction/ubsp', [AdminController::class, 'showFormData'])->name('transaction.ubsp');
+    // Route::get('/transaction/ubsp', [AdminController::class, 'showFormData'])->name('transaction.ubsp');
+    Route::get('/transaction/ubsp', [AdminController::class, 'getTransactionUBSP'])->name('transaction.ubsp');
     Route::get('/transaction/ubsp/filter', [AdminController::class, 'filterTransactionUBSP'])->name('filter.transaction.ubsp');
     Route::get('/transaction/ubsp/create', [AdminController::class, 'showFormData'])->name('transaction.ubsp.store');
     Route::post('/transaction/ubsp/create', [AdminController::class, 'saveTransactionUBSP'])->name('transaction.ubsp.store');

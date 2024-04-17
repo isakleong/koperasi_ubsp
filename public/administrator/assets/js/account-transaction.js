@@ -183,6 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const newRow = $("#rowDebit .row:first").clone();
         newRow.find(".deleteRowDebit").show();
+        newRow.find('.notesInputDebit').val('').removeAttr('id');
         newRow.find('.amountInputDebit').val('').removeAttr('id');
         newRow.find('.amountInputDebit').each(function() {
             new AutoNumeric(this, {
@@ -212,6 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const newRow = $("#rowKredit .row:first").clone();
         newRow.find(".deleteRowKredit").show();
+        newRow.find('.notesInputKredit').val('').removeAttr('id');
         newRow.find('.amountInputKredit').val('').removeAttr('id');
         newRow.find('.amountInputKredit').each(function() {
             new AutoNumeric(this, {

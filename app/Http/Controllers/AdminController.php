@@ -47,6 +47,35 @@ class AdminController extends Controller
     }
 
     //TRANSACTION UBSP
+    public function getTransactionUBSP(Request $request) {
+        // $transaction = AccountTransaction::with('debitDetail.account', 'creditDetail.account', 'transactionImage')->orderBy('created_at', 'desc')->paginate(5);
+        // return view('admin.transaction-ubsp', compact('transaction'));
+
+        $query = AccountTransaction::with('debitDetail.account', 'creditDetail.account', 'transactionImage')->orderBy('created_at', 'desc');
+        if ($request->has('search')) {
+            $keyword = $request->input('search');
+            $query->where(function ($q) use ($keyword) {
+                $q->where('docId', 'like', "%$keyword%")
+                    ->orWhere('notes', 'like', "%$keyword%")
+                    ->orWhereHas('debitDetail.account', function ($q) use ($keyword) {
+                        $q->where('accountNo', 'like', "%$keyword%")
+                          ->orWhere('name', 'like', "%$keyword%");
+                    })
+                    ->orWhereHas('creditDetail.account', function ($q) use ($keyword) {
+                        $q->where('accountNo', 'like', "%$keyword%")
+                          ->orWhere('name', 'like', "%$keyword%");
+                    })
+                    ->orWhereHas('transactionDetail', function ($q) use ($keyword) {
+                        $q->where('notes', 'like', "%$keyword%");
+                    });
+            });
+        }
+
+        $transaction = $query->paginate(5);
+
+        return view('admin.transaction-ubsp', compact('transaction'));
+    }
+
     public function saveTransactionUBSP(Request $request) {
         $request->merge([
             'amountDebit' => array_map(function ($value) {
@@ -118,6 +147,9 @@ class AdminController extends Controller
                 $model->kind = 'others';
                 $model->totalDebit = $totalDebit;
                 $model->totalKredit = $totalKredit;
+                if(isset($input['description'])) {
+                    $model->notes = $input['description'];
+                }
                 $model->save();
 
                 //insert account transaction detail
@@ -129,8 +161,24 @@ class AdminController extends Controller
                     $detail->accountNo = $accountNo;
                     $detail->kind = 'D';
                     $detail->total = $input['amountDebit'][$index];
+                    if(isset($input['notesDebit'][$index])) {
+                        $detail->notes = $input['notesDebit'][$index];
+                    }
                     $detail->save();
                     $cntIndex++;
+
+                    //update coa balance
+                    $account = Account::where('accountNo', $accountNo)->first();
+                    if ($account) {
+                        if ($account->normalBalance == 'D') {
+                            $account->balance += $input['amountDebit'][$index];
+                            // dd($account->balance);
+                        } else {
+                            dd("2");
+                            $account->balance -= $input['amountDebit'][$index];
+                        }
+                        $account->save();
+                    }
                 }
 
                 foreach ($input['kreditAccountID'] as $index => $accountNo) {
@@ -140,8 +188,24 @@ class AdminController extends Controller
                     $detail->accountNo = $accountNo;
                     $detail->kind = 'K';
                     $detail->total = $input['amountKredit'][$index];
+                    if(isset($input['notesKredit'][$index])) {
+                        $detail->notes = $input['notesKredit'][$index];
+                    }
                     $detail->save();
                     $cntIndex++;
+
+                    //update coa balance
+                    $account = Account::where('accountNo', $accountNo)->first();
+                    if ($account) {
+                        if ($account->normalBalance == 'K') {
+                            $account->balance += $input['amountKredit'][$index];
+                            dd("3");
+                        } else {
+                            $account->balance -= $input['amountKredit'][$index];
+                            dd("4");
+                        }
+                        $account->save();
+                    }
                 }
 
                 //insert account transaction image
@@ -246,7 +310,7 @@ class AdminController extends Controller
 
             return view('admin.transaction');
         } elseif ($parameter == "admin.transaction.ubsp") {
-            $transaction = AccountTransaction::with('debitDetail.account', 'creditDetail.account', 'transactionImage')->orderBy('transactionDate', 'desc')->get();
+            $transaction = AccountTransaction::with('debitDetail.account', 'creditDetail.account', 'transactionImage')->orderBy('created_at', 'desc')->paginate(5);
 
             return view('admin.transaction-ubsp', compact('transaction'));
         } elseif ($parameter == "admin.transaction.ubsp.store") {
