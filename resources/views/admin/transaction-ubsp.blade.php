@@ -39,7 +39,11 @@
             border: none;
             border-radius: 12px;
             color: #fff;
-            background-image: linear-gradient(to right top, #0D41E1, #0C63E7, #0A85ED, #09A6F3, #07C8F9);
+            /* background-image: linear-gradient(to right top, #0D41E1, #0C63E7, #0A85ED, #09A6F3, #07C8F9); */
+            /* background-image: linear-gradient(to right top, #545AA7, #6F00FF, #5A4FCF, #6050DC, #7B68EE);
+            background-image: linear-gradient(to right top, #696eff, #545AA7, #6F00FF, #5A4FCF, #8364e8, #6050DC, #7B68EE);
+            background-image: linear-gradient(to right top, #831bea, #8a1bd9, #a827e4, #6F00FF, #8364e8, #7B68EE, #c4a0f6); */
+            background-image: linear-gradient(to right top, #831bea, #8364e8, #7B68EE, #a07bfc);
         }
 
         #customCardBorder {
@@ -47,9 +51,11 @@
             border-top-right-radius: 30px !important;
             border: none;
             border-radius: 6px;
-            background-color: blue;
+            /* background-color: blue; */
             color: #fff;
-            background-image: linear-gradient(to right top, #0a33b1, #094eb7, #086abc, #0784c2, #05a1c8);
+            /* background-image: linear-gradient(to right top, #0a33b1, #094eb7, #086abc, #0784c2, #05a1c8); */
+            /* background-image: linear-gradient(to right top, #2E2787, #000f89, #002387, #1D428A, #1C39BB); */
+            background-image: linear-gradient(to right top, #ad5af7, #c4a0f6);
         }
     </style>
 @endsection

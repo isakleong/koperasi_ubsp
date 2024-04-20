@@ -140,45 +140,50 @@
                                         <span class="mb-0 text-black"><strong>Keterangan : {{ $item->notes }}</strong></span>
                                     @endif
 
-                                    <table class="table table-sm table-hover table-bordered ml-2 mt-2 mb-2 table-light" id="table1" style="width: 100%">
-                                        <thead class="table-secondary">
-                                            <tr>
-                                                <th>No Akun</th>
-                                                <th>Nama Akun</th>
-                                                <th>No Anggota</th>
-                                                <th>Nama Anggota</th>
-                                                <th>Debit</th>
-                                                <th>Kredit</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($item->debitDetail as $detail)
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-hover table-striped table-bordered ml-2 mt-2 mb-2 table-light" id="table1" style="width: 100%">
+                                            <thead class="table-secondary">
                                                 <tr>
-                                                    <td>{{ $detail->account->accountNo }}</td>
-                                                    <td>{{ $detail->account->name }}</td>
-                                                    <td>{{ $item->memberId }}</td>
-                                                    <td>{{ $item->memberId }}</td>
-                                                    <td class="text-end">Rp {{ number_format($detail->total, 2, '.', ',') }}</td>
-                                                    <td></td>
+                                                    <th>No Akun</th>
+                                                    <th>Nama Akun</th>
+                                                    <th>No Anggota</th>
+                                                    <th>Nama Anggota</th>
+                                                    <th>Keterangan</th>
+                                                    <th>Debit</th>
+                                                    <th>Kredit</th>
                                                 </tr>
-                                            @endforeach
-                                            @foreach ($item->creditDetail as $detail)
-                                                <tr>
-                                                    <td>{{ $detail->account->accountNo }}</td>
-                                                    <td>{{ $detail->account->name }}</td>
-                                                    <td>{{ $item->memberId }}</td>
-                                                    <td>{{ $item->memberId }}</td>
-                                                    <td></td>
-                                                    <td class="text-end">Rp {{ number_format($detail->total, 2, '.', ',') }}</td>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($item->debitDetail as $detail)
+                                                    <tr>
+                                                        <td>{{ $detail->account->accountNo }}</td>
+                                                        <td>{{ $detail->account->name }}</td>
+                                                        <td>{{ $item->memberId }}</td>
+                                                        <td>{{ $item->memberId }}</td>
+                                                        <td>{{ $item->notes }}</td>
+                                                        <td class="text-end">Rp {{ number_format($detail->total, 2, '.', ',') }}</td>
+                                                        <td></td>
+                                                    </tr>
+                                                @endforeach
+                                                @foreach ($item->creditDetail as $detail)
+                                                    <tr>
+                                                        <td>{{ $detail->account->accountNo }}</td>
+                                                        <td>{{ $detail->account->name }}</td>
+                                                        <td>{{ $item->memberId }}</td>
+                                                        <td>{{ $item->memberId }}</td>
+                                                        <td>{{ $item->notes }}</td>
+                                                        <td></td>
+                                                        <td class="text-end">Rp {{ number_format($detail->total, 2, '.', ',') }}</td>
+                                                    </tr>
+                                                @endforeach
+                                                <tr class="table-group-divider">
+                                                    <td colspan="5" class="bg-label-secondary text-end"><span class="mb-0 text-black"><strong>Sub Total</strong></span></td>
+                                                    <td class="bg-label-secondary text-end"><span class="mb-0 text-black"><strong>Rp {{ number_format($item->totalDebit, 2, '.', ',') }}</strong></span></td>
+                                                    <td class="bg-label-secondary text-end"><span class="mb-0 text-black"><strong>Rp {{ number_format($item->totalKredit, 2, '.', ',') }}</strong></span></td>
                                                 </tr>
-                                            @endforeach
-                                            <tr class="table-group-divider">
-                                                <td colspan="4" class="bg-label-secondary text-end"><span class="mb-0 text-black"><strong>Sub Total</strong></span></td>
-                                                <td class="bg-label-secondary text-end"><span class="mb-0 text-black"><strong>Rp {{ number_format($item->totalDebit, 2, '.', ',') }}</strong></span></td>
-                                                <td class="bg-label-secondary text-end"><span class="mb-0 text-black"><strong>Rp {{ number_format($item->totalKredit, 2, '.', ',') }}</strong></span></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
 
                                 {{-- <table class="table table-sm table-hover table-bordered mb-4" id="table1" style="width: 100%">
