@@ -39,15 +39,72 @@
 
     <!-- Helpers -->
     <script src="/administrator/assets/vendor/js/helpers.js"></script>
-    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
-    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="/administrator/assets/js/config.js"></script>
 </head>
 
 <body>
     <!-- Content -->
 
-    <div class="container-xxl">
+    <div class="authentication-wrapper authentication-cover">
+        <div class="authentication-inner row m-0">
+            <!-- /Left Text -->
+            <div class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center p-5">
+                <div class="w-100 d-flex justify-content-center">
+                    <img src="/assets/images/bg-login.svg" class="img-fluid" alt="Login image" width="700">
+                </div>
+            </div>
+            <!-- /Left Text -->
+
+            <!-- Login -->
+            <div class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg p-sm-4 p-4">
+                <div class="w-px-400 mx-auto">
+                    <!-- Logo -->
+                    <div class="app-brand justify-content-center mb-5">
+                        <a href="/admin/login" class="app-brand-link gap-2">
+                            <span class="app-brand-logo demo">
+                                <img src="/assets/images/logo.svg" alt="Logo" width="200">
+                            </span>
+                        </a>
+                    </div>
+                    <!-- /Logo -->
+
+                    <h4 class="mb-2">Sistem Akuntansi UBSP</h4>
+                    <p class="mb-4">Selamat datang, Admin! 👋</p>
+
+                    <form id="formAuthentication" class="mb-3" method="post">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="email" name="username"
+                                placeholder="Masukkan username" autofocus />
+                        </div>
+                        <div class="mb-3 form-password-toggle">
+                            <div class="d-flex justify-content-between">
+                                <label class="form-label" for="password">Password</label>
+                            </div>
+                            <div class="input-group input-group-merge">
+                                <input type="password" id="password" class="form-control" name="password"
+                                    placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                    aria-describedby="password" />
+                                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-primary d-grid w-100" type="submit">Masuk</button>
+                        </div>
+
+                        <div class="divider my-4">
+                            <div class="divider-text">© <script>document.write(new Date().getFullYear());</script> Sistem Akuntansi UBSP</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- /Login -->
+        </div>
+    </div>
+
+
+    {{-- <div class="container-xxl">
         <div class="authentication-wrapper authentication-basic container-p-y">
             <div class="authentication-inner">
                 <!-- Register -->
@@ -60,7 +117,6 @@
                                     <img width="60" src="/main/assets/static/images/logo/UBSP-logos_transparent.png"
                                         alt="Logo">
                                 </span>
-                                {{-- <span class="app-brand-text demo text-body fw-bold">UBSP</span> --}}
                             </a>
                         </div>
                         <!-- /Logo -->
@@ -91,10 +147,9 @@
                         </form>
                     </div>
                 </div>
-                <!-- /Register -->
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- / Content -->
 
