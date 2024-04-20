@@ -21,16 +21,16 @@
                             </div>
                             <span class="col-md-12 col-lg-5 col-xl-12 col-xxl-5 text-center mx-auto mx-md-0 mb-2"><img
                                     src="/assets/images/company.svg"
-                                    class="w-75 m-2" style="mix-blend-mode: multiply;filter: contrast(1);"></span>
+                                    class="w-75 m-2"></span>
                         </div>
 
-                        <a href="{{ route('admin.transaction.ubsp') }}" class="btn btn-white text-primary w-100 fw-medium shadow-sm">Transaksi UBSP</a>
+                        <a href="{{ route('admin.transaction.ubsp') }}" class="btn btn-white text-primary w-100 fw-bold shadow-sm">Transaksi UBSP</a>
                     </div>
                 </div>
             </div>
 
             <div class="col-lg-12 col-xl-6 col-12">
-                <div class="card mb-4 bg-gradient-warning">
+                <div class="card mb-4 bg-gradient-primary">
                     <div class="card-body">
                         <div class="row justify-content-between mb-3">
                             <div
@@ -39,10 +39,11 @@
                                 <p class="card-text text-white">Transaksi anggota koperasi UBSP</p>
                             </div>
                             <span class="col-md-12 col-lg-5 col-xl-12 col-xxl-5 text-center mx-auto mx-md-0 mb-2"><img
-                                    src="/assets/images/member1.svg" class="w-75 m-2" style="mix-blend-mode: multiply;filter: contrast(1);"></span>
+                                    src="/assets/images/member1.svg" class="w-75 m-2"></span>
+                                    {{-- style="mix-blend-mode: multiply;filter: contrast(1);" --}}
                         </div>
 
-                        <a href="{{ route('admin.transaction.member') }}" class="btn btn-white text-warning w-100 fw-medium shadow-sm">Transaksi Anggota</a>
+                        <a href="{{ route('admin.transaction.member') }}" class="btn btn-white text-primary w-100 fw-bold shadow-sm">Transaksi Anggota</a>
                     </div>
                 </div>
             </div>

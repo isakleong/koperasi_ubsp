@@ -19,7 +19,7 @@
                                     src="/assets/images/simpanan.svg"
                                     class="w-85 m-2" style="mix-blend-mode: multiply;filter: contrast(1);"></span>
                         </div>
-                        <button type="button" class="btn btn-warning text-white w-100 fw-medium shadow-sm" data-bs-toggle="modal" data-bs-target="#simpanan">Transaksi Simpanan</button>
+                        <button type="button" class="btn btn-primary text-white w-100 fw-medium shadow-sm" data-bs-toggle="modal" data-bs-target="#simpanan">Transaksi Simpanan</button>
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                                     src="/assets/images/pinjaman.svg" class="w-85 m-2" style="mix-blend-mode: multiply;filter: contrast(1);"></span>
                         </div>
 
-                        <a href="{{ route('admin.transaction.member') }}" class="btn btn-warning text-white w-100 fw-medium shadow-sm">Transaksi Pinjaman</a>
+                        <a href="{{ route('admin.transaction.member') }}" class="btn btn-primary text-white w-100 fw-medium shadow-sm">Transaksi Pinjaman</a>
                     </div>
                 </div>
             </div>
@@ -55,7 +55,7 @@
                                     src="/assets/images/angsuran.svg" class="w-85 m-2" style="mix-blend-mode: multiply;filter: contrast(1);"></span>
                         </div>
 
-                        <a href="{{ route('admin.transaction.member') }}" class="btn btn-warning text-white w-100 fw-medium shadow-sm">Transaksi Angsuran</a>
+                        <a href="{{ route('admin.transaction.member') }}" class="btn btn-primary text-white w-100 fw-medium shadow-sm">Transaksi Angsuran</a>
                     </div>
                 </div>
             </div>
