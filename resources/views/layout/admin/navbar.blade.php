@@ -1,9 +1,10 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
-        <a href="index.html" class="app-brand-link">
-            <span class="app-brand-logo align-items-center">
-                <img width="60" src="/main/assets/static/images/logo/UBSP-logos_transparent.png" alt="Logo">
+        <a href="/admin" class="app-brand-link">
+            <span class="app-brand-logo">
+                <img src="/assets/images/logo.svg" alt="Logo" width="60">
             </span>
+            <span class="menu-text fw-bold">Akuntansi UBSP</span>
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
