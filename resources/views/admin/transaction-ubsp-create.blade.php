@@ -146,10 +146,12 @@
                                                 </div>
 
                                                 <div class="col-lg-12 col-xl-1 col-12 d-flex align-items-center mb-2">
-                                                    <button class="btn btn-label-danger mt-4 deleteRowDebit"
+                                                    <button class="btn btn-icon btn-sm btn-label-danger btn-remove mt-4 deleteRowDebit"
                                                         style="display: none;">
                                                         {{-- <i class="bx bx-x me-1"></i> --}}
-                                                        <span class="align-middle">Hapus</span>
+                                                        {{-- <span class="align-middle">Hapus</span> --}}
+
+                                                        <span class="tf-icons bx bx-trash bx-flashing-hover"></span>
                                                     </button>
                                                 </div>
                                             </div>
