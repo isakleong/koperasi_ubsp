@@ -4,6 +4,9 @@
     <link rel="stylesheet" href="/main/assets/extensions/filepond/filepond.css">
     <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
     <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
+    
+    <link rel="stylesheet" href="/vendor/bs-stepper/css/bs-stepper.css">
+    {{-- <link rel="stylesheet" href="/vendor/bs-stepper/css/theme-default.css"> --}}
 
     <style>
         #overlay {
@@ -27,7 +30,31 @@
             transform: translate(-50%, -50%);
         }
     </style>
+
+<style>
+    .filepond--drop-label {
+        color: #4c4e53;
+    }
+
+    .filepond--label-action {
+        text-decoration-color: #babdc0;
+    }
+
+    .filepond--panel-root {
+        border-radius: 2em;
+        background-color: #f3e9fa;
+    }
+
+    .filepond--item-panel {
+        background-color: #595e68;
+    }
+
+    .filepond--drip-blob {
+        background-color: #7f8a9a;
+    }
+</style>
 @endsection
+@livewireStyles
 
 @section('content')
     {{-- @include('sweetalert::alert') --}}
@@ -40,117 +67,199 @@
             <div class="col-xl">
                 <div class="card mb-4">
                     @if (isset($configuration) && count($configuration) == 2)
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Formulir Anggota Baru</h5>
-                        {{-- <small class="text-muted float-end">Sistem Akuntansi UBSP</small> --}}
-                    </div>
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Formulir Anggota Baru</h5>
+                            {{-- <small class="text-muted float-end">Sistem Akuntansi UBSP</small> --}}
+                        </div>
                     @endif
                     <div class="card-body">
-                        @if (isset($configuration) && count($configuration) == 2)
+                        {{-- <div class="bs-stepper wizard-numbered mt-2">
+                            <div class="bs-stepper-header">
+                                <div class="step" data-target="#account-details">
+                                    <button type="button" class="step-trigger">
+                                        <span class="bs-stepper-circle">1</span>
+                                        <span class="bs-stepper-label mt-1">
+                                            <span class="bs-stepper-title">Account Details</span>
+                                            <span class="bs-stepper-subtitle">Setup Account Details</span>
+                                        </span>
+                                    </button>
+                                </div>
+                                <div class="line">
+                                    <i class="bx bx-chevron-right"></i>
+                                </div>
+                                <div class="step" data-target="#personal-info">
+                                    <button type="button" class="step-trigger">
+                                        <span class="bs-stepper-circle">2</span>
+                                        <span class="bs-stepper-label mt-1">
+                                            <span class="bs-stepper-title">Personal Info</span>
+                                            <span class="bs-stepper-subtitle">Add personal info</span>
+                                        </span>
+
+                                    </button>
+                                </div>
+                                <div class="line">
+                                    <i class="bx bx-chevron-right"></i>
+                                </div>
+                                <div class="step" data-target="#social-links">
+                                    <button type="button" class="step-trigger">
+                                        <span class="bs-stepper-circle">3</span>
+                                        <span class="bs-stepper-label mt-1">
+                                            <span class="bs-stepper-title">Social Links</span>
+                                            <span class="bs-stepper-subtitle">Add social links</span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="bs-stepper-content">
+                                <form onSubmit="return false">
+                                    <!-- Account Details -->
+                                    <div id="account-details" class="content">
+                                        <div class="content-header mb-3">
+                                            <h6 class="mb-0">Account Details</h6>
+                                            <small>Enter Your Account Details.</small>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-sm-6">
+                                                <label class="form-label" for="username">Username</label>
+                                                <input type="text" id="username" class="form-control"
+                                                    placeholder="johndoe" />
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="form-label" for="email">Email</label>
+                                                <input type="email" id="email" class="form-control"
+                                                    placeholder="john.doe@email.com" aria-label="john.doe" />
+                                            </div>
+                                            <div class="col-sm-6 form-password-toggle">
+                                                <label class="form-label" for="password">Password</label>
+                                                <div class="input-group input-group-merge">
+                                                    <input type="password" id="password" class="form-control"
+                                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                                        aria-describedby="password2" />
+                                                    <span class="input-group-text cursor-pointer" id="password2"><i
+                                                            class="bx bx-hide"></i></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 form-password-toggle">
+                                                <label class="form-label" for="confirm-password">Confirm
+                                                    Password</label>
+                                                <div class="input-group input-group-merge">
+                                                    <input type="password" id="confirm-password" class="form-control"
+                                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                                        aria-describedby="confirm-password2" />
+                                                    <span class="input-group-text cursor-pointer"
+                                                        id="confirm-password2"><i class="bx bx-hide"></i></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-between">
+                                                <button class="btn btn-label-secondary btn-prev" disabled>
+                                                    <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                                    <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                                </button>
+                                                <button class="btn btn-primary btn-next">
+                                                    <span
+                                                        class="align-middle d-sm-inline-block d-none me-sm-1">Next</span>
+                                                    <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Personal Info -->
+                                    <div id="personal-info" class="content">
+                                        <div class="content-header mb-3">
+                                            <h6 class="mb-0">Personal Info</h6>
+                                            <small>Enter Your Personal Info.</small>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-sm-6">
+                                                <label class="form-label" for="first-name">First Name</label>
+                                                <input type="text" id="first-name" class="form-control"
+                                                    placeholder="John" />
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="form-label" for="last-name">Last Name</label>
+                                                <input type="text" id="last-name" class="form-control"
+                                                    placeholder="Doe" />
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="form-label" for="country">Country</label>
+                                                <select class="select2" id="country">
+                                                    <option label=" "></option>
+                                                    <option>UK</option>
+                                                    <option>USA</option>
+                                                    <option>Spain</option>
+                                                    <option>France</option>
+                                                    <option>Italy</option>
+                                                    <option>Australia</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="form-label" for="language">Language</label>
+                                                <select class="selectpicker w-auto" id="language"
+                                                    data-style="btn-transparent" data-icon-base="bx"
+                                                    data-tick-icon="bx-check text-white" multiple>
+                                                    <option>English</option>
+                                                    <option>French</option>
+                                                    <option>Spanish</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-between">
+                                                <button class="btn btn-primary btn-prev">
+                                                    <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                                    <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                                </button>
+                                                <button class="btn btn-primary btn-next">
+                                                    <span
+                                                        class="align-middle d-sm-inline-block d-none me-sm-1">Next</span>
+                                                    <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Social Links -->
+                                    <div id="social-links" class="content">
+                                        <div class="content-header mb-3">
+                                            <h6 class="mb-0">Social Links</h6>
+                                            <small>Enter Your Social Links.</small>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-sm-6">
+                                                <label class="form-label" for="twitter">Twitter</label>
+                                                <input type="text" id="twitter" class="form-control"
+                                                    placeholder="https://twitter.com/abc" />
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="form-label" for="facebook">Facebook</label>
+                                                <input type="text" id="facebook" class="form-control"
+                                                    placeholder="https://facebook.com/abc" />
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="form-label" for="google">Google+</label>
+                                                <input type="text" id="google" class="form-control"
+                                                    placeholder="https://plus.google.com/abc" />
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="form-label" for="linkedin">LinkedIn</label>
+                                                <input type="text" id="linkedin" class="form-control"
+                                                    placeholder="https://linkedin.com/abc" />
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-between">
+                                                <button class="btn btn-primary btn-prev">
+                                                    <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                                    <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                                </button>
+                                                <button class="btn btn-success btn-submit">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div> --}}
+
+                        <livewire:user-register-wizard />
+
+                        {{-- @if (isset($configuration) && count($configuration) == 2)
                         <form action="{{ route('admin.user.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="fname" name="fname" placeholder="" required value="{{ old('fname') }}" />
-                                    <label for="fname">Nama Depan</label>
-                                </div>
-                                @error('fname')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="lname" name="lname" placeholder="" required value="{{ old('lname') }}" />
-                                    <label for="lname">Nama Belakang</label>
-                                </div>
-                                @error('lname')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="birthplace" name="birthplace"
-                                        placeholder="" required
-                                        value="{{ old('birthplace') }}" />
-                                    <label for="birthplace">Tempat Lahir</label>
-                                </div>
-                                @error('birthplace')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="date" class="form-control mb-3" id="birthdate" name="birthdate"
-                                        required value="{{ old('birthdate') }}">
-                                    <label for="birthdate">Tanggal Lahir</label>
-                                </div>
-                                @error('birthdate')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="address" name="address"
-                                        placeholder="" required
-                                        value="{{ old('address') }}" />
-                                    <label for="address">Alamat Tinggal</label>
-                                </div>
-                                @error('address')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="workAddress" name="workAddress"
-                                        placeholder="" required
-                                        value="{{ old('workAddress') }}" />
-                                    <label for="workAddress">Alamat Kerja</label>
-                                </div>
-                                @error('workAddress')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="email" class="form-control" id="email" name="email"
-                                        placeholder="" required value="{{ old('email') }}" />
-                                    <label for="email">Email</label>
-                                </div>
-                                @error('email')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="phone" name="phone"
-                                        placeholder="" oninput=validateNumberInput(this) required
-                                        value="{{ old('phone') }}" />
-                                    <label for="phone">No Hp</label>
-                                </div>
-                                @error('phone')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="mothername" name="mothername"
-                                        placeholder="" required
-                                        value="{{ old('mothername') }}" />
-                                    <label for="mothername">Nama Ibu Kandung</label>
-                                </div>
-                                @error('mothername')
-                                    <p class="mt-1" style="color: red">{{ $message }}</p>
-                                @enderror
-                            </div>
-
                             <div class="mb-3">
                                 <div class="form-group">
                                     <label for="ktp">Foto KTP</label>
@@ -234,7 +343,8 @@
                                 <h5 class="mb-4 mx-2">Konfigurasi anggota UBSP tidak ditemukan, silahkan melakukan setting terlebih dahulu.</h5>
                             </div>
                         </div>
-                        @endif
+                        @endif --}}
+
                     </div>
                 </div>
             </div>
@@ -243,25 +353,35 @@
     <!-- / Content -->
 @endsection
 
+{{-- @livewireScripts --}}
 @section('vendorJS')
     <script src="/main/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js">
     </script>
     <script src="/main/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js">
     </script>
     <script src="/main/assets/extensions/filepond-plugin-image-crop/filepond-plugin-image-crop.min.js"></script>
-    <script
-        src="/main/assets/extensions/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js">
+    <script src="/main/assets/extensions/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js">
     </script>
     <script src="/main/assets/extensions/filepond-plugin-image-filter/filepond-plugin-image-filter.min.js"></script>
     <script src="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js"></script>
     <script src="/main/assets/extensions/filepond-plugin-image-resize/filepond-plugin-image-resize.min.js"></script>
     <script src="/main/assets/extensions/filepond/filepond.js"></script>
-    <script src="/main/assets/extensions/toastify-js/src/toastify.js"></script>
     <script src="/main/assets/static/js/pages/filepond.js"></script>
 
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/sweetalert/sweetalert2.js"></script>
     <script src="/vendor/lottie/lottie.min.js"></script>
+
+    <script src="/vendor/bs-stepper/js/bs-stepper.js"></script>
+
+    <script>
+        document.addEventListener('livewire:load', function () {
+            console.log("yes loaded");
+    // Reinitialize Filepond
+    FilePond.parse(document.body);
+});
+
+    </script>
 
     <script>
         function validateNumberInput(input) {
@@ -280,15 +400,16 @@
             $('.show_confirm').click(function(event) {
                 event.preventDefault();
                 var form = $(this).closest("form");
-                var item = $('input[name="fname"]').val() + ' ' +$('input[name="lname"]').val();
-                if(item.trim() === "") {
+                var item = $('input[name="fname"]').val() + ' ' + $('input[name="lname"]').val();
+                if (item.trim() === "") {
                     item = "(Nama Anggota Belum Diisi)";
                 }
 
                 Swal.fire({
                     title: 'Konfirmasi',
                     html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
-                        '<p class="mt-2">Apakah Anda yakin ingin menambahkan anggota ' + item + '?</p>',
+                        '<p class="mt-2">Apakah Anda yakin ingin menambahkan anggota ' + item +
+                        '?</p>',
                     confirmButtonText: 'Ya, Tambah',
                     denyButtonText: 'Batal',
                     customClass: {
@@ -351,7 +472,7 @@
                 Swal.fire({
                     title: 'Error',
                     html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
-                            '<p class="mt-2">Formulir anggota baru belum diisi secara lengkap. Silahkan dicek kembali.</p>',
+                        '<p class="mt-2">Formulir anggota baru belum diisi secara lengkap. Silahkan dicek kembali.</p>',
                     showCloseButton: true,
                     focusConfirm: false,
                     didOpen: () => {
@@ -371,3 +492,4 @@
         });
     </script>
 @endsection
+@livewireScripts

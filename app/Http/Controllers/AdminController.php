@@ -320,7 +320,37 @@ class AdminController extends Controller
         } elseif ($parameter == "admin.transaction.member") {
 
             return view('admin.transaction-member');
-        } elseif ($parameter == "admin.posting") {
+        } elseif ($parameter == "admin.transaction.member.saving.deposit") {
+            $configName = ['JENIS SIMPANAN', 'SIMPANAN WAJIB', 'MIN SIMPANAN SUKARELA', 'MIN SIMPANAN SIBUHAR'];
+            $configuration = Config::whereIn('name', $configName)->get();
+
+            $configStatus = false;
+            $kind = array();
+            $minWajib = "";
+            $minSibuhar = "";
+            $minSukarela = "";
+
+            if(count($configuration) == 4) {
+                $configStatus = true;
+                foreach($configuration as $item) {
+                    if(strtolower($item->name) == "jenis simpanan") {
+                        $kind =  explode('|', $item->value);
+                    } elseif(strtolower($item->name) == "simpanan wajib") {
+                        $minWajib = $item->value;
+                    } elseif(strtolower($item->name) == "min simpanan sukarela") {
+                        $minSukarela = $item->value;
+                    } elseif(strtolower($item->name) == "min simpanan sibuhar") {
+                        $minSibuhar = $item->value;
+                    }
+                }
+            }
+
+            $member = User::where('status', 2)->get();
+
+            return view('admin.transaction-member-saving-deposit', compact('member', 'configStatus', 'kind', 'minWajib', 'minSukarela', 'minSibuhar'));
+        }
+        
+        elseif ($parameter == "admin.posting") {
             $transaction = AccountTransaction::with('debitDetail.account', 'creditDetail.account', 'transactionImage')->orderBy('transactionDate', 'desc')->get();
 
             return view('admin.posting', compact('transaction'));

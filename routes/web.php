@@ -152,6 +152,8 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     Route::post('/transaction/ubsp/create', [AdminController::class, 'saveTransactionUBSP'])->name('transaction.ubsp.store');
     Route::get('/transaction/member', [AdminController::class, 'showFormData'])->name('transaction.member');
 
+    Route::get('/transaction/member/saving-deposit', [AdminController::class, 'showFormData'])->name('transaction.member.saving.deposit');
+
     //POSTING
     Route::get('/menu/posting', [AdminController::class, 'showFormData'])->name('posting');
 
