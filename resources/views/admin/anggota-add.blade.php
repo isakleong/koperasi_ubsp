@@ -1,9 +1,12 @@
 @extends('layout.admin.main')
 
 @section('vendorCSS')
-    <link rel="stylesheet" href="/main/assets/extensions/filepond/filepond.css">
+    {{-- <link rel="stylesheet" href="/main/assets/extensions/filepond/filepond.css">
     <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
-    <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
+    <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css"> --}}
+
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet"/>
     
     <link rel="stylesheet" href="/vendor/bs-stepper/css/bs-stepper.css">
     {{-- <link rel="stylesheet" href="/vendor/bs-stepper/css/theme-default.css"> --}}
@@ -31,7 +34,7 @@
         }
     </style>
 
-<style>
+{{-- <style>
     .filepond--drop-label {
         color: #4c4e53;
     }
@@ -52,9 +55,9 @@
     .filepond--drip-blob {
         background-color: #7f8a9a;
     }
-</style>
+</style> --}}
 @endsection
-@livewireStyles
+
 
 @section('content')
     {{-- @include('sweetalert::alert') --}}
@@ -73,188 +76,6 @@
                         </div>
                     @endif
                     <div class="card-body">
-                        {{-- <div class="bs-stepper wizard-numbered mt-2">
-                            <div class="bs-stepper-header">
-                                <div class="step" data-target="#account-details">
-                                    <button type="button" class="step-trigger">
-                                        <span class="bs-stepper-circle">1</span>
-                                        <span class="bs-stepper-label mt-1">
-                                            <span class="bs-stepper-title">Account Details</span>
-                                            <span class="bs-stepper-subtitle">Setup Account Details</span>
-                                        </span>
-                                    </button>
-                                </div>
-                                <div class="line">
-                                    <i class="bx bx-chevron-right"></i>
-                                </div>
-                                <div class="step" data-target="#personal-info">
-                                    <button type="button" class="step-trigger">
-                                        <span class="bs-stepper-circle">2</span>
-                                        <span class="bs-stepper-label mt-1">
-                                            <span class="bs-stepper-title">Personal Info</span>
-                                            <span class="bs-stepper-subtitle">Add personal info</span>
-                                        </span>
-
-                                    </button>
-                                </div>
-                                <div class="line">
-                                    <i class="bx bx-chevron-right"></i>
-                                </div>
-                                <div class="step" data-target="#social-links">
-                                    <button type="button" class="step-trigger">
-                                        <span class="bs-stepper-circle">3</span>
-                                        <span class="bs-stepper-label mt-1">
-                                            <span class="bs-stepper-title">Social Links</span>
-                                            <span class="bs-stepper-subtitle">Add social links</span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="bs-stepper-content">
-                                <form onSubmit="return false">
-                                    <!-- Account Details -->
-                                    <div id="account-details" class="content">
-                                        <div class="content-header mb-3">
-                                            <h6 class="mb-0">Account Details</h6>
-                                            <small>Enter Your Account Details.</small>
-                                        </div>
-                                        <div class="row g-3">
-                                            <div class="col-sm-6">
-                                                <label class="form-label" for="username">Username</label>
-                                                <input type="text" id="username" class="form-control"
-                                                    placeholder="johndoe" />
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label class="form-label" for="email">Email</label>
-                                                <input type="email" id="email" class="form-control"
-                                                    placeholder="john.doe@email.com" aria-label="john.doe" />
-                                            </div>
-                                            <div class="col-sm-6 form-password-toggle">
-                                                <label class="form-label" for="password">Password</label>
-                                                <div class="input-group input-group-merge">
-                                                    <input type="password" id="password" class="form-control"
-                                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                                        aria-describedby="password2" />
-                                                    <span class="input-group-text cursor-pointer" id="password2"><i
-                                                            class="bx bx-hide"></i></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6 form-password-toggle">
-                                                <label class="form-label" for="confirm-password">Confirm
-                                                    Password</label>
-                                                <div class="input-group input-group-merge">
-                                                    <input type="password" id="confirm-password" class="form-control"
-                                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                                        aria-describedby="confirm-password2" />
-                                                    <span class="input-group-text cursor-pointer"
-                                                        id="confirm-password2"><i class="bx bx-hide"></i></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 d-flex justify-content-between">
-                                                <button class="btn btn-label-secondary btn-prev" disabled>
-                                                    <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
-                                                    <span class="align-middle d-sm-inline-block d-none">Previous</span>
-                                                </button>
-                                                <button class="btn btn-primary btn-next">
-                                                    <span
-                                                        class="align-middle d-sm-inline-block d-none me-sm-1">Next</span>
-                                                    <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Personal Info -->
-                                    <div id="personal-info" class="content">
-                                        <div class="content-header mb-3">
-                                            <h6 class="mb-0">Personal Info</h6>
-                                            <small>Enter Your Personal Info.</small>
-                                        </div>
-                                        <div class="row g-3">
-                                            <div class="col-sm-6">
-                                                <label class="form-label" for="first-name">First Name</label>
-                                                <input type="text" id="first-name" class="form-control"
-                                                    placeholder="John" />
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label class="form-label" for="last-name">Last Name</label>
-                                                <input type="text" id="last-name" class="form-control"
-                                                    placeholder="Doe" />
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label class="form-label" for="country">Country</label>
-                                                <select class="select2" id="country">
-                                                    <option label=" "></option>
-                                                    <option>UK</option>
-                                                    <option>USA</option>
-                                                    <option>Spain</option>
-                                                    <option>France</option>
-                                                    <option>Italy</option>
-                                                    <option>Australia</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label class="form-label" for="language">Language</label>
-                                                <select class="selectpicker w-auto" id="language"
-                                                    data-style="btn-transparent" data-icon-base="bx"
-                                                    data-tick-icon="bx-check text-white" multiple>
-                                                    <option>English</option>
-                                                    <option>French</option>
-                                                    <option>Spanish</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-12 d-flex justify-content-between">
-                                                <button class="btn btn-primary btn-prev">
-                                                    <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
-                                                    <span class="align-middle d-sm-inline-block d-none">Previous</span>
-                                                </button>
-                                                <button class="btn btn-primary btn-next">
-                                                    <span
-                                                        class="align-middle d-sm-inline-block d-none me-sm-1">Next</span>
-                                                    <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Social Links -->
-                                    <div id="social-links" class="content">
-                                        <div class="content-header mb-3">
-                                            <h6 class="mb-0">Social Links</h6>
-                                            <small>Enter Your Social Links.</small>
-                                        </div>
-                                        <div class="row g-3">
-                                            <div class="col-sm-6">
-                                                <label class="form-label" for="twitter">Twitter</label>
-                                                <input type="text" id="twitter" class="form-control"
-                                                    placeholder="https://twitter.com/abc" />
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label class="form-label" for="facebook">Facebook</label>
-                                                <input type="text" id="facebook" class="form-control"
-                                                    placeholder="https://facebook.com/abc" />
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label class="form-label" for="google">Google+</label>
-                                                <input type="text" id="google" class="form-control"
-                                                    placeholder="https://plus.google.com/abc" />
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label class="form-label" for="linkedin">LinkedIn</label>
-                                                <input type="text" id="linkedin" class="form-control"
-                                                    placeholder="https://linkedin.com/abc" />
-                                            </div>
-                                            <div class="col-12 d-flex justify-content-between">
-                                                <button class="btn btn-primary btn-prev">
-                                                    <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
-                                                    <span class="align-middle d-sm-inline-block d-none">Previous</span>
-                                                </button>
-                                                <button class="btn btn-success btn-submit">Submit</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div> --}}
-
                         <livewire:user-register-wizard />
 
                         {{-- @if (isset($configuration) && count($configuration) == 2)
@@ -353,9 +174,8 @@
     <!-- / Content -->
 @endsection
 
-{{-- @livewireScripts --}}
 @section('vendorJS')
-    <script src="/main/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js">
+    {{-- <script src="/main/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js">
     </script>
     <script src="/main/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js">
     </script>
@@ -366,7 +186,10 @@
     <script src="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js"></script>
     <script src="/main/assets/extensions/filepond-plugin-image-resize/filepond-plugin-image-resize.min.js"></script>
     <script src="/main/assets/extensions/filepond/filepond.js"></script>
-    <script src="/main/assets/static/js/pages/filepond.js"></script>
+    <script src="/main/assets/static/js/pages/filepond.js"></script> --}}
+
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
 
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/sweetalert/sweetalert2.js"></script>
@@ -374,16 +197,18 @@
 
     <script src="/vendor/bs-stepper/js/bs-stepper.js"></script>
 
-    <script>
-        document.addEventListener('livewire:load', function () {
-            console.log("yes loaded");
-    // Reinitialize Filepond
-    FilePond.parse(document.body);
-});
+    {{-- <script>
+        console.log("hehe");
+        FilePond.registerPlugin(FilePondPluginImagePreview);
 
-    </script>
+        // Select the file input and use 
+        // create() to turn it into a pond
+        FilePond.create(
+            document.querySelector('input')
+        );
+    </script> --}}
 
-    <script>
+    {{-- <script>
         function validateNumberInput(input) {
             input.value = input.value.replace(/[^0-9]/g, '');
         }
@@ -490,6 +315,6 @@
                 });
             @endif
         });
-    </script>
+    </script> --}}
 @endsection
-@livewireScripts
+

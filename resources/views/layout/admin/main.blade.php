@@ -53,6 +53,8 @@
     <!-- Helpers -->
     <script src="/administrator/assets/vendor/js/helpers.js"></script>
     <script src="/administrator/assets/js/config.js"></script>
+
+    @livewireStyles
 </head>
 
 <body>
@@ -128,6 +130,7 @@
 
     <!-- Place this tag in your head or just before your close body tag. -->
     {{-- <script async defer src="/administrator/js/buttons.js"></script> --}}
+    @livewireScripts
 </body>
 
 </html>
