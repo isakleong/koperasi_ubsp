@@ -68,8 +68,24 @@
 
                 <div class="mb-3">
                     <div class="form-group">
-                        <div wire:ignore x-data x-init="FilePond.registerPlugin(FilePondPluginImagePreview);FilePond.create($refs.ktpx);">
-                            <input type="file" x-ref="ktpx" wire:model="ktpx" >
+                        <div wire:ignore x-data x-init="
+                            FilePond.setOptions({
+                                server: {
+                                    process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+                                        {{-- @this.upload('ktpx', file, load, error, progress) --}}
+                                        @this.upload('ktpx', file, (filename) => {load(filename)}, error, progress)
+                                    },
+                                    revert: (filename, load) => {
+                                        @this.removeUpload('ktpx', filename, load)
+
+                                    }
+                                }
+                            })
+                        
+                        
+                        
+                        FilePond.registerPlugin(FilePondPluginImagePreview);FilePond.create($refs.input);">
+                            <input type="file" x-ref="input" wire:model="ktpx" >
                         </div>
                     </div>
                     @error('ktpx') <span class="error">{{ $message }}</span> @enderror
