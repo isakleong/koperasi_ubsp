@@ -1,8 +1,8 @@
 <div>
-    @if(!empty($successMessage))
-    <div class="alert alert-success">
-        {{ $successMessage }}
-    </div>
+    @if (!empty($successMessage))
+        <div class="alert alert-success">
+            {{ $successMessage }}
+        </div>
     @endif
 
     <div class="bs-stepper">
@@ -52,46 +52,9 @@
                     @error('fname')
                         <p class="mt-1" style="color: red">{{ $message }}</p>
                     @enderror
-                </div> --}}
-
-                {{-- <div class="mb-3">
-                    <div class="form-group">
-                        <label for="ktpx">Foto KTP</label>
-                        <input type="file" class="image-resize-filepond" wire:model="ktpx" id="ktpx" accept="image/*">
-
-                        <input type="file" class="filepond" data-max-file-size="3MB" wire:model="ktpx" id="ktpx" accept="image/*">
-                    </div>
-                    @error('ktpx')
-                        <p class="mt-1" style="color: red">{{ $message }}</p>
-                    @enderror
-                </div> --}}
-
-                <div class="mb-3">
-                    <div class="form-group">
-                        <div wire:ignore x-data x-init="
-                            FilePond.setOptions({
-                                server: {
-                                    process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
-                                        {{-- @this.upload('ktpx', file, load, error, progress) --}}
-                                        @this.upload('ktpx', file, (filename) => {load(filename)}, error, progress)
-                                    },
-                                    revert: (filename, load) => {
-                                        @this.removeUpload('ktpx', filename, load)
-
-                                    }
-                                }
-                            })
-                        
-                        
-                        
-                        FilePond.registerPlugin(FilePondPluginImagePreview);FilePond.create($refs.input);">
-                            <input type="file" x-ref="input" wire:model="ktpx" >
-                        </div>
-                    </div>
-                    @error('ktpx') <span class="error">{{ $message }}</span> @enderror
                 </div>
 
-                {{-- <div class="mb-3">
+                <div class="mb-3">
                     <div class="form-floating">
                         <input type="text" class="form-control" id="lname" wire:model="lname" placeholder="" required value="{{ old('lname') }}" />
                         <label for="lname">Nama Belakang</label>
@@ -182,14 +145,104 @@
                         <p class="mt-1" style="color: red">{{ $message }}</p>
                     @enderror
                 </div> --}}
+
+                <div class="mb-3">
+                    <div class="form-group">
+                        <div 
+                            wire:ignore
+                            x-data="{pond: null}"
+                            x-init="
+                                FilePond.registerPlugin(FilePondPluginImagePreview);
+                                pond = FilePond.create($refs.kk);
+
+                                pond.setOptions({
+                                    server: {
+                                        process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+                                            @this.upload('kk', file, (filename) => { load(filename) }, error, progress)
+                                        },
+                                        revert: (filename, load) => {
+                                            @this.removeUpload('kk', filename, load)
+                                
+                                        }
+                                    }
+                                });
+                        ">
+                            <label>Foto KK</label>
+                            <input type="file" x-ref="kk" wire:model="kk" name="kk">
+                        </div>
+                    </div>
+                    @error('kk')
+                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-group">
+                        <div 
+                            wire:ignore
+                            x-data="{pond: null}"
+                            x-init="
+                                FilePond.registerPlugin(FilePondPluginImagePreview);
+                                pond = FilePond.create($refs.ktp);
+
+                                pond.setOptions({
+                                    server: {
+                                        process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+                                            @this.upload('ktp', file, (filename) => { load(filename) }, error, progress)
+                                        },
+                                        revert: (filename, load) => {
+                                            @this.removeUpload('ktp', filename, load)
+                                
+                                        }
+                                    }
+                                });
+                        ">
+                            <label>Foto KTP</label>
+                            <input type="file" x-ref="ktp" wire:model="ktp" name="ktp">
+                        </div>
+                    </div>
+                    @error('ktp')
+                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- <div class="mb-3">
+                    <div class="form-group">
+                        <div
+                            wire:ignore
+                            x-data 
+                            x-init="
+                                FilePond.setOptions({
+                                server: {
+                                    process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+                                        @this.upload('kk', file, (filename) => { load(filename) }, error, progress)
+                                    },
+                                    revert: (filename, load) => {
+                                        @this.removeUpload('kk', filename, load)
+                            
+                                    }
+                                }
+                            })
+                            
+                            FilePond.create($refs.kk);
+                        ">
+                            <label>Foto Kartu Keluarga</label>
+                            <input type="file" x-ref="kk" wire:model.lazy="kk" id="2-upload-file">
+                        </div>
+                    </div>
+                    @error('kk')
+                        <p class="mt-1" style="color: red">{{ $message }}</p>
+                    @enderror
+                </div> --}}
+
                 <div class="col-12 d-flex justify-content-between">
                     <button class="btn btn-label-secondary btn-prev" disabled>
-                      <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
-                      <span class="align-middle d-sm-inline-block d-none">Kembali</span>
+                        <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                        <span class="align-middle d-sm-inline-block d-none">Kembali</span>
                     </button>
                     <button class="btn btn-primary btn-next" wire:click="firstStepSubmit">
-                      <span class="align-middle d-sm-inline-block d-none me-sm-1">Lanjut</span>
-                      <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                        <span class="align-middle d-sm-inline-block d-none me-sm-1">Lanjut</span>
+                        <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
                     </button>
                 </div>
             </div>
@@ -197,45 +250,76 @@
             <div id="step2" style="display: {{ $currentStep != 2 ? 'none' : '' }}">
                 <div class="mb-3">
                     <div class="form-group">
-                        <label for="ktp">Foto KTP</label>
-                        <input type="file" class="image-resize-filepond" wire:model="ktp" id="ktp" accept="image/*">
+                        <div wire:ignore x-data x-init="FilePond.setOptions({
+                            server: {
+                                process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+                                    @this.upload('ktp', file, (filename) => { load(filename) }, error, progress)
+                                },
+                                revert: (filename, load) => {
+                                    @this.removeUpload('ktp', filename, load)
+                        
+                                }
+                            }
+                        })
+                        
+                        FilePond.registerPlugin(FilePondPluginImagePreview);
+                        FilePond.create($refs.input);">
+                            <label>Foto KTP</label>
+                            <input type="file" x-ref="input" wire:model="ktp">
+                        </div>
                     </div>
                     @error('ktp')
                         <p class="mt-1" style="color: red">{{ $message }}</p>
                     @enderror
                 </div>
+
                 <div class="mb-3">
                     <div class="form-group">
-                        <label for="kk">Foto Kartu Keluarga</label>
-                        <input type="file" class="image-preview-filepond" wire:model="kk" id="kk"
-                            accept="image/*">
+                        <div wire:ignore x-data x-init="FilePond.setOptions({
+                            server: {
+                                process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+                                    @this.upload('kk', file, (filename) => { load(filename) }, error, progress)
+                                },
+                                revert: (filename, load) => {
+                                    @this.removeUpload('kk', filename, load)
+                        
+                                }
+                            }
+                        })
+                        
+                        FilePond.registerPlugin(FilePondPluginImagePreview);
+                        FilePond.create($refs.input);">
+                            <label>Foto Kartu Keluarga</label>
+                            <input type="file" x-ref="input" wire:model="kk">
+                        </div>
                     </div>
                     @error('kk')
                         <p class="mt-1" style="color: red">{{ $message }}</p>
                     @enderror
                 </div>
+
                 <div class="col-12 d-flex justify-content-between">
                     <button class="btn btn-label-danger btn-prev" wire:click="back(1)">
-                      <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
-                      <span class="align-middle d-sm-inline-block d-none">Kembali</span>
+                        <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                        <span class="align-middle d-sm-inline-block d-none">Kembali</span>
                     </button>
                     <button class="btn btn-primary btn-next" wire:click="secondStepSubmit">
-                      <span class="align-middle d-sm-inline-block d-none me-sm-1">Lanjut</span>
-                      <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                        <span class="align-middle d-sm-inline-block d-none me-sm-1">Lanjut</span>
+                        <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
                     </button>
                 </div>
             </div>
             @once
-            <script>
-                document.addEventListener('livewire:load', function () {
-                    Livewire.on('reinitializeFilepond', () => {
-                        // Reinitialize or setup Filepond
-                        // For example:
-                        FilePond.create(document.querySelector('.image-resize-filepond'));
-                        FilePond.create(document.querySelector('.image-preview-filepond'));
+                <script>
+                    document.addEventListener('livewire:load', function() {
+                        Livewire.on('reinitializeFilepond', () => {
+                            // Reinitialize or setup Filepond
+                            // For example:
+                            FilePond.create(document.querySelector('.image-resize-filepond'));
+                            FilePond.create(document.querySelector('.image-preview-filepond'));
+                        });
                     });
-                });
-            </script>
+                </script>
             @endonce
 
             <div id="step3" style="display: {{ $currentStep != 3 ? 'none' : '' }}">

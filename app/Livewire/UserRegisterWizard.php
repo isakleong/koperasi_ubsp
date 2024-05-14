@@ -10,7 +10,7 @@ class UserRegisterWizard extends Component
     use WithFileUploads;
     
     public $currentStep = 1;
-    public $fname, $lname, $birthdate, $birthplace, $address, $workAddress, $email, $phone, $mothername, $method, $simpanan, $ktp, $kk, $ktpx;
+    public $fname, $lname, $birthdate, $birthplace, $address, $workAddress, $email, $phone, $mothername, $method, $simpanan, $ktp, $kk;
     public $successMessage = '';
 
     public function render()
@@ -21,45 +21,68 @@ class UserRegisterWizard extends Component
     public function firstStepSubmit()
     {
         // $this->validate(
+        //     // [
+        //     //     'fname' => 'required',
+        //     //     'lname' => 'required',
+        //     //     'birthdate' => 'required|date|before:' . now()->subYears(17)->format('Y-m-d'),
+        //     //     'birthplace' => 'required',
+        //     //     'address' => 'required',
+        //     //     'workAddress' => 'required',
+        //     //     'email' => 'required|email|unique:users,email',
+        //     //     'phone' => 'required|min:10|regex:/^([0-9\s\-\+\(\)]*)$/',
+        //     //     'mothername' => 'required'
+        //     // ],
+        //     // [
+        //     //     'fname.required' => 'Nama depan belum diisi',
+        //     //     'lname.required' => 'Nama belakang belum diisi',
+        //     //     'birthdate.required' => 'Tanggal lahir belum diisi',
+        //     //     'birthdate.date' => 'Tanggal lahir tidak valid',
+        //     //     'birthdate.before' => 'Anggota UBSP harus berusia minimal 17 tahun',
+        //     //     'birthplace.required' => 'Tempat lahir belum diisi',
+        //     //     'address.required' => 'Alamat tinggal belum diisi',
+        //     //     'workAddress.required' => 'Alamat kerja belum diisi',
+        //     //     'email.required' => 'Email belum diisi',
+        //     //     'email.unique' => 'Email sudah ada',
+        //     //     'email.email' => 'Email tidak valid',
+        //     //     'phone.required' => 'No Hp belum diisi',
+        //     //     'phone.min' => 'No Hp tidak valid',
+        //     //     'phone.regex' => 'No Hp tidak valid',
+        //     //     'mothername.required' => 'Nama ibu kandung belum diisi'
+        //     // ]
+
         //     [
-        //         'fname' => 'required',
-        //         'lname' => 'required',
-        //         'birthdate' => 'required|date|before:' . now()->subYears(17)->format('Y-m-d'),
-        //         'birthplace' => 'required',
-        //         'address' => 'required',
-        //         'workAddress' => 'required',
-        //         'email' => 'required|email|unique:users,email',
-        //         'phone' => 'required|min:10|regex:/^([0-9\s\-\+\(\)]*)$/',
-        //         'mothername' => 'required'
+        //         'ktp' => 'required|image',
+        //         'kk' => 'required|image'
         //     ],
         //     [
-        //         'fname.required' => 'Nama depan belum diisi',
-        //         'lname.required' => 'Nama belakang belum diisi',
-        //         'birthdate.required' => 'Tanggal lahir belum diisi',
-        //         'birthdate.date' => 'Tanggal lahir tidak valid',
-        //         'birthdate.before' => 'Anggota UBSP harus berusia minimal 17 tahun',
-        //         'birthplace.required' => 'Tempat lahir belum diisi',
-        //         'address.required' => 'Alamat tinggal belum diisi',
-        //         'workAddress.required' => 'Alamat kerja belum diisi',
-        //         'email.required' => 'Email belum diisi',
-        //         'email.unique' => 'Email sudah ada',
-        //         'email.email' => 'Email tidak valid',
-        //         'phone.required' => 'No Hp belum diisi',
-        //         'phone.min' => 'No Hp tidak valid',
-        //         'phone.regex' => 'No Hp tidak valid',
-        //         'mothername.required' => 'Nama ibu kandung belum diisi'
-        //     ]
+        //         'ktp.required' => 'Foto KTP belum diisi',
+        //         'ktp.image' => 'Foto KTP tidak valid',
+        //         'kk.required' => 'Foto KK belum diisi',
+        //         'kk.image' => 'Foto KK tidak valid'
+        //     ],
         // );
-
-        $this->validate(
-            [
-                'ktpx' => 'required|image',
-            ],
-            [
-                'ktpx.required' => 'Foto KTPX belum diisi',
-                'ktpx.image' => 'Foto KTPX tidak valid',
-            ]
-        );
+        
+        if (!$this->ktp && !$this->kk) {
+            $this->addError('ktp', 'At least one file must be uploaded');
+            $this->addError('kk', 'At least one file must be uploaded');
+        }
+    
+        // Perform validation if at least one file is uploaded
+        if ($this->ktp || $this->kk) {
+            dd($this->ktp);
+            $this->validate(
+                [
+                    'ktp' => 'required|image',
+                    'kk' => 'required|image'
+                ],
+                [
+                    'ktp.required' => 'Foto KTP belum diisi',
+                    'ktp.image' => 'Foto KTP tidak valid',
+                    'kk.required' => 'Foto KK belum diisi',
+                    'kk.image' => 'Foto KK tidak valid'
+                ]
+            );
+        }
  
         $this->currentStep = 2;
     }
