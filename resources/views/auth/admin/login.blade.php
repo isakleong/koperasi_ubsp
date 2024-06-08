@@ -8,20 +8,31 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>@yield('title')</title>
+    <title>Login - Sistem Akuntansi UBSP</title>
 
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/administrator/assets/img/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="57x57" href="/administrator/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/administrator/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/administrator/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/administrator/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/administrator/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/administrator/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/administrator/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/administrator/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/administrator/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/administrator/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/administrator/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/administrator/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/administrator/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/administrator/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/administrator/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-        rel="stylesheet" />
-
+    <link rel="stylesheet" href="/administrator/assets/vendor/fonts/fonts.css" />
     <link rel="stylesheet" href="/administrator/assets/vendor/fonts/boxicons.css" />
 
     <!-- Core CSS -->
@@ -33,8 +44,6 @@
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="/administrator/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
 
-    <!-- Page CSS -->
-    <!-- Page -->
     <link rel="stylesheet" href="/administrator/assets/vendor/css/pages/page-auth.css" />
 
     <!-- Helpers -->
@@ -43,33 +52,23 @@
 </head>
 
 <body>
-    <!-- Content -->
-
     <div class="authentication-wrapper authentication-cover">
         <div class="authentication-inner row m-0">
-            <!-- /Left Text -->
-            <div class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center p-5">
+            <div class="d-none d-lg-flex col-lg-6 col-xl-6 align-items-center p-5">
                 <div class="w-100 d-flex justify-content-center">
                     <img src="/assets/images/bg-login.svg" class="img-fluid" alt="Login image" width="700">
                 </div>
             </div>
-            <!-- /Left Text -->
 
-            <!-- Login -->
-            <div class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg p-sm-4 p-4">
+            <div class="d-flex col-12 col-lg-6 col-xl-6 align-items-center authentication-bg p-sm-4 p-4">
                 <div class="w-px-400 mx-auto">
-                    <!-- Logo -->
                     <div class="app-brand justify-content-center mb-5">
-                        <a href="/admin/login" class="app-brand-link gap-2">
-                            <span class="app-brand-logo demo">
-                                <img src="/assets/images/logo.svg" alt="Logo" width="200">
-                            </span>
-                        </a>
+                        <span class="app-brand-logo demo">
+                            <img src="/assets/images/logo.svg" alt="Logo" width="200">
+                        </span>
                     </div>
-                    <!-- /Logo -->
 
-                    <h4 class="mb-2">Sistem Akuntansi UBSP</h4>
-                    <p class="mb-4">Selamat datang, Admin! 👋</p>
+                    <h4 class="mb-2">Selamat datang, Admin!</h4>
 
                     <form id="formAuthentication" class="mb-3" method="post">
                         @csrf
@@ -90,7 +89,7 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <button class="btn btn-primary d-grid w-100" type="submit">Masuk</button>
+                            <button class="btn btn-primary d-grid w-100" type="submit">MASUK</button>
                         </div>
 
                         <div class="divider my-4">
@@ -99,80 +98,14 @@
                     </form>
                 </div>
             </div>
-            <!-- /Login -->
         </div>
     </div>
-
-
-    {{-- <div class="container-xxl">
-        <div class="authentication-wrapper authentication-basic container-p-y">
-            <div class="authentication-inner">
-                <!-- Register -->
-                <div class="card">
-                    <div class="card-body">
-                        <!-- Logo -->
-                        <div class="app-brand justify-content-center">
-                            <a href="index.html" class="app-brand-link gap-2">
-                                <span class="app-brand-logo demo">
-                                    <img width="60" src="/main/assets/static/images/logo/UBSP-logos_transparent.png"
-                                        alt="Logo">
-                                </span>
-                            </a>
-                        </div>
-                        <!-- /Logo -->
-                        <h4 class="mb-2">Sistem Akuntansi UBSP</h4>
-                        <p class="mb-4">Selamat datang, Admin! 👋</p>
-
-                        <form id="formAuthentication" class="mb-3" method="post">
-                            @csrf
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="email" name="username"
-                                    placeholder="Masukkan username" autofocus />
-                            </div>
-                            <div class="mb-3 form-password-toggle">
-                                <div class="d-flex justify-content-between">
-                                    <label class="form-label" for="password">Password</label>
-                                </div>
-                                <div class="input-group input-group-merge">
-                                    <input type="password" id="password" class="form-control" name="password"
-                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                        aria-describedby="password" />
-                                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <button class="btn btn-primary d-grid w-100" type="submit">Masuk</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-
-    <!-- / Content -->
-
-    <!-- Core JS -->
-    <!-- build:js assets/vendor/js/core.js -->
 
     <script src="/administrator/assets/vendor/libs/jquery/jquery.js"></script>
     <script src="/administrator/assets/vendor/libs/popper/popper.js"></script>
     <script src="/administrator/assets/vendor/js/bootstrap.js"></script>
     <script src="/administrator/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
     <script src="/administrator/assets/vendor/js/menu.js"></script>
-
-    <!-- endbuild -->
-
-    <!-- Vendors JS -->
-
-    <!-- Main JS -->
     <script src="/administrator/assets/js/main.js"></script>
-
-    <!-- Page JS -->
-
-    <!-- Place this tag in your head or just before your close body tag. -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>
-
 </html>
