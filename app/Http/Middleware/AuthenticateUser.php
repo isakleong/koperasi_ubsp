@@ -16,7 +16,11 @@ class AuthenticateUser
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::guard('web')->check()) {
+        // if (!Auth::guard('web')->check()) {
+        //     return redirect('/login');
+        // }
+
+        if (!Auth::guard('web')->check() && !Auth::guard('admin')->check()) {
             return redirect('/login');
         }
 

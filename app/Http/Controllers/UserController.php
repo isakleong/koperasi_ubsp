@@ -20,6 +20,7 @@ use Illuminate\Validation\Rule;
 // use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class UserController extends Controller
 {
@@ -141,8 +142,6 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        //
-
         $validator = Validator::make(
             [
                 'fname' => $request->input('fname'),
@@ -153,6 +152,7 @@ class UserController extends Controller
                 'workAddress' => $request->input('workAddress'),
                 'email' => $request->input('email'),
                 'phone' => $request->input('phone'),
+                'nik' => $request->input('nik'),
                 'mothername' => $request->input('mothername'),
                 'method' => $request->input('method'),
                 'simpanan' => $request->file('simpanan'),
@@ -168,6 +168,7 @@ class UserController extends Controller
                 'workAddress' => 'required',
                 'email' => 'required|email|unique:users,email',
                 'phone' => 'required|min:10|regex:/^([0-9\s\-\+\(\)]*)$/',
+                'nik' => 'required|numeric|digits:16',
                 'mothername' => 'required',
                 'method' => 'required|in:cash,transfer',
                 'simpanan' => 'required_if:method,transfer',
@@ -189,6 +190,9 @@ class UserController extends Controller
                 'phone.required' => 'No Hp belum diisi',
                 'phone.min' => 'No Hp tidak valid',
                 'phone.regex' => 'No Hp tidak valid',
+                'nik.required' => 'NIK belum diisi',
+                'nik.numeric' => 'NIK tidak valid',
+                'nik.digits' => 'NIK harus 16 digit',
                 'mothername.required' => 'Nama ibu kandung belum diisi',
                 'method.required' => 'Jenis pembayaran belum diisi',
                 'method.in' => 'Jenis pembayaran tidak valid',
@@ -202,7 +206,6 @@ class UserController extends Controller
             
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors())->withInput();
-            // return redirect('/admin/menu/user')->withSuccess('Data anggota berhasil ditambahkan!');
         }
 
         try {
@@ -216,31 +219,12 @@ class UserController extends Controller
             $nominal = str_replace(',', '', $nominal);
 
             //generate member id
-            $uuid4 = Uuid::uuid4()->getHex();
-            $salt_1 = Str::random(7);
-            $salt_2 = random_int(0, 9);
-            $salt_3 = Str::substr($uuid4, 0, 7);
-            $saltData = $salt_1.$salt_2.$salt_3;
-            $input['memberId'] = strtoupper('MUBSP'.date('ymd').$saltData);
-            //end of generate member id
+            $prefix = 'M-'.date('ym').'-';
+            $memberId = IdGenerator::generate(['table' => 'users', 'field' => 'memberId', 'length' => 10, 'prefix' => $prefix]);
+            $input['memberId'] = $memberId;
 
-            //secure password with salt
-            $memberId = $input['memberId'];
-            $id = substr($memberId, -1);
-            $salt = substr($memberId, 18, 1);
-            $now = date('ymd');
-
-            $carbonDate = Carbon::parse($input['registDate']);
-            $hour = $carbonDate->format('H');
-            $minute = $carbonDate->format('i');
-            $second = $carbonDate->format('s');
-
-            $char1 = ($minute + $hour + ($salt * 7)) % 16;
-            $char2 = ($minute + $second + ($salt * 7)) % 16;
-            $char3 = ($minute + ord($id[0]) + ($salt * 7)) % 16;
-            $res = strtoupper(dechex($char1)) . strtoupper(dechex($char2)) . $salt . strtoupper(dechex($char3));
-            $input['password'] = Hash::make($res.$input['password']);
-            //end of secure password with salt
+            //secure password with hash
+            $input['password'] = Hash::make($input['password']);
 
             //image handler
             if($imageKTP = $request->file('ktp')) {
@@ -267,13 +251,11 @@ class UserController extends Controller
                 $imageName = "simpanan-".time()."-".Str::random(5).".".$imageSimpanan->getClientOriginalExtension();
                 $buktiSimpanan = $destinationPath.$imageName;
             }
-            //end of image handler
 
             $input["status"] = 0;
 
+            //insert user
             DB::beginTransaction();
-            
-            //insert into user
             $user = User::create($input);
 
             if(isset($imageKTP)) {
@@ -294,14 +276,40 @@ class UserController extends Controller
                 })->save($buktiSimpanan);
             }
 
-            //insert into user account
+            //insert user account
             $arrUserAccount = [];
             $arrUserAccount["memberId"] = $user->memberId;
 
-            $salt_1 = random_int(0, 9);
-            $salt_2 = Str::random(7);
-            $salt_3 = Str::random(16);
-            $arrUserAccount["accountId"] = strtoupper("UAC-".$salt_1.$salt_2."-".$salt_3);
+            // $prefix = 'MAC-'.$memberId.'-';
+            // $arrUserAccount["accountId"] = IdGenerator::generate(['table' => 'user_account', 'field' => 'accountId', 'length' => 17, 'prefix' => $prefix]);
+
+            $prefix = 'MAC-'.$memberId.'-';
+            $latestAccount = DB::table('user_account')
+            ->where('accountId', 'LIKE', $prefix . '%')
+            ->orderBy('accountId', 'desc')
+            ->first();
+
+            // Determine the next sequence number
+            if ($latestAccount) {
+                // Extract the sequence number from the latest account ID
+                $latestSequence = (int) substr($latestAccount->accountId, strlen($prefix));
+                $nextSequence = str_pad($latestSequence + 1, 2, '0', STR_PAD_LEFT);
+            } else {
+                $nextSequence = '01';
+            }
+
+            // Define the length of the ID including prefix and sequence
+            $totalLength = strlen($prefix) + strlen($nextSequence);
+
+            // Generate the new account ID
+            $arrUserAccount["accountId"] = IdGenerator::generate([
+                'table' => 'user_account',
+                'field' => 'accountId',
+                'length' => $totalLength,
+                'prefix' => $prefix,
+                'reset_on_prefix_change' => true,
+                'max_value' => $nextSequence
+            ]);
 
             $arrUserAccount["kind"] = "pokok";
             $arrUserAccount["balance"] = $nominal;
@@ -309,7 +317,7 @@ class UserController extends Controller
             $userAccount = $user->userAccount()->create($arrUserAccount);
             $userAccount->save();
 
-            //insert into transaction
+            //insert transaction
             $arrTransaction = [];
             $arrTransaction["accountId"] = $userAccount->accountId;
             $arrTransaction["kind"] = "pokok";
@@ -322,14 +330,17 @@ class UserController extends Controller
 
             $userAccount->transaction()->create($arrTransaction);
 
+            event(new Registered($user));
+
+            // Auth::login($user);
+
             DB::commit();
 
-            event(new Registered($user));
             return redirect('/admin/menu/user')->withSuccess('Data anggota berhasil ditambahkan!');
         } catch (\Exception $e) {
             DB::rollback();
 
-            File::deleteDirectory('image/upload/'.$memberId);
+            File::deleteDirectory('image/upload/'.$memberId);   
 
             $errorMsg = $e->getMessage();
             return view('layout.admin.error', compact(['errorMsg']));

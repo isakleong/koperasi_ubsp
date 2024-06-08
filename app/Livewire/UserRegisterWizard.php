@@ -69,7 +69,7 @@ class UserRegisterWizard extends Component
     
         // Perform validation if at least one file is uploaded
         if ($this->ktp || $this->kk) {
-            dd($this->ktp);
+            dd($this);
             $this->validate(
                 [
                     'ktp' => 'required|image',

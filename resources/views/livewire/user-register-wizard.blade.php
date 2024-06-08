@@ -148,11 +148,34 @@
 
                 <div class="mb-3">
                     <div class="form-group">
+
+                        {{-- alternatif 1 --}}
+                        {{-- <div wire:ignore x-data x-init="document.addEventListener('DOMContentLoaded', function() {
+                            const pond = FilePond.create($refs.kk, {
+                                server: {
+                                    process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+                                        @this.upload('kk', file, load, error, progress)
+                                    },
+                                    revert: (filename, load) => {
+                                        @this.removeUpload('kk', filename, load)
+                                    },
+                                },
+                            });
+                            this.addEventListener('pondReset', e => {
+                                pond.removeFiles();
+                            });
+                        
+                        });">
+                            <input type="file" x-ref="kk" wire:model="kk">
+                        </div> --}}
+
+
                         <div 
                             wire:ignore
                             x-data="{pond: null}"
                             x-init="
                                 FilePond.registerPlugin(FilePondPluginImagePreview);
+                                const inputElements = document.querySelectorAll('input.kk');
                                 pond = FilePond.create($refs.kk);
 
                                 pond.setOptions({
@@ -162,13 +185,12 @@
                                         },
                                         revert: (filename, load) => {
                                             @this.removeUpload('kk', filename, load)
-                                
                                         }
                                     }
                                 });
                         ">
                             <label>Foto KK</label>
-                            <input type="file" x-ref="kk" wire:model="kk" name="kk">
+                            <input type="file" x-ref="kk" wire:model="kk" name="kk" class="kk">
                         </div>
                     </div>
                     @error('kk')
@@ -183,6 +205,7 @@
                             x-data="{pond: null}"
                             x-init="
                                 FilePond.registerPlugin(FilePondPluginImagePreview);
+                                const inputElements = document.querySelectorAll('input.ktp');
                                 pond = FilePond.create($refs.ktp);
 
                                 pond.setOptions({
@@ -198,7 +221,7 @@
                                 });
                         ">
                             <label>Foto KTP</label>
-                            <input type="file" x-ref="ktp" wire:model="ktp" name="ktp">
+                            <input type="file" x-ref="ktp" wire:model="ktp" name="ktp" class="ktp">
                         </div>
                     </div>
                     @error('ktp')

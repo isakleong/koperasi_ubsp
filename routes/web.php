@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MainController;
@@ -32,8 +34,10 @@ Route::get('/email/verify', function(){
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
     $user = $request->user();
+    Log::info('User: ', $user); // Log the user instance
     // Update the joinDate column
     $user->update(['status' => 1]);
+    Log::info('User after update: ', $user); // Log the user instance after update
     return redirect('/');
 })->middleware(['auth.user', 'signed'])->name('verification.verify');
 

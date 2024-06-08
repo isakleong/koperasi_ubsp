@@ -6,7 +6,7 @@
             border: none;
             border-radius: 12px;
             color: #fff;
-            background-image: linear-gradient(to right top, #0D41E1, #0C63E7, #0A85ED, #09A6F3, #07C8F9);
+            /* background-image: linear-gradient(to right top, #0D41E1, #0C63E7, #0A85ED, #09A6F3, #07C8F9); */
         }
 
         #customCardBorder {
@@ -14,9 +14,9 @@
             border-top-right-radius: 30px !important;
             border: none;
             border-radius: 6px;
-            background-color: blue;
+            background-color: white;
             color: #fff;
-            background-image: linear-gradient(to right top, #0a33b1, #094eb7, #086abc, #0784c2, #05a1c8);
+            /* background-image: linear-gradient(to right top, #0a33b1, #094eb7, #086abc, #0784c2, #05a1c8); */
         }
 
         .bgCard:hover {
@@ -42,7 +42,7 @@
                     <div class="col-lg-6 mb-4 bgCard">
                         <a href="/admin/user/create">
                             <div class="container-fluid">
-                                <div class="p-3" id="customCard">
+                                <div class="card p-3 bg-gradient-primary" id="customCard">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <img src="/administrator/assets/img/icons/multiple_user.png" width="50" />
                                         <span><i class='bx bxs-message-square-add' style="font-size: 3em;"></i></span>
@@ -55,7 +55,7 @@
                                         <span class="cardholder">Tambah Anggota</span>
                                     </div> --}}
                                         <div class="text-center">
-                                            <span class="cardholder">Tambah Anggota</span>
+                                            <h6 class="text-primary m-0">Tambah Anggota</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -66,14 +66,14 @@
                     <div class="col-lg-6 mb-4 bgCard">
                         <a href="/admin/user">
                             <div class="container-fluid">
-                                <div class="p-3" id="customCard">
+                                <div class="card p-3 bg-gradient-primary" id="customCard">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <img src="/administrator/assets/img/icons/multiple_user.png" width="50" />
                                         <span><i class='bx bxs-message-square-edit' style="font-size: 3em;"></i></span>
                                     </div>
                                     <div class="p-4 mt-4" id="customCardBorder">
                                         <div class="text-center">
-                                            <span class="cardholder">Edit Anggota</span>
+                                            <h6 class="text-primary m-0">Edit Anggota</h6>
                                         </div>
                                     </div>
                                 </div>

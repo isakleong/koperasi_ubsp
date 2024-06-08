@@ -26,9 +26,10 @@ return new class extends Migration
             $table->string('address')->required();
             $table->string('workAddress')->required();
             $table->string('phone')->required();
+            $table->string('nik', 50)->required();
             $table->string('ktp')->required();
             $table->string('kk')->required();
-            $table->tinyInteger('status')->default(2);
+            $table->tinyInteger('status')->default(0);
             $table->timestamp('registDate')->nullable();
             $table->timestamp('joinDate')->nullable();
             $table->timestamp('exitDate')->nullable();
