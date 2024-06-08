@@ -44,7 +44,7 @@
     <ul class="navbar-nav flex-row align-items-center ms-auto">
         <li class="nav-item navbar-dropdown dropdown-user dropdown">
             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                <div class="avatar avatar-online">
+                <div class="avatar">
                     <span class="avatar-initial rounded-circle bg-label-primary"><i class="bx bxs-user-pin"></i></span>
                 </div>
             </a>
@@ -52,7 +52,7 @@
                 <li>
                     <a class="dropdown-item" href="/admin/logout">
                         <i class="bx bx-power-off me-2"></i>
-                        <span class="align-middle">Log Out</span>
+                        <span class="align-middle">Keluar</span>
                     </a>
                 </li>
             </ul>
