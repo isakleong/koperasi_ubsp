@@ -79,7 +79,7 @@
                         @else
                             <div class="btn-group" id="dropdown-icon-demo">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bx bx-file-blank me-1"></i> Export Data
+                                <i class="bx bx-file-blank me-1"></i> Ekspor Data
                             </button>
                             <ul class="dropdown-menu">
                                 <form action="{{ route('admin.export.journal') }}" method="post">

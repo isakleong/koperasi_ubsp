@@ -136,7 +136,7 @@
                 buttons: [
                 {
                     extend: 'collection',
-                    text: 'Export Data',
+                    text: 'Ekspor Data',
                     className: 'custom-html-collection',
                     buttons: [
                         {

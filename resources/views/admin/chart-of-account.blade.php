@@ -103,13 +103,20 @@
     <script>
         $(document).ready(function() {
             var table = new DataTable('#table1', {
-                responsive: true
+                responsive: true,
+                language: {
+                    search: 'Cari : ',
+                    zeroRecords: 'Kategori Akun tidak ditemukan',
+                    infoEmpty: 'Menampilkan 0 data',
+                    info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ data',
+                    lengthMenu: '_MENU_ per halaman'
+                }
             });
             new DataTable.Buttons(table, {
                 buttons: [
                 {
                     extend: 'collection',
-                    text: 'Export Data',
+                    text: 'Ekspor Data',
                     className: 'custom-html-collection',
                     buttons: [
                         {

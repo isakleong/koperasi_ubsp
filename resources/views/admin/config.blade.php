@@ -177,7 +177,14 @@
     <script>
         $(document).ready(function() {
             $('.table').DataTable({
-                responsive: true
+                responsive: true,
+                language: {
+                    search: 'Cari : ',
+                    zeroRecords: 'Kategori Akun tidak ditemukan',
+                    infoEmpty: 'Menampilkan 0 data',
+                    info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ data',
+                    lengthMenu: '_MENU_ per halaman'
+                }
             });
 
 
