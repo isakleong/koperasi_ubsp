@@ -455,17 +455,33 @@
                 var form = $(this).closest("form");
 
                 Swal.fire({
-                    title: 'Tolak Anggota?',
-                    text: '',
-                    icon: 'question',
-                    showDenyButton: true,
-                    confirmButtonText: 'Ya, tolak',
+                    title: 'Konfirmasi',
+                    html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                        '<p class="mt-2">Apakah Anda yakin ingin menolak anggota?</p>',
+                    confirmButtonText: 'Ya, Tambah',
                     denyButtonText: 'Batal',
+                    customClass: {
+                        confirmButton: "btn btn-primary",
+                        denyButton: "btn btn-danger"
+                    },
+                    showDenyButton: true,
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    didOpen: () => {
+                        var animation = lottie.loadAnimation({
+                            container: document.getElementById('lottie-container'),
+                            renderer: 'svg',
+                            loop: true,
+                            autoplay: true,
+                            path: '/assets/animations/confirm.json',
+                            rendererSettings: {
+                                preserveAspectRatio: 'xMidYMid slice'
+                            }
+                        });
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit();
-                    } else if (result.isDenied) {
-                        // Swal.fire('Changes are not saved', '', 'info');
                     }
                 });
             });
@@ -478,17 +494,33 @@
                 var form = $(this).closest("form");
 
                 Swal.fire({
-                    title: 'Terima Anggota?',
-                    text: '',
-                    icon: 'question',
-                    showDenyButton: true,
-                    confirmButtonText: 'Ya, terima',
+                    title: 'Konfirmasi',
+                    html: '<div style="width: 50%; margin: auto;" id="lottie-container"></div>' +
+                        '<p class="mt-2">Apakah Anda yakin ingin menerima anggota?</p>',
+                    confirmButtonText: 'Ya, Tambah',
                     denyButtonText: 'Batal',
+                    customClass: {
+                        confirmButton: "btn btn-primary",
+                        denyButton: "btn btn-danger"
+                    },
+                    showDenyButton: true,
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    didOpen: () => {
+                        var animation = lottie.loadAnimation({
+                            container: document.getElementById('lottie-container'),
+                            renderer: 'svg',
+                            loop: true,
+                            autoplay: true,
+                            path: '/assets/animations/confirm.json',
+                            rendererSettings: {
+                                preserveAspectRatio: 'xMidYMid slice'
+                            }
+                        });
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit();
-                    } else if (result.isDenied) {
-                        // Swal.fire('Changes are not saved', '', 'info');
                     }
                 });
             });

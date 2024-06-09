@@ -103,8 +103,34 @@ class UserController extends Controller
         }
     }
 
-    public function rejectData(Request $request) {
+    public function rejectData(Request $request, $id) {
+        $now = date('Y-m-d H:i:s');
+        $user = User::findOrFail($id);
 
+        try {
+            DB::beginTransaction();
+
+            $user->exitDate = $now;
+            $user->status = 3;
+            $user->save();
+
+            foreach ($user->userAccount as $userAccount) {
+                if ($userAccount->kind === 'pokok') {
+                    $userAccount->closedDate = $now;
+                    $userAccount->save();
+
+                    $userAccount->transaction()->update(['status' => 3, 'approvedOn' => $now]);
+                }
+            }
+
+            DB::commit();
+
+            return redirect('/admin/user')->withSuccess('Data status user berhasil diupdate!');
+        } catch (\Exception  $e) {
+            DB::rollback();
+            $errorMsg = $e->getMessage();
+            return view('layout.admin.error', compact(['errorMsg']));
+        }
     }
 
     private function fetchDataFromDatabase($keyword, $status)

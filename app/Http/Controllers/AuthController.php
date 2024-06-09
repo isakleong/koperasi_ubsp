@@ -218,15 +218,7 @@ class AuthController extends Controller {
                 $id = substr($user->memberId, -1);
                 $salt = substr($user->memberId, 18, 1);
                 
-                $carbonDate = Carbon::parse($user->registDate);
-                $hour = $carbonDate->format('H');
-                $minute = $carbonDate->format('i');
-                $second = $carbonDate->format('s');
-                $char1 = ($minute + $hour + ($salt * 7)) % 16;
-                $char2 = ($minute + $second + ($salt * 7)) % 16;
-                $char3 = ($minute + ord($id[0]) + ($salt * 7)) % 16;
-                $res = strtoupper(dechex($char1)) . strtoupper(dechex($char2)) . $salt . strtoupper(dechex($char3));
-                $request['password'] = $res.$request['password'];
+                $request['password'] = $request['password'];
 
                 $credentials = $request->only('email','password');
 
