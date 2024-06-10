@@ -107,7 +107,6 @@ class AdminController extends Controller
         );
 
         if ($validator->fails()) {
-            dd("catch 1");
             return redirect()->back()->withErrors($validator->errors())->withInput();
             
             // return response()->json( [ 'errors' => $validator->errors() ] );
@@ -174,7 +173,6 @@ class AdminController extends Controller
                             $account->balance += $input['amountDebit'][$index];
                             // dd($account->balance);
                         } else {
-                            dd("2");
                             $account->balance -= $input['amountDebit'][$index];
                         }
                         $account->save();
@@ -199,10 +197,8 @@ class AdminController extends Controller
                     if ($account) {
                         if ($account->normalBalance == 'K') {
                             $account->balance += $input['amountKredit'][$index];
-                            dd("3");
                         } else {
                             $account->balance -= $input['amountKredit'][$index];
-                            dd("4");
                         }
                         $account->save();
                     }
@@ -236,7 +232,6 @@ class AdminController extends Controller
 
                 return redirect('/admin/transaction/ubsp')->withSuccess('Data transaksi UBSP berhasil ditambahkan!');
             } catch (\Exception $e) {
-                dd("catch 3 ".$e->getMessage());
                 DB::rollback();
                 return redirect('/admin/transaction/ubsp')->with('errorData', $e->getMessage());
             }

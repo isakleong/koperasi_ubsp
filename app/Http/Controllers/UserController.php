@@ -21,6 +21,7 @@ use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use App\Rules\UniqueActiveEmail;
 
 class UserController extends Controller
 {
@@ -192,7 +193,7 @@ class UserController extends Controller
                 'birthplace' => 'required',
                 'address' => 'required',
                 'workAddress' => 'required',
-                'email' => 'required|email|unique:users,email',
+                'email' => 'required|email',new UniqueActiveEmail,
                 'phone' => 'required|min:10|regex:/^([0-9\s\-\+\(\)]*)$/',
                 'nik' => 'required|numeric|digits:16',
                 'mothername' => 'required',
@@ -213,6 +214,7 @@ class UserController extends Controller
                 'email.required' => 'Email belum diisi',
                 'email.unique' => 'Email sudah ada',
                 'email.email' => 'Email tidak valid',
+                'email.unique_active_email' => 'Email sudah ada',
                 'phone.required' => 'No Hp belum diisi',
                 'phone.min' => 'No Hp tidak valid',
                 'phone.regex' => 'No Hp tidak valid',
