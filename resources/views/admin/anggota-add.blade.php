@@ -174,38 +174,37 @@
                                 <div class="row">
                                     <div class="col-lg-3 mb-3">
                                         <label for="province" class="form-label">Provinsi</label>
+                                        @php
+                                            $provinces = new App\Http\Controllers\RegionController;
+                                            $provinces= $provinces->provinces();
+                                        @endphp
                                         <select id="province" name="province" class="select2 form-select form-select-lg" data-allow-clear="true">
-                                        <option value="AK">Alaska</option>
-                                        <option value="HI">Hawaii</option>
-                                        <option value="CA">California</option>
-                                        <option value="NV">Nevada</option>
+                                            <option>==Pilih Salah Satu==</option>
+                                            @foreach ($provinces as $item)
+                                                <option value="{{ $item->id ?? '' }}">{{ $item->name ?? '' }}</option>
+                                            @endforeach
+                                            {{-- <option value="AK">Alaska</option>
+                                            <option value="HI">Hawaii</option>
+                                            <option value="CA">California</option>
+                                            <option value="NV">Nevada</option> --}}
                                         </select>
                                     </div>
                                     <div class="col-lg-3 mb-3">
                                         <label for="city" class="form-label">Kota / Kabupaten</label>
                                         <select id="city" name="city" class="select2 form-select form-select-lg" data-allow-clear="true">
-                                        <option value="AK">Alaska</option>
-                                        <option value="HI">Hawaii</option>
-                                        <option value="CA">California</option>
-                                        <option value="NV">Nevada</option>
+                                            <option>==Pilih Salah Satu==</option>
                                         </select>
                                     </div>
                                     <div class="col-lg-3 mb-3">
                                         <label for="district" class="form-label">Kecamatan</label>
                                         <select id="district" name="district" class="select2 form-select form-select-lg" data-allow-clear="true">
-                                        <option value="AK">Alaska</option>
-                                        <option value="HI">Hawaii</option>
-                                        <option value="CA">California</option>
-                                        <option value="NV">Nevada</option>
+                                            <option>==Pilih Salah Satu==</option>
                                         </select>
                                     </div>
                                     <div class="col-lg-3 mb-3">
                                         <label for="village" class="form-label">Desa / Kelurahan</label>
                                         <select id="village" name="village" class="select2 form-select form-select-lg" data-allow-clear="true">
-                                        <option value="AK">Alaska</option>
-                                        <option value="HI">Hawaii</option>
-                                        <option value="CA">California</option>
-                                        <option value="NV">Nevada</option>
+                                            <option>==Pilih Salah Satu==</option>
                                         </select>
                                     </div>
                                 </div>
@@ -406,6 +405,38 @@
     <script src="/vendor/select2.js"></script>
     <script src="/vendor/select2/js/forms-selects.js"></script>
     <script src="/vendor/select2/js/bootstrap-select.js"></script>
+
+    <script>
+        function onChangeSelect(url, id, name) {
+            // send ajax request to get the cities of the selected province and append to the select tag
+            $.ajax({
+                url: url,
+                type: 'GET',
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    $('#' + name).empty();
+                    $('#' + name).append('<option>==Pilih Salah Satu==</option>');
+
+                    $.each(data, function (key, value) {
+                        $('#' + name).append('<option value="' + key + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        $(function () {
+            $('#province').on('change', function () {
+                onChangeSelect('{{ route("admin.cities") }}', $(this).val(), 'city');
+            });
+            $('#city').on('change', function () {
+                onChangeSelect('{{ route("admin.districts") }}', $(this).val(), 'district');
+            })
+            $('#district').on('change', function () {
+                onChangeSelect('{{ route("admin.villages") }}', $(this).val(), 'village');
+            })
+        });
+    </script>
 
     <script>
         function validateNumberInput(input) {

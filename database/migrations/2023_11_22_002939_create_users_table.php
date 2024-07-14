@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string("memberId")->unique();
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->string('mothername');
@@ -26,7 +24,6 @@ return new class extends Migration
             $table->string('address')->required();
             $table->string('workAddress')->required();
             $table->string('phone')->required();
-            $table->string('nik', 50)->required();
             $table->string('ktp')->required();
             $table->string('kk')->required();
             $table->tinyInteger('status')->default(0);

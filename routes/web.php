@@ -15,6 +15,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\RegionController;
 use App\Http\Controllers\AccountCategoryController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
@@ -140,6 +141,17 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     Route::resource('/user', UserController::class);
     Route::post('user/{id}/acc', [UserController::class, 'accData'])->name('acc.user');
     Route::post('user/{id}/reject', [UserController::class, 'rejectData'])->name('reject.user');
+
+    //LARAVOLT (WILAYAH INDONESIA)
+    // Route::get('provinces', 'RegionController@provinces')->name('provinces');
+    // Route::get('cities', 'RegionController@cities')->name('cities');
+    // Route::get('districts', 'RegionController@districts')->name('districts');
+    // Route::get('villages', 'RegionController@villages')->name('villages');
+
+    Route::get('provinces', [RegionController::class,'provinces'])->name('provinces');
+    Route::get('cities', [RegionController::class,'cities'])->name('cities');
+    Route::get('districts', [RegionController::class,'districts'])->name('districts');
+    Route::get('villages', [RegionController::class,'villages'])->name('villages');
 
     //AKUN DAN KATEGORI
     Route::resource('/account_category', AccountCategoryController::class);
