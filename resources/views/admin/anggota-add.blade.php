@@ -5,6 +5,10 @@
     <link rel="stylesheet" href="/main/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
     <link rel="stylesheet" href="/main/assets/extensions/toastify-js/src/toastify.css">
 
+    <link rel="stylesheet" href="/vendor/flatpickr/flatpickr.css">
+    <link rel="stylesheet" href="/vendor/select2/css/select2.css">
+    <link rel="stylesheet" href="/vendor/select2/css/bootstrap-select.css">
+
     {{-- <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
     <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet" /> --}}
 
@@ -81,70 +85,158 @@
                         @if (isset($configuration) && count($configuration) == 2)
                             <form action="{{ route('admin.user.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
-                                <div class="mb-3">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="fname" name="fname"
-                                            placeholder="" required value="{{ old('fname') }}" />
-                                        <label for="fname">Nama Depan</label>
+                                <div class="row">
+                                    <div class="col-lg-6 mb-3">
+                                        <label class="form-label" for="fname">Nama Depan</label>
+                                        <input type="text" class="form-control" id="fname" name="fname" placeholder="Nama Depan" required value="{{ old('fname') }}"/>
+                                        @error('fname')
+                                            <p class="mt-1" style="color: red">{{ $message }}</p>
+                                        @enderror
+
+                                        {{-- <div class="form-floating">
+                                            <input type="text" class="form-control" id="fname" name="fname"
+                                                placeholder="" required value="{{ old('fname') }}" />
+                                            <label for="fname">Nama Depan</label>
+                                        </div>
+                                        @error('fname')
+                                            <p class="mt-1" style="color: red">{{ $message }}</p>
+                                        @enderror --}}
                                     </div>
-                                    @error('fname')
-                                        <p class="mt-1" style="color: red">{{ $message }}</p>
-                                    @enderror
+
+                                    <div class="col-lg-6 mb-3">
+                                        <label class="form-label" for="lname">Nama Belakang</label>
+                                        <input type="text" class="form-control" id="lname" name="lname" placeholder="Nama Belakang" required value="{{ old('lname') }}"/>
+                                        @error('lname')
+                                            <p class="mt-1" style="color: red">{{ $message }}</p>
+                                        @enderror
+
+                                        {{-- <div class="form-floating">
+                                            <input type="text" class="form-control" id="lname" name="lname"
+                                                placeholder="" required value="{{ old('lname') }}" />
+                                            <label for="lname">Nama Belakang</label>
+                                        </div>
+                                        @error('lname')
+                                            <p class="mt-1" style="color: red">{{ $message }}</p>
+                                        @enderror --}}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-6 mb-3">
+                                        <label class="form-label" for="birthplace">Tempat Lahir</label>
+                                        <input type="text" class="form-control" id="birthplace" name="birthplace" placeholder="Tempat Lahir" required value="{{ old('birthplace') }}"/>
+                                        
+                                        {{-- <div class="form-floating">
+                                            <input type="text" class="form-control" id="birthplace" name="birthplace"
+                                                placeholder="" required value="{{ old('birthplace') }}" />
+                                            <label for="birthplace">Tempat Lahir</label>
+                                        </div>
+                                        @error('birthplace')
+                                            <p class="mt-1" style="color: red">{{ $message }}</p>
+                                        @enderror --}}
+                                    </div>
+
+                                    <div class="col-lg-6 mb-3">
+                                        <label class="form-label" for="basic-default-dob">Tanggal Lahir</label>
+                                        <input type="text" class="form-control flatpickr-validation" id="birthdate" name="birthdate" required value="{{ old('birthdate') }}" />
+                                        
+                                        
+                                        {{-- <div class="form-floating">
+                                            <input type="date" class="form-control mb-3" id="birthdate" name="birthdate"
+                                                required value="{{ old('birthdate') }}">
+                                            <label for="birthdate">Tanggal Lahir</label>
+                                        </div>
+                                        @error('birthdate')
+                                            <p class="mt-1" style="color: red">{{ $message }}</p>
+                                        @enderror --}}
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-lg-12">
+                                        <label class="form-label" for="address">Alamat Tinggal</label>
+                                        <input type="text" class="form-control" id="address" name="address" placeholder="Alamat Tinggal" required value="{{ old('address') }}"/>
+                                        @error('address')
+                                            <p class="mt-1" style="color: red">{{ $message }}</p>
+                                        @enderror
+                                        
+                                        {{-- <div class="form-floating">
+                                            <input type="text" class="form-control" id="address" name="address"
+                                                placeholder="" required value="{{ old('address') }}" />
+                                            <label for="address">Alamat Tinggal</label>
+                                        </div>
+                                        @error('address')
+                                            <p class="mt-1" style="color: red">{{ $message }}</p>
+                                        @enderror --}}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-3 mb-3">
+                                        <label for="province" class="form-label">Provinsi</label>
+                                        <select id="province" name="province" class="select2 form-select form-select-lg" data-allow-clear="true">
+                                        <option value="AK">Alaska</option>
+                                        <option value="HI">Hawaii</option>
+                                        <option value="CA">California</option>
+                                        <option value="NV">Nevada</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-3 mb-3">
+                                        <label for="city" class="form-label">Kota / Kabupaten</label>
+                                        <select id="city" name="city" class="select2 form-select form-select-lg" data-allow-clear="true">
+                                        <option value="AK">Alaska</option>
+                                        <option value="HI">Hawaii</option>
+                                        <option value="CA">California</option>
+                                        <option value="NV">Nevada</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-3 mb-3">
+                                        <label for="district" class="form-label">Kecamatan</label>
+                                        <select id="district" name="district" class="select2 form-select form-select-lg" data-allow-clear="true">
+                                        <option value="AK">Alaska</option>
+                                        <option value="HI">Hawaii</option>
+                                        <option value="CA">California</option>
+                                        <option value="NV">Nevada</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-3 mb-3">
+                                        <label for="village" class="form-label">Desa / Kelurahan</label>
+                                        <select id="village" name="village" class="select2 form-select form-select-lg" data-allow-clear="true">
+                                        <option value="AK">Alaska</option>
+                                        <option value="HI">Hawaii</option>
+                                        <option value="CA">California</option>
+                                        <option value="NV">Nevada</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-lg-12">
+                                        <label class="form-label" for="workAddress">Alamat Kerja</label>
+                                        <input type="text" class="form-control" id="workAddress" name="workAddress" placeholder="Alamat Kerja" required value="{{ old('workAddress') }}"/>
+                                        @error('workAddress')
+                                            <p class="mt-1" style="color: red">{{ $message }}</p>
+                                        @enderror
+
+                                        {{-- <div class="form-floating">
+                                            <input type="text" class="form-control" id="workAddress" name="workAddress"
+                                                placeholder="" required value="{{ old('workAddress') }}" />
+                                            <label for="workAddress">Alamat Kerja</label>
+                                        </div>
+                                        @error('workAddress')
+                                            <p class="mt-1" style="color: red">{{ $message }}</p>
+                                        @enderror --}}
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-lg-12">
+                                        
+                                    </div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="lname" name="lname"
-                                            placeholder="" required value="{{ old('lname') }}" />
-                                        <label for="lname">Nama Belakang</label>
-                                    </div>
-                                    @error('lname')
-                                        <p class="mt-1" style="color: red">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="birthplace" name="birthplace"
-                                            placeholder="" required value="{{ old('birthplace') }}" />
-                                        <label for="birthplace">Tempat Lahir</label>
-                                    </div>
-                                    @error('birthplace')
-                                        <p class="mt-1" style="color: red">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <div class="form-floating">
-                                        <input type="date" class="form-control mb-3" id="birthdate" name="birthdate"
-                                            required value="{{ old('birthdate') }}">
-                                        <label for="birthdate">Tanggal Lahir</label>
-                                    </div>
-                                    @error('birthdate')
-                                        <p class="mt-1" style="color: red">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="address" name="address"
-                                            placeholder="" required value="{{ old('address') }}" />
-                                        <label for="address">Alamat Tinggal</label>
-                                    </div>
-                                    @error('address')
-                                        <p class="mt-1" style="color: red">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="workAddress" name="workAddress"
-                                            placeholder="" required value="{{ old('workAddress') }}" />
-                                        <label for="workAddress">Alamat Kerja</label>
-                                    </div>
-                                    @error('workAddress')
-                                        <p class="mt-1" style="color: red">{{ $message }}</p>
-                                    @enderror
+                                    
                                 </div>
 
                                 <div class="mb-3">
@@ -307,9 +399,13 @@
     {{-- <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script> --}}
 
-    <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/sweetalert/sweetalert2.js"></script>
     <script src="/vendor/lottie/lottie.min.js"></script>
+    <script src="/vendor/flatpickr/flatpickr.js"></script>
+
+    <script src="/vendor/select2.js"></script>
+    <script src="/vendor/select2/js/forms-selects.js"></script>
+    <script src="/vendor/select2/js/bootstrap-select.js"></script>
 
     <script>
         function validateNumberInput(input) {
@@ -325,6 +421,10 @@
                 $('#bukti-trf').hide();
             }
 
+            $("#birthdate").flatpickr({
+                dateFormat: "d-m-Y"
+            });
+            
             $('.show_confirm').click(function(event) {
                 event.preventDefault();
                 var form = $(this).closest("form");

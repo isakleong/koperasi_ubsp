@@ -38,8 +38,9 @@
 
     <!-- Core CSS -->
     <link rel="stylesheet" href="/administrator/assets/vendor/css/core.css" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="/administrator/assets/vendor/css/theme-default.css"
-        class="template-customizer-theme-css" />
+    {{-- <link rel="stylesheet" href="/vendor/testcore.css"> --}}
+    <link rel="stylesheet" href="/administrator/assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    {{-- <link rel="stylesheet" href="/vendor/testdefault.css"> --}}
     <link rel="stylesheet" href="/administrator/assets/css/demo.css" />
 
     <!-- Vendors CSS -->
